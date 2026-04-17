@@ -10,6 +10,7 @@ import '../models/document_type.dart';
 import '../models/filter_state.dart';
 import '../models/saved_view.dart';
 import '../models/storage_path.dart';
+import '../models/task_notification.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -223,6 +224,26 @@ class ApiService {
   Future<void> deleteDocument(int id) async {
     try {
       await _dio.delete('api/documents/$id/');
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<List<TaskNotification>> getTasks() async {
+    try {
+      final response = await _dio.get('api/tasks/');
+      final results = response.data as List<dynamic>;
+      return results
+          .map((e) => TaskNotification.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<void> acknowledgeTasks(List<int> ids) async {
+    try {
+      await _dio.post('api/acknowledge_tasks/', data: {'tasks': ids});
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

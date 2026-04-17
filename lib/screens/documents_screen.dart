@@ -169,16 +169,38 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 const Expanded(child: Center(child: CircularProgressIndicator()))
               else if (provider.error != null)
                 Expanded(
-                  child: _ErrorView(
-                    error: provider.error!,
-                    onRetry: provider.loadDocuments,
+                  child: RefreshIndicator(
+                    onRefresh: provider.loadDocuments,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: SizedBox(
+                          height: constraints.maxHeight,
+                          child: _ErrorView(
+                            error: provider.error!,
+                            onRetry: provider.loadDocuments,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 )
               else if (provider.documents.isEmpty)
                 Expanded(
-                  child: _EmptyView(
-                    hasFilters: provider.hasActiveFilters,
-                    onReset: provider.resetFilter,
+                  child: RefreshIndicator(
+                    onRefresh: provider.loadDocuments,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: SizedBox(
+                          height: constraints.maxHeight,
+                          child: _EmptyView(
+                            hasFilters: provider.hasActiveFilters,
+                            onReset: provider.resetFilter,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 )
               else ...[
@@ -202,6 +224,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     onRefresh: provider.loadDocuments,
                     child: ListView.builder(
                       controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
                       itemCount:
                           provider.documents.length + (provider.hasMore ? 1 : 0),
                       itemBuilder: (context, index) {

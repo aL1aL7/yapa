@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/documents_provider.dart';
+import 'providers/notifications_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/documents_screen.dart';
+import 'screens/notifications_screen.dart';
 import 'screens/settings_screen.dart';
 import 'services/storage_service.dart';
 
@@ -55,8 +57,15 @@ class _AppRoot extends StatelessWidget {
       case AuthStatus.unauthenticated:
         return const LoginScreen();
       case AuthStatus.authenticated:
-        return ChangeNotifierProvider(
-          create: (_) => DocumentsProvider(auth.api!),
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => DocumentsProvider(auth.api!),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => NotificationsProvider(auth.api!)..load(),
+            ),
+          ],
           child: const _MainShell(),
         );
     }
@@ -75,24 +84,40 @@ class _MainShellState extends State<_MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final unread = context.watch<NotificationsProvider>().unacknowledgedCount;
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
           DocumentsScreen(),
+          NotificationsScreen(),
           SettingsScreen(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-        destinations: const [
-          NavigationDestination(
+        destinations: [
+          const NavigationDestination(
             icon: Icon(Icons.folder_outlined),
             selectedIcon: Icon(Icons.folder),
             label: 'Dokumente',
           ),
           NavigationDestination(
+            icon: Badge(
+              isLabelVisible: unread > 0,
+              label: Text(unread > 9 ? '9+' : '$unread'),
+              child: const Icon(Icons.notifications_outlined),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: unread > 0,
+              label: Text(unread > 9 ? '9+' : '$unread'),
+              child: const Icon(Icons.notifications),
+            ),
+            label: 'Benachrichtigungen',
+          ),
+          const NavigationDestination(
             icon: Icon(Icons.settings_outlined),
             selectedIcon: Icon(Icons.settings),
             label: 'Einstellungen',
