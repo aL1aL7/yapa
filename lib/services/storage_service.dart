@@ -1,5 +1,4 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {
   static const _storage = FlutterSecureStorage(
@@ -33,33 +32,24 @@ class StorageService {
     return (serverUrl: serverUrl, username: username);
   }
 
-  Future<void> clearAll() async {
-    await _storage.deleteAll();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-  }
+  Future<void> clearAll() => _storage.deleteAll();
 
-  Future<bool> getAllowSelfSigned() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_keyAllowSelfSigned) ?? false;
-  }
+  Future<bool> getAllowSelfSigned() async =>
+      (await _storage.read(key: _keyAllowSelfSigned)) == 'true';
 
-  Future<void> setAllowSelfSigned(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_keyAllowSelfSigned, value);
-  }
+  Future<void> setAllowSelfSigned(bool value) =>
+      _storage.write(key: _keyAllowSelfSigned, value: value.toString());
 
   Future<int?> getDefaultViewId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_keyDefaultViewId);
+    final raw = await _storage.read(key: _keyDefaultViewId);
+    return raw == null ? null : int.tryParse(raw);
   }
 
   Future<void> setDefaultViewId(int? id) async {
-    final prefs = await SharedPreferences.getInstance();
     if (id == null) {
-      await prefs.remove(_keyDefaultViewId);
+      await _storage.delete(key: _keyDefaultViewId);
     } else {
-      await prefs.setInt(_keyDefaultViewId, id);
+      await _storage.write(key: _keyDefaultViewId, value: id.toString());
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import '../models/document.dart';
@@ -25,6 +26,9 @@ class ApiService {
   final bool allowSelfSigned;
 
   ApiService({required this.baseUrl, required String token, this.allowSelfSigned = false}) {
+    if (!baseUrl.startsWith('https://')) {
+      throw const ApiException('Nur HTTPS-Verbindungen erlaubt.');
+    }
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl.endsWith('/') ? baseUrl : '$baseUrl/',
       headers: {
@@ -36,9 +40,11 @@ class ApiService {
     ));
 
     if (allowSelfSigned) {
+      final expectedHost = Uri.parse(baseUrl).host;
       (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
         final client = HttpClient();
-        client.badCertificateCallback = (cert, host, port) => true;
+        // Only accept self-signed certs from the configured server host
+        client.badCertificateCallback = (cert, host, port) => host == expectedHost;
         return client;
       };
     }
@@ -50,6 +56,9 @@ class ApiService {
     required String password,
     bool allowSelfSigned = false,
   }) async {
+    if (!baseUrl.startsWith('https://')) {
+      throw const ApiException('Nur HTTPS-Verbindungen erlaubt.');
+    }
     final url = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
     final dio = Dio(BaseOptions(
       baseUrl: url,
@@ -58,9 +67,11 @@ class ApiService {
     ));
 
     if (allowSelfSigned) {
+      final expectedHost = Uri.parse(baseUrl).host;
       (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
         final client = HttpClient();
-        client.badCertificateCallback = (cert, host, port) => true;
+        // Only accept self-signed certs from the configured server host
+        client.badCertificateCallback = (cert, host, port) => host == expectedHost;
         return client;
       };
     }
@@ -217,6 +228,18 @@ class ApiService {
     }
   }
 
+  Future<Uint8List> fetchDocumentPreview(int id) async {
+    try {
+      final response = await _dio.get(
+        'api/documents/$id/preview/',
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return Uint8List.fromList(response.data as List<int>);
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
   String getDocumentPreviewUrl(int id) => '${baseUrl.endsWith('/') ? baseUrl : '$baseUrl/'}api/documents/$id/preview/';
 
   String getDocumentThumbUrl(int id) => '${baseUrl.endsWith('/') ? baseUrl : '$baseUrl/'}api/documents/$id/thumb/';
@@ -245,7 +268,7 @@ class ApiService {
       return ApiException('Ressource nicht gefunden.', statusCode: statusCode);
     }
     return ApiException(
-      e.response?.data?.toString() ?? e.message ?? 'Unbekannter Fehler',
+      'Serverfehler (HTTP ${statusCode ?? 'unbekannt'})',
       statusCode: statusCode,
     );
   }

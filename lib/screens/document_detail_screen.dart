@@ -1,17 +1,13 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import '../models/document.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
 import '../services/api_service.dart';
-import '../services/storage_service.dart';
 import '../widgets/tag_chip.dart';
 import 'document_edit_screen.dart';
 
@@ -56,28 +52,18 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   }
 
   Future<Uint8List> _fetchPdfBytes(ApiService api, int docId) async {
-    final allowSelfSigned =
-        await StorageService().getAllowSelfSigned().catchError((_) => false);
-
-    final dio = Dio(BaseOptions(
-      headers: {'Authorization': api.authHeader},
-      responseType: ResponseType.bytes,
-      receiveTimeout: const Duration(minutes: 2),
-    ));
-
-    if (allowSelfSigned) {
-      (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-        final client = HttpClient();
-        client.badCertificateCallback = (cert, host, port) => true;
-        return client;
-      };
-    }
-
-    final response = await dio.get(api.getDocumentPreviewUrl(docId));
-    final bytes = Uint8List.fromList(response.data as List<int>);
-    // Cache bytes for download reuse
+    final bytes = await api.fetchDocumentPreview(docId);
     if (mounted) setState(() => _pdfBytes = bytes);
     return bytes;
+  }
+
+  static String _sanitizeFileName(String name) {
+    // Strip path separators and traversal sequences to prevent path traversal
+    return name
+        .replaceAll(RegExp(r'[/\\]'), '_')
+        .replaceAll(RegExp(r'\.\.+'), '_')
+        .replaceAll(RegExp(r'[<>:"|?*\x00-\x1F]'), '_')
+        .trim();
   }
 
   Future<void> _downloadDocument() async {
@@ -88,9 +74,10 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       final bytes = _pdfBytes ?? await _pdfBytesFuture;
       if (bytes == null) throw Exception('Keine Daten verfügbar');
 
-      final fileName = _document!.originalFileName.isNotEmpty
+      final rawName = _document!.originalFileName.isNotEmpty
           ? _document!.originalFileName
           : 'dokument_${_document!.id}.pdf';
+      final fileName = _sanitizeFileName(rawName);
 
       final savedPath = await FilePicker.saveFile(
         dialogTitle: 'Dokument speichern',
@@ -111,9 +98,10 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       // savedPath == null bedeutet: Nutzer hat abgebrochen → kein Feedback nötig
     } catch (e) {
       if (mounted) {
+        final msg = e is ApiException ? e.message : 'Download fehlgeschlagen.';
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Download fehlgeschlagen: $e'),
+            content: Text(msg),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
@@ -250,9 +238,10 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
+      final msg = e is ApiException ? e.message : 'Löschen fehlgeschlagen.';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Fehler beim Löschen: $e'),
+          content: Text(msg),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
@@ -312,7 +301,9 @@ class _PdfViewer extends StatelessWidget {
                   const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 16),
                   Text(
-                    'Dokument konnte nicht geladen werden:\n${snapshot.error}',
+                    snapshot.error is ApiException
+                        ? 'Dokument konnte nicht geladen werden:\n${snapshot.error}'
+                        : 'Dokument konnte nicht geladen werden.',
                     textAlign: TextAlign.center,
                   ),
                 ],

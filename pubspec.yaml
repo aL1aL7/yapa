@@ -13,7 +13,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
   flutter_secure_storage: ^10.0.0
-  shared_preferences: ^2.3.3
   provider: ^6.1.2
   syncfusion_flutter_pdfviewer: ^33.1.49
   cached_network_image: ^3.4.1
