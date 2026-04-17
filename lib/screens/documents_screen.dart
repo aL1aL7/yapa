@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../widgets/document_card.dart';
 import 'document_detail_screen.dart';
 import 'filter_sheet.dart';
+import 'upload_screen.dart';
 
 class DocumentsScreen extends StatefulWidget {
   const DocumentsScreen({super.key});
@@ -69,6 +70,22 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   Widget build(BuildContext context) {
     final auth = context.read<AuthProvider>();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final provider = context.read<DocumentsProvider>();
+          final uploaded = await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ChangeNotifierProvider.value(
+                value: provider,
+                child: const UploadScreen(),
+              ),
+            ),
+          );
+          if (uploaded == true) provider.loadDocuments();
+        },
+        child: const Icon(Icons.upload_file),
+      ),
       appBar: AppBar(
         title: _searchActive
             ? TextField(

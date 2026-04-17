@@ -8,6 +8,7 @@ import '../models/correspondent.dart';
 import '../models/document_type.dart';
 import '../models/filter_state.dart';
 import '../models/saved_view.dart';
+import '../models/storage_path.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -158,6 +159,51 @@ class ApiService {
       final response = await _dio.get('api/custom_fields/', queryParameters: {'page_size': 500});
       final results = (response.data['results'] as List<dynamic>);
       return results.map((e) => CustomField.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<List<StoragePath>> getStoragePaths() async {
+    try {
+      final response = await _dio.get('api/storage_paths/', queryParameters: {'page_size': 500});
+      final results = response.data['results'] as List<dynamic>;
+      return results.map((e) => StoragePath.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<void> uploadDocument({
+    required List<int> bytes,
+    required String fileName,
+    String? title,
+    int? correspondent,
+    int? documentType,
+    int? storagePath,
+    List<int> tagIds = const [],
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        'document': MultipartFile.fromBytes(bytes, filename: fileName),
+        if (title != null && title.isNotEmpty) 'title': title,
+        if (correspondent != null) 'correspondent': correspondent.toString(),
+        if (documentType != null) 'document_type': documentType.toString(),
+        if (storagePath != null) 'storage_path': storagePath.toString(),
+      });
+      for (final id in tagIds) {
+        formData.fields.add(MapEntry('tags', id.toString()));
+      }
+      await _dio.post('api/documents/post_document/', data: formData);
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<Document> updateDocument(int id, Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.patch('api/documents/$id/', data: data);
+      return Document.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

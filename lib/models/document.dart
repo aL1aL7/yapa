@@ -8,6 +8,7 @@ class Document {
   final List<int> tags;
   final int? correspondent;
   final int? documentType;
+  final int? storagePath;
   final String archiveSerialNumber;
   final String originalFileName;
   final List<Map<String, dynamic>> customFields;
@@ -22,6 +23,7 @@ class Document {
     required this.tags,
     this.correspondent,
     this.documentType,
+    this.storagePath,
     required this.archiveSerialNumber,
     required this.originalFileName,
     required this.customFields,
@@ -37,6 +39,7 @@ class Document {
         tags: (json['tags'] as List<dynamic>?)?.map((e) => e as int).toList() ?? [],
         correspondent: json['correspondent'] as int?,
         documentType: json['document_type'] as int?,
+        storagePath: json['storage_path'] as int?,
         archiveSerialNumber: json['archive_serial_number'] as String? ?? '',
         originalFileName: json['original_file_name'] as String? ?? '',
         customFields: (json['custom_fields'] as List<dynamic>?)

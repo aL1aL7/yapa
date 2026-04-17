@@ -13,6 +13,7 @@ import '../providers/documents_provider.dart';
 import '../services/api_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/tag_chip.dart';
+import 'document_edit_screen.dart';
 
 class DocumentDetailScreen extends StatefulWidget {
   final int documentId;
@@ -194,7 +195,32 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         ],
       ),
       body: _PdfViewer(pdfFuture: _pdfBytesFuture),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: FilledButton.icon(
+            onPressed: _openEdit,
+            icon: const Icon(Icons.edit_outlined),
+            label: const Text('Bearbeiten'),
+          ),
+        ),
+      ),
     );
+  }
+
+  void _openEdit() {
+    final provider = context.read<DocumentsProvider>();
+    Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: provider,
+          child: DocumentEditScreen(document: _document!),
+        ),
+      ),
+    ).then((updated) {
+      if (updated == true) _loadDocument();
+    });
   }
 }
 
@@ -285,6 +311,9 @@ class _DetailsContent extends StatelessWidget {
     final docType = document.documentType != null
         ? provider.documentTypeById(document.documentType!)
         : null;
+    final storagePath = document.storagePath != null
+        ? provider.storagePathById(document.storagePath!)
+        : null;
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -320,6 +349,12 @@ class _DetailsContent extends StatelessWidget {
             icon: Icons.description_outlined,
             label: 'Dokumenttyp',
             value: docType.name,
+          ),
+        if (storagePath != null)
+          _DetailTile(
+            icon: Icons.folder_outlined,
+            label: 'Speicherpfad',
+            value: storagePath.name,
           ),
         if (document.archiveSerialNumber.isNotEmpty)
           _DetailTile(

@@ -6,6 +6,7 @@ import '../models/correspondent.dart';
 import '../models/document_type.dart';
 import '../models/custom_field.dart';
 import '../models/saved_view.dart';
+import '../models/storage_path.dart';
 import '../services/api_service.dart';
 
 class DocumentsProvider extends ChangeNotifier {
@@ -26,6 +27,7 @@ class DocumentsProvider extends ChangeNotifier {
   List<DocumentType> _documentTypes = [];
   List<CustomField> _customFields = [];
   List<SavedView> _savedViews = [];
+  List<StoragePath> _storagePaths = [];
   SavedView? _selectedView;
   bool _metaLoaded = false;
 
@@ -43,6 +45,7 @@ class DocumentsProvider extends ChangeNotifier {
   List<DocumentType> get documentTypes => _documentTypes;
   List<CustomField> get customFields => _customFields;
   List<SavedView> get savedViews => _savedViews;
+  List<StoragePath> get storagePaths => _storagePaths;
   SavedView? get selectedView => _selectedView;
 
   Future<void> init() async {
@@ -58,12 +61,14 @@ class DocumentsProvider extends ChangeNotifier {
         _api.getDocumentTypes(),
         _api.getCustomFields(),
         _api.getSavedViews(),
+        _api.getStoragePaths(),
       ]);
       _tags = results[0] as List<Tag>;
       _correspondents = results[1] as List<Correspondent>;
       _documentTypes = results[2] as List<DocumentType>;
       _customFields = results[3] as List<CustomField>;
       _savedViews = results[4] as List<SavedView>;
+      _storagePaths = results[5] as List<StoragePath>;
       _metaLoaded = true;
       notifyListeners();
     } catch (_) {}
@@ -158,5 +163,23 @@ class DocumentsProvider extends ChangeNotifier {
     } catch (_) {
       return null;
     }
+  }
+
+  StoragePath? storagePathById(int id) {
+    try {
+      return _storagePaths.firstWhere((s) => s.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<Document> updateDocument(int id, Map<String, dynamic> data) async {
+    final doc = await _api.updateDocument(id, data);
+    final idx = _documents.indexWhere((d) => d.id == id);
+    if (idx >= 0) {
+      _documents[idx] = doc;
+      notifyListeners();
+    }
+    return doc;
   }
 }
