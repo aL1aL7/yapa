@@ -95,9 +95,10 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.tune),
-                  onPressed: _showFilter,
+                  // Filter-Button deaktivieren wenn eine Ansicht aktiv ist
+                  onPressed: provider.selectedView == null ? _showFilter : null,
                 ),
-                if (provider.filter.hasActiveFilters)
+                if (provider.filter.hasActiveFilters && provider.selectedView == null)
                   Positioned(
                     right: 6,
                     top: 6,
@@ -124,7 +125,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 child: Row(children: [
                   const Icon(Icons.refresh),
                   const SizedBox(width: 8),
-                  Text('Aktualisieren'),
+                  const Text('Aktualisieren'),
                 ]),
               ),
               PopupMenuItem(
@@ -141,79 +142,160 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       ),
       body: Consumer<DocumentsProvider>(
         builder: (context, provider, _) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (provider.error != null) {
-            return _ErrorView(
-              error: provider.error!,
-              onRetry: provider.loadDocuments,
-            );
-          }
-
-          if (provider.documents.isEmpty) {
-            return _EmptyView(
-              hasFilters: provider.filter.hasActiveFilters,
-              onReset: provider.resetFilter,
-            );
-          }
-
           return Column(
             children: [
-              if (provider.filter.hasActiveFilters)
-                _ActiveFilterBar(provider: provider),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: Row(
-                  children: [
-                    Text(
-                      '${provider.totalCount} Dokument${provider.totalCount != 1 ? 'e' : ''}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: provider.loadDocuments,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: provider.documents.length + (provider.hasMore ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index >= provider.documents.length) {
-                        return const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      }
-                      final doc = provider.documents[index];
-                      return DocumentCard(
-                        document: doc,
-                        provider: provider,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => MultiProvider(
-                              providers: [
-                                ChangeNotifierProvider.value(value: context.read<AuthProvider>()),
-                                ChangeNotifierProvider.value(value: provider),
-                              ],
-                              child: DocumentDetailScreen(documentId: doc.id),
+              // Ansichten-Leiste (nur wenn Ansichten vorhanden)
+              if (provider.savedViews.isNotEmpty)
+                _ViewSelectorBar(provider: provider),
+
+              if (provider.isLoading)
+                const Expanded(child: Center(child: CircularProgressIndicator()))
+              else if (provider.error != null)
+                Expanded(
+                  child: _ErrorView(
+                    error: provider.error!,
+                    onRetry: provider.loadDocuments,
+                  ),
+                )
+              else if (provider.documents.isEmpty)
+                Expanded(
+                  child: _EmptyView(
+                    hasFilters: provider.hasActiveFilters,
+                    onReset: provider.resetFilter,
+                  ),
+                )
+              else ...[
+                if (provider.filter.hasActiveFilters && provider.selectedView == null)
+                  _ActiveFilterBar(provider: provider),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${provider.totalCount} Dokument${provider.totalCount != 1 ? 'e' : ''}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.outline,
                             ),
-                          ),
-                        ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: provider.loadDocuments,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount:
+                          provider.documents.length + (provider.hasMore ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index >= provider.documents.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        final doc = provider.documents[index];
+                        return DocumentCard(
+                          document: doc,
+                          provider: provider,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => MultiProvider(
+                                providers: [
+                                  ChangeNotifierProvider.value(
+                                      value: context.read<AuthProvider>()),
+                                  ChangeNotifierProvider.value(value: provider),
+                                ],
+                                child: DocumentDetailScreen(documentId: doc.id),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ],
           );
         },
       ),
+    );
+  }
+}
+
+class _ViewSelectorBar extends StatelessWidget {
+  final DocumentsProvider provider;
+
+  const _ViewSelectorBar({required this.provider});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final views = provider.savedViews;
+    final selected = provider.selectedView;
+
+    return Container(
+      color: theme.colorScheme.surfaceContainerLow,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          children: [
+            // "Alle Dokumente" Chip
+            _ViewChip(
+              label: 'Alle Dokumente',
+              icon: Icons.folder_outlined,
+              selected: selected == null,
+              onTap: () => provider.selectView(null),
+            ),
+            const SizedBox(width: 8),
+            ...views.map((view) => Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: _ViewChip(
+                    label: view.name,
+                    icon: Icons.bookmark_outline,
+                    selected: selected?.id == view.id,
+                    onTap: () => provider.selectView(view),
+                  ),
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ViewChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _ViewChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return FilterChip(
+      avatar: Icon(
+        icon,
+        size: 16,
+        color: selected
+            ? theme.colorScheme.onPrimaryContainer
+            : theme.colorScheme.onSurfaceVariant,
+      ),
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(),
+      showCheckmark: false,
+      visualDensity: VisualDensity.compact,
     );
   }
 }
@@ -256,7 +338,8 @@ class _ActiveFilterBar extends StatelessWidget {
         chips.add(_FilterChip(
           label: c.name,
           icon: Icons.person_outline,
-          onRemove: () => provider.updateFilter(filter.copyWith(correspondentId: null)),
+          onRemove: () =>
+              provider.updateFilter(filter.copyWith(correspondentId: null)),
         ));
       }
     }
@@ -267,7 +350,8 @@ class _ActiveFilterBar extends StatelessWidget {
         chips.add(_FilterChip(
           label: d.name,
           icon: Icons.description_outlined,
-          onRemove: () => provider.updateFilter(filter.copyWith(documentTypeId: null)),
+          onRemove: () =>
+              provider.updateFilter(filter.copyWith(documentTypeId: null)),
         ));
       }
     }
@@ -280,10 +364,13 @@ class _ActiveFilterBar extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(children: chips.map((c) => Padding(
-                padding: const EdgeInsets.only(right: 6),
-                child: c,
-              )).toList()),
+              child: Row(
+                  children: chips
+                      .map((c) => Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: c,
+                          ))
+                      .toList()),
             ),
           ),
           TextButton(
@@ -301,7 +388,8 @@ class _FilterChip extends StatelessWidget {
   final IconData icon;
   final VoidCallback onRemove;
 
-  const _FilterChip({required this.label, required this.icon, required this.onRemove});
+  const _FilterChip(
+      {required this.label, required this.icon, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +417,8 @@ class _ErrorView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.cloud_off, size: 56, color: Theme.of(context).colorScheme.error),
+              Icon(Icons.cloud_off,
+                  size: 56, color: Theme.of(context).colorScheme.error),
               const SizedBox(height: 16),
               Text(error, textAlign: TextAlign.center),
               const SizedBox(height: 16),
@@ -367,7 +456,9 @@ class _EmptyView extends StatelessWidget {
               ),
               if (hasFilters) ...[
                 const SizedBox(height: 16),
-                OutlinedButton(onPressed: onReset, child: const Text('Filter zurücksetzen')),
+                OutlinedButton(
+                    onPressed: onReset,
+                    child: const Text('Filter zurücksetzen')),
               ],
             ],
           ),

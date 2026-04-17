@@ -6,7 +6,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import '../models/document.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
@@ -87,22 +87,29 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       final bytes = _pdfBytes ?? await _pdfBytesFuture;
       if (bytes == null) throw Exception('Keine Daten verfügbar');
 
-      final dir = await getApplicationDocumentsDirectory();
       final fileName = _document!.originalFileName.isNotEmpty
           ? _document!.originalFileName
           : 'dokument_${_document!.id}.pdf';
-      final file = File('${dir.path}/$fileName');
-      await file.writeAsBytes(bytes);
 
-      if (mounted) {
+      final savedPath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Dokument speichern',
+        fileName: fileName,
+        bytes: bytes,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      if (!mounted) return;
+
+      if (savedPath != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gespeichert: ${file.path}'),
+            content: Text('Gespeichert: $savedPath'),
             behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(label: 'OK', onPressed: () {}),
           ),
         );
       }
+      // savedPath == null bedeutet: Nutzer hat abgebrochen → kein Feedback nötig
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

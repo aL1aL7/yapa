@@ -7,6 +7,7 @@ import '../models/custom_field.dart';
 import '../models/correspondent.dart';
 import '../models/document_type.dart';
 import '../models/filter_state.dart';
+import '../models/saved_view.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -78,18 +79,36 @@ class ApiService {
 
   Future<DocumentPage> getDocuments({
     required FilterState filter,
+    SavedView? savedView,
     int page = 1,
     int pageSize = 25,
   }) async {
     try {
+      final baseParams = savedView != null
+          ? {
+              ...savedView.toQueryParams(),
+              // Allow search query on top of view filters
+              if (filter.query.isNotEmpty) 'query': filter.query,
+            }
+          : filter.toQueryParams();
       final params = {
-        ...filter.toQueryParams(),
+        ...baseParams,
         'page': page,
         'page_size': pageSize,
         'truncate_content': true,
       };
       final response = await _dio.get('api/documents/', queryParameters: params);
       return DocumentPage.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<List<SavedView>> getSavedViews() async {
+    try {
+      final response = await _dio.get('api/saved_views/', queryParameters: {'page_size': 100});
+      final results = response.data['results'] as List<dynamic>;
+      return results.map((e) => SavedView.fromJson(e as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

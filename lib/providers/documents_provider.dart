@@ -5,6 +5,7 @@ import '../models/tag.dart';
 import '../models/correspondent.dart';
 import '../models/document_type.dart';
 import '../models/custom_field.dart';
+import '../models/saved_view.dart';
 import '../services/api_service.dart';
 
 class DocumentsProvider extends ChangeNotifier {
@@ -24,6 +25,8 @@ class DocumentsProvider extends ChangeNotifier {
   List<Correspondent> _correspondents = [];
   List<DocumentType> _documentTypes = [];
   List<CustomField> _customFields = [];
+  List<SavedView> _savedViews = [];
+  SavedView? _selectedView;
   bool _metaLoaded = false;
 
   DocumentsProvider(this._api);
@@ -39,6 +42,8 @@ class DocumentsProvider extends ChangeNotifier {
   List<Correspondent> get correspondents => _correspondents;
   List<DocumentType> get documentTypes => _documentTypes;
   List<CustomField> get customFields => _customFields;
+  List<SavedView> get savedViews => _savedViews;
+  SavedView? get selectedView => _selectedView;
 
   Future<void> init() async {
     await Future.wait([loadMeta(), loadDocuments()]);
@@ -52,11 +57,13 @@ class DocumentsProvider extends ChangeNotifier {
         _api.getCorrespondents(),
         _api.getDocumentTypes(),
         _api.getCustomFields(),
+        _api.getSavedViews(),
       ]);
       _tags = results[0] as List<Tag>;
       _correspondents = results[1] as List<Correspondent>;
       _documentTypes = results[2] as List<DocumentType>;
       _customFields = results[3] as List<CustomField>;
+      _savedViews = results[4] as List<SavedView>;
       _metaLoaded = true;
       notifyListeners();
     } catch (_) {}
@@ -69,7 +76,11 @@ class DocumentsProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final page = await _api.getDocuments(filter: _filter, page: 1);
+      final page = await _api.getDocuments(
+        filter: _filter,
+        savedView: _selectedView,
+        page: 1,
+      );
       _documents = page.results;
       _totalCount = page.count;
       _hasMore = page.next != null;
@@ -89,7 +100,11 @@ class DocumentsProvider extends ChangeNotifier {
 
     try {
       final nextPage = _currentPage + 1;
-      final page = await _api.getDocuments(filter: _filter, page: nextPage);
+      final page = await _api.getDocuments(
+        filter: _filter,
+        savedView: _selectedView,
+        page: nextPage,
+      );
       _documents.addAll(page.results);
       _hasMore = page.next != null;
       _currentPage = nextPage;
@@ -101,6 +116,12 @@ class DocumentsProvider extends ChangeNotifier {
     }
   }
 
+  void selectView(SavedView? view) {
+    _selectedView = view;
+    _filter = const FilterState();
+    loadDocuments();
+  }
+
   void updateFilter(FilterState newFilter) {
     _filter = newFilter;
     loadDocuments();
@@ -108,8 +129,12 @@ class DocumentsProvider extends ChangeNotifier {
 
   void resetFilter() {
     _filter = const FilterState();
+    _selectedView = null;
     loadDocuments();
   }
+
+  bool get hasActiveFilters =>
+      _filter.hasActiveFilters || _selectedView != null;
 
   Tag? tagById(int id) {
     try {
