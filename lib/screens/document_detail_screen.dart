@@ -95,8 +95,6 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         dialogTitle: 'Dokument speichern',
         fileName: fileName,
         bytes: bytes,
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
       );
 
       if (!mounted) return;
