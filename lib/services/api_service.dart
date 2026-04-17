@@ -243,7 +243,15 @@ class ApiService {
 
   Future<void> acknowledgeTasks(List<int> ids) async {
     try {
-      await _dio.post('api/acknowledge_tasks/', data: {'tasks': ids});
+      // Send without versioned Accept header — acknowledge_tasks ignores versioning
+      await _dio.post(
+        'api/tasks/acknowledge/',
+        data: {'tasks': ids},
+        options: Options(
+          contentType: Headers.jsonContentType,
+          headers: {'Accept': 'application/json'},
+        ),
+      );
     } on DioException catch (e) {
       throw _mapDioError(e);
     }
@@ -282,8 +290,11 @@ class ApiService {
       );
     }
     final statusCode = e.response?.statusCode;
-    if (statusCode == 401 || statusCode == 403) {
+    if (statusCode == 401) {
       return ApiException('Ungültige Anmeldedaten.', statusCode: statusCode);
+    }
+    if (statusCode == 403) {
+      return ApiException('Zugriff verweigert.', statusCode: statusCode);
     }
     if (statusCode == 404) {
       return ApiException('Ressource nicht gefunden.', statusCode: statusCode);

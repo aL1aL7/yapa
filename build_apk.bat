@@ -27,7 +27,7 @@ if errorlevel 1 (
 
 :: Rename APK
 set APK_SRC=build\app\outputs\flutter-apk\app-release.apk
-set APK_DST=build\app\outputs\flutter-apk\yapa-%VERSION_NAME%.apk
+set APK_DST=build\app\outputs\flutter-apk\yapa-%NEW_VERSION%.apk
 move /y "%APK_SRC%" "%APK_DST%"
 
 echo.

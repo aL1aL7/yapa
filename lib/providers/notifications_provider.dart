@@ -23,7 +23,7 @@ class NotificationsProvider extends ChangeNotifier {
     try {
       final tasks = await _api.getTasks();
       tasks.sort((a, b) => b.dateCreated.compareTo(a.dateCreated));
-      _tasks = tasks;
+      _tasks = tasks.where((t) => t.isFileTask && !t.acknowledged).toList();
     } on ApiException catch (e) {
       _error = e.message;
     } finally {
@@ -32,30 +32,22 @@ class NotificationsProvider extends ChangeNotifier {
     }
   }
 
+  // Throws ApiException on failure — callers handle UX (e.g. SnackBar)
   Future<void> acknowledgeTask(int id) async {
-    try {
-      await _api.acknowledgeTasks([id]);
-      final idx = _tasks.indexWhere((t) => t.id == id);
-      if (idx >= 0) {
-        _tasks[idx] = _tasks[idx].copyWith(acknowledged: true);
-        notifyListeners();
-      }
-    } on ApiException catch (e) {
-      _error = e.message;
+    await _api.acknowledgeTasks([id]);
+    final idx = _tasks.indexWhere((t) => t.id == id);
+    if (idx >= 0) {
+      _tasks[idx] = _tasks[idx].copyWith(acknowledged: true);
       notifyListeners();
     }
   }
 
+  // Throws ApiException on failure — callers handle UX (e.g. SnackBar)
   Future<void> acknowledgeAll() async {
     final ids = _tasks.where((t) => !t.acknowledged).map((t) => t.id).toList();
     if (ids.isEmpty) return;
-    try {
-      await _api.acknowledgeTasks(ids);
-      _tasks = _tasks.map((t) => t.copyWith(acknowledged: true)).toList();
-      notifyListeners();
-    } on ApiException catch (e) {
-      _error = e.message;
-      notifyListeners();
-    }
+    await _api.acknowledgeTasks(ids);
+    _tasks = _tasks.map((t) => t.copyWith(acknowledged: true)).toList();
+    notifyListeners();
   }
 }

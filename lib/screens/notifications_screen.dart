@@ -3,9 +3,28 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/task_notification.dart';
 import '../providers/notifications_provider.dart';
+import '../services/api_service.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
+
+  void _acknowledgeAll(BuildContext context, NotificationsProvider provider) async {
+    try {
+      await provider.acknowledgeAll();
+    } on ApiException catch (e) {
+      if (context.mounted) _showError(context, e.message);
+    }
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +37,7 @@ class NotificationsScreen extends StatelessWidget {
         actions: [
           if (unread > 0)
             TextButton.icon(
-              onPressed: provider.acknowledgeAll,
+              onPressed: () => _acknowledgeAll(context, provider),
               icon: const Icon(Icons.done_all),
               label: const Text('Alle bestätigen'),
             ),
@@ -116,10 +135,26 @@ class _TaskCard extends StatelessWidget {
 
   const _TaskCard({required this.task});
 
+  Future<void> _acknowledge(BuildContext context) async {
+    final provider = context.read<NotificationsProvider>();
+    try {
+      await provider.acknowledgeTask(task.id);
+    } on ApiException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final provider = context.read<NotificationsProvider>();
     final (icon, color, statusLabel) = _statusInfo(task.status, theme);
     final dateFormat = DateFormat('dd.MM.yyyy HH:mm');
     final date = task.dateDone ?? task.dateCreated;
@@ -132,7 +167,7 @@ class _TaskCard extends StatelessWidget {
           : null,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: isUnread ? () => provider.acknowledgeTask(task.id) : null,
+        onTap: isUnread ? () => _acknowledge(context) : null,
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Row(

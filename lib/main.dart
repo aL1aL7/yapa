@@ -115,7 +115,7 @@ class _MainShellState extends State<_MainShell> {
               label: Text(unread > 9 ? '9+' : '$unread'),
               child: const Icon(Icons.notifications),
             ),
-            label: 'Benachrichtigungen',
+            label: 'Dateiaufgaben',
           ),
           const NavigationDestination(
             icon: Icon(Icons.settings_outlined),

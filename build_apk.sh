@@ -19,7 +19,7 @@ flutter build apk --release
 
 # Rename APK to yapa-{versionName}.apk
 APK_SRC="build/app/outputs/flutter-apk/app-release.apk"
-APK_DST="build/app/outputs/flutter-apk/yapa-${VERSION_NAME}.apk"
+APK_DST="build/app/outputs/flutter-apk/yapa-${NEW_VERSION}.apk"
 mv "$APK_SRC" "$APK_DST"
 
 echo ""
