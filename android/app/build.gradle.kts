@@ -38,14 +38,7 @@ android {
         }
     }
 
-    applicationVariants.all {
-        val variant = this
-        variant.outputs
-            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-            .forEach { output ->
-                output.outputFileName = "yapa-${variant.versionName}.apk"
-            }
-    }
+
 }
 
 flutter {

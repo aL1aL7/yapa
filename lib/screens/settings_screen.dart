@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  late final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +63,28 @@ class SettingsScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Text('App', style: theme.textTheme.labelLarge),
           ),
-          const ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text('Version'),
-            subtitle: Text('1.0.0'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.description_outlined),
-            title: Text('YAPA'),
-            subtitle: Text('Yet Another Paperless App\npaper-ngx Mobile Client'),
+          FutureBuilder<PackageInfo>(
+            future: _packageInfo,
+            builder: (context, snapshot) {
+              final info = snapshot.data;
+              return Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.info_outline),
+                    title: const Text('Version'),
+                    subtitle: Text(info != null
+                        ? '${info.version}+${info.buildNumber}'
+                        : '—'),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.description_outlined),
+                    title: Text(info?.appName ?? 'YAPA'),
+                    subtitle: const Text(
+                        'Yet Another Paperless-ngx App\nMobile client for paperless-ngx'),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
