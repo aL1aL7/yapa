@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/document.dart';
 import '../models/custom_field.dart';
 import '../providers/documents_provider.dart';
+import '../services/api_service.dart';
 
 class DocumentEditScreen extends StatefulWidget {
   final Document document;
@@ -106,7 +107,7 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Fehler beim Speichern: $e'),
+          content: Text(e is ApiException ? e.message : 'Fehler beim Speichern.'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
         ),

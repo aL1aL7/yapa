@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
+import '../services/api_service.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -95,7 +96,7 @@ class _UploadScreenState extends State<UploadScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Upload fehlgeschlagen: $e'),
+          content: Text(e is ApiException ? e.message : 'Upload fehlgeschlagen.'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
