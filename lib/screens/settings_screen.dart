@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/documents_provider.dart';
+import '../services/storage_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -12,10 +14,29 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   late final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
+  int? _defaultViewId;
+  bool _defaultViewLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDefaultViewId();
+  }
+
+  Future<void> _loadDefaultViewId() async {
+    final id = await StorageService().getDefaultViewId();
+    if (mounted) setState(() { _defaultViewId = id; _defaultViewLoaded = true; });
+  }
+
+  Future<void> _setDefaultView(int? id) async {
+    await StorageService().setDefaultViewId(id);
+    setState(() => _defaultViewId = id);
+  }
 
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
+    final provider = context.watch<DocumentsProvider>();
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -39,6 +60,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text('Ansicht', style: theme.textTheme.labelLarge),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: _defaultViewLoaded
+                ? DropdownButtonFormField<int?>(
+                    initialValue: _defaultViewId,
+                    decoration: const InputDecoration(
+                      labelText: 'Standard-Ansicht beim Start',
+                      prefixIcon: Icon(Icons.bookmark_outline),
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      const DropdownMenuItem<int?>(
+                        value: null,
+                        child: Text('Alle Dokumente'),
+                      ),
+                      ...provider.savedViews.map((v) => DropdownMenuItem(
+                            value: v.id,
+                            child: Text(v.name),
+                          )),
+                    ],
+                    onChanged: _setDefaultView,
+                  )
+                : const SizedBox(
+                    height: 56,
+                    child: Center(child: LinearProgressIndicator()),
+                  ),
+          ),
+          if (provider.savedViews.isEmpty && _defaultViewLoaded)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+              child: Text(
+                'Keine gespeicherten Ansichten vorhanden.',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          const SizedBox(height: 8),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Text('Sicherheit', style: theme.textTheme.labelLarge),
           ),
           ListTile(
@@ -54,7 +116,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: Icon(Icons.logout, color: theme.colorScheme.error),
-            title: Text('Abmelden', style: TextStyle(color: theme.colorScheme.error)),
+            title: Text('Abmelden',
+                style: TextStyle(color: theme.colorScheme.error)),
             subtitle: const Text('Token und gespeicherte Daten löschen'),
             onTap: () => _confirmLogout(context, auth),
           ),

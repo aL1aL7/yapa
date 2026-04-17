@@ -10,6 +10,7 @@ class StorageService {
   static const _keyServerUrl = 'server_url';
   static const _keyUsername = 'username';
   static const _keyAllowSelfSigned = 'allow_self_signed';
+  static const _keyDefaultViewId = 'default_view_id';
 
   Future<void> saveToken(String token) =>
       _storage.write(key: _keyToken, value: token);
@@ -46,5 +47,19 @@ class StorageService {
   Future<void> setAllowSelfSigned(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyAllowSelfSigned, value);
+  }
+
+  Future<int?> getDefaultViewId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_keyDefaultViewId);
+  }
+
+  Future<void> setDefaultViewId(int? id) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (id == null) {
+      await prefs.remove(_keyDefaultViewId);
+    } else {
+      await prefs.setInt(_keyDefaultViewId, id);
+    }
   }
 }

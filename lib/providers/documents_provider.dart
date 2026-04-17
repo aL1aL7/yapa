@@ -8,6 +8,7 @@ import '../models/custom_field.dart';
 import '../models/saved_view.dart';
 import '../models/storage_path.dart';
 import '../services/api_service.dart';
+import '../services/storage_service.dart';
 
 class DocumentsProvider extends ChangeNotifier {
   final ApiService _api;
@@ -49,7 +50,17 @@ class DocumentsProvider extends ChangeNotifier {
   SavedView? get selectedView => _selectedView;
 
   Future<void> init() async {
-    await Future.wait([loadMeta(), loadDocuments()]);
+    await loadMeta();
+    await _applyDefaultView();
+    await loadDocuments();
+  }
+
+  Future<void> _applyDefaultView() async {
+    final id = await StorageService().getDefaultViewId();
+    if (id != null) {
+      final view = _savedViews.where((v) => v.id == id).firstOrNull;
+      if (view != null) _selectedView = view;
+    }
   }
 
   Future<void> loadMeta() async {
@@ -181,5 +192,12 @@ class DocumentsProvider extends ChangeNotifier {
       notifyListeners();
     }
     return doc;
+  }
+
+  Future<void> deleteDocument(int id) async {
+    await _api.deleteDocument(id);
+    _documents.removeWhere((d) => d.id == id);
+    _totalCount = (_totalCount - 1).clamp(0, _totalCount);
+    notifyListeners();
   }
 }

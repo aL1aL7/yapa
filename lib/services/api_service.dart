@@ -209,6 +209,14 @@ class ApiService {
     }
   }
 
+  Future<void> deleteDocument(int id) async {
+    try {
+      await _dio.delete('api/documents/$id/');
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
   String getDocumentPreviewUrl(int id) => '${baseUrl.endsWith('/') ? baseUrl : '$baseUrl/'}api/documents/$id/preview/';
 
   String getDocumentThumbUrl(int id) => '${baseUrl.endsWith('/') ? baseUrl : '$baseUrl/'}api/documents/$id/thumb/';

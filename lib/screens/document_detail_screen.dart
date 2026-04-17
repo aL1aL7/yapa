@@ -165,6 +165,8 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                   _openDetails();
                 case _MenuAction.download:
                   _downloadDocument();
+                case _MenuAction.delete:
+                  _confirmDelete();
               }
             },
             itemBuilder: (_) => [
@@ -190,6 +192,17 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
+              PopupMenuItem(
+                value: _MenuAction.delete,
+                child: ListTile(
+                  leading: Icon(Icons.delete_outline,
+                      color: Theme.of(context).colorScheme.error),
+                  title: Text('Löschen',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.error)),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
             ],
           ),
         ],
@@ -208,6 +221,45 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     );
   }
 
+  Future<void> _confirmDelete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Dokument löschen'),
+        content: const Text(
+            'Das Dokument wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Abbrechen'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+            ),
+            child: const Text('Löschen'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      await context.read<DocumentsProvider>().deleteDocument(widget.documentId);
+      if (!mounted) return;
+      Navigator.pop(context);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Fehler beim Löschen: $e'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
+  }
+
   void _openEdit() {
     final provider = context.read<DocumentsProvider>();
     Navigator.push<bool>(
@@ -224,7 +276,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   }
 }
 
-enum _MenuAction { details, download }
+enum _MenuAction { details, download, delete }
 
 class _PdfViewer extends StatelessWidget {
   final Future<Uint8List>? pdfFuture;
