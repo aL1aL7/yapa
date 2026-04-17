@@ -91,7 +91,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
           ? _document!.originalFileName
           : 'dokument_${_document!.id}.pdf';
 
-      final savedPath = await FilePicker.platform.saveFile(
+      final savedPath = await FilePicker.saveFile(
         dialogTitle: 'Dokument speichern',
         fileName: fileName,
         bytes: bytes,

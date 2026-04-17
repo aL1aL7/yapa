@@ -12,14 +12,14 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.0.0
   shared_preferences: ^2.3.3
   provider: ^6.1.2
-  syncfusion_flutter_pdfviewer: ^28.2.6
+  syncfusion_flutter_pdfviewer: ^33.1.49
   cached_network_image: ^3.4.1
-  intl: ^0.19.0
+  intl: ^0.20.2
   path_provider: ^2.1.5
-  file_picker: ^8.1.7
+  file_picker: ^11.0.2
 
 dev_dependencies:
   flutter_test:
