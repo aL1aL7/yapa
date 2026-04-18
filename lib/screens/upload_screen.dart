@@ -12,7 +12,13 @@ import '../widgets/tag_chip.dart';
 import '../widgets/tag_multiselect_field.dart';
 
 class UploadScreen extends StatefulWidget {
-  const UploadScreen({super.key});
+  /// Pre-populated file bytes, e.g. when opened from a share intent.
+  final Uint8List? initialBytes;
+
+  /// Pre-populated file name, e.g. when opened from a share intent.
+  final String? initialFileName;
+
+  const UploadScreen({super.key, this.initialBytes, this.initialFileName});
 
   @override
   State<UploadScreen> createState() => _UploadScreenState();
@@ -30,6 +36,17 @@ class _UploadScreenState extends State<UploadScreen> {
   int? _selectedDocumentType;
   int? _selectedStoragePath;
   final Set<int> _selectedTags = {};
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialBytes != null && widget.initialFileName != null) {
+      _fileBytes = widget.initialBytes;
+      _fileName = widget.initialFileName;
+      _titleController.text =
+          widget.initialFileName!.replaceAll(RegExp(r'\.[^.]+$'), '');
+    }
+  }
 
   @override
   void dispose() {

@@ -53,6 +53,7 @@ The filter sheet allows combining multiple criteria:
 ### Document Upload
 - Pick a file from device storage (PDF, PNG, JPG, JPEG, TIFF, GIF, WEBP)
 - Take a photo directly with the camera
+- **Share target** — YAPA registers as a share destination; sharing a PDF or image from any other Android app opens the upload screen with the file pre-loaded
 - Set title, correspondent, document type, storage path, and tags before uploading (tags as colour-coded chips or multi-select dropdown — configurable)
 - File name is pre-filled as the document title
 
