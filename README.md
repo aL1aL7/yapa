@@ -1,5 +1,9 @@
 # YAPA – Yet Another Paperless-ngx App
 
+<p align="center">
+  <img src="assets/icon/app_icon.png" alt="YAPA App Icon" width="120"/>
+</p>
+
 A mobile client for [Paperless-ngx](https://docs.paperless-ngx.com/) built with Flutter.  
 YAPA lets you browse, search, filter, upload, and edit your documents directly from your Android device.
 
@@ -133,3 +137,13 @@ lib/
 ├── services/           # API service, secure storage service
 └── widgets/            # Reusable widgets (DocumentCard, TagChip)
 ```
+
+## Why YAPA Exists
+
+I had no prior experience with vibe coding and wanted to give it a try.
+Around the same time, the Android app I had been using for Paperless-ngx — [paperless-mobile](https://github.com/astubenbord/paperless-mobile) — had gone unmaintained for a while (it has since resumed receiving updates).
+That combination of curiosity and a gap in tooling motivated me to attempt building my own Android app. YAPA is the result.
+
+The app is tailored to my personal workflow and is deliberately **not** a full replacement for the Paperless-ngx web interface.
+Creating or editing storage paths, tasks, tags, correspondents, document types, and similar administrative objects is outside the scope of this app.
+At its core, YAPA is a **document viewer** — a convenient way to browse, search, and manage the documents already in your archive from a mobile device.
