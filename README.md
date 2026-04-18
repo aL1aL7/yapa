@@ -142,7 +142,7 @@ lib/
 
 I had no prior experience with vibe coding and wanted to give it a try.
 Around the same time, the Android app I had been using for Paperless-ngx — [paperless-mobile](https://github.com/astubenbord/paperless-mobile) — had gone unmaintained for a while (it has since resumed receiving updates).
-That combination of curiosity and a gap in tooling motivated me to attempt building my own Android app. YAPA is the result.
+That combination of curiosity and a gap in tooling motivated me to attempt building my own Android app. YAPA is the result — and the entire project was vibe coded from start to finish.
 
 The app is tailored to my personal workflow and is deliberately **not** a full replacement for the Paperless-ngx web interface.
 Creating or editing storage paths, tasks, tags, correspondents, document types, and similar administrative objects is outside the scope of this app.
