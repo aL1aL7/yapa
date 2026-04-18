@@ -122,30 +122,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () => _confirmLogout(context, auth),
           ),
           const Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Text('App', style: theme.textTheme.labelLarge),
-          ),
           FutureBuilder<PackageInfo>(
             future: _packageInfo,
             builder: (context, snapshot) {
               final info = snapshot.data;
-              return Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.info_outline),
-                    title: const Text('Version'),
-                    subtitle: Text(info != null
-                        ? '${info.version}+${info.buildNumber}'
-                        : '—'),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.description_outlined),
-                    title: Text(info?.appName ?? 'YAPA'),
-                    subtitle: const Text(
-                        'Yet Another Paperless-ngx App\nMobile client for paperless-ngx'),
-                  ),
-                ],
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        'assets/icon/app_icon.png',
+                        width: 72,
+                        height: 72,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      info?.appName ?? 'YAPA',
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Yet Another Paperless-ngx App',
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: theme.colorScheme.outline),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      info != null
+                          ? 'Version ${info.version}+${info.buildNumber}'
+                          : '—',
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: theme.colorScheme.outline),
+                    ),
+                  ],
+                ),
               );
             },
           ),

@@ -87,6 +87,12 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         child: const Icon(Icons.upload_file),
       ),
       appBar: AppBar(
+        leading: _searchActive
+            ? null
+            : Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset('assets/icon/app_icon.png'),
+              ),
         title: _searchActive
             ? TextField(
                 controller: _searchController,
