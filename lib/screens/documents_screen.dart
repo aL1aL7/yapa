@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import '../models/filter_state.dart';
 import '../providers/documents_provider.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/document_card.dart';
@@ -402,6 +403,29 @@ class _ActiveFilterBar extends StatelessWidget {
               provider.updateFilter(filter.copyWith(documentTypeId: null)),
         ));
       }
+    }
+
+    for (final cf in filter.customFieldFilters.where((f) => f.isComplete)) {
+      final fieldName =
+          provider.customFieldById(cf.fieldId)?.name ?? 'Feld ${cf.fieldId}';
+      final String label;
+      switch (cf.condition) {
+        case CustomFieldCondition.present:
+          label = fieldName;
+        case CustomFieldCondition.isNull:
+          label = '$fieldName: ${l10n?.filterConditionIsNull ?? 'leer'}';
+        case CustomFieldCondition.equals:
+          label = '$fieldName: ${cf.value}';
+      }
+      chips.add(_FilterChip(
+        label: label,
+        icon: Icons.tune,
+        onRemove: () {
+          final list = List<CustomFieldFilter>.from(filter.customFieldFilters)
+            ..remove(cf);
+          provider.updateFilter(filter.copyWith(customFieldFilters: list));
+        },
+      ));
     }
 
     return Container(

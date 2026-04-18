@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import '../models/custom_field.dart';
 import '../models/filter_state.dart';
 import '../providers/documents_provider.dart';
 import '../widgets/tag_chip.dart';
@@ -126,35 +128,52 @@ class _FilterSheetState extends State<FilterSheet> {
                 if (provider.customFields.isNotEmpty) ...[
                   _SectionTitle(l10n?.filterSectionCustomField ?? 'Benutzerdefiniertes Feld'),
                   const SizedBox(height: 8),
-                  DropdownButtonFormField<String?>(
-                    initialValue: _filter.customFieldId,
-                    decoration: InputDecoration(
-                      labelText: l10n?.filterFieldLabel ?? 'Feld',
-                      border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    ),
-                    items: [
-                      DropdownMenuItem(value: null, child: Text(l10n?.filterNone ?? 'Keines')),
-                      ...provider.customFields.map((f) =>
-                          DropdownMenuItem(value: f.id.toString(), child: Text(f.name))),
-                    ],
-                    onChanged: (v) => setState(() =>
-                        _filter = _filter.copyWith(customFieldId: v, customFieldValue: null)),
-                  ),
-                  if (_filter.customFieldId != null) ...[
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      initialValue: _filter.customFieldValue,
-                      decoration: InputDecoration(
-                        labelText: l10n?.filterValueContains ?? 'Wert enthält',
-                        border: const OutlineInputBorder(),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ...List.generate(_filter.customFieldFilters.length, (i) {
+                    final cf = _filter.customFieldFilters[i];
+                    final field = provider.customFields.firstWhere(
+                      (f) => f.id == cf.fieldId,
+                      orElse: () => provider.customFields.first,
+                    );
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _CustomFieldFilterRow(
+                        cfFilter: cf,
+                        field: field,
+                        customFields: provider.customFields,
+                        l10n: l10n,
+                        onChanged: (updated) => setState(() {
+                          final list = List<CustomFieldFilter>.from(
+                              _filter.customFieldFilters);
+                          list[i] = updated;
+                          _filter = _filter.copyWith(customFieldFilters: list);
+                        }),
+                        onRemove: () => setState(() {
+                          final list = List<CustomFieldFilter>.from(
+                              _filter.customFieldFilters);
+                          list.removeAt(i);
+                          _filter = _filter.copyWith(customFieldFilters: list);
+                        }),
                       ),
-                      onChanged: (v) => setState(() =>
-                          _filter = _filter.copyWith(customFieldValue: v.isEmpty ? null : v)),
-                    ),
-                  ],
-                  const SizedBox(height: 20),
+                    );
+                  }),
+                  TextButton.icon(
+                    icon: const Icon(Icons.add, size: 18),
+                    label: Text(l10n?.filterAddCustomField ??
+                        'Weiteres Feld hinzufügen'),
+                    onPressed: () => setState(() {
+                      final first = provider.customFields.first;
+                      final list = List<CustomFieldFilter>.from(
+                          _filter.customFieldFilters);
+                      list.add(CustomFieldFilter(
+                        fieldId: first.id,
+                        fieldName: first.name,
+                        fieldDataType: first.dataType,
+                        condition: CustomFieldCondition.present,
+                      ));
+                      _filter = _filter.copyWith(customFieldFilters: list);
+                    }),
+                  ),
+                  const SizedBox(height: 12),
                 ],
                 _SectionTitle(l10n?.filterSectionSorting ?? 'Sortierung'),
                 const SizedBox(height: 8),
@@ -196,6 +215,159 @@ class _FilterSheetState extends State<FilterSheet> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CustomFieldFilterRow extends StatelessWidget {
+  final CustomFieldFilter cfFilter;
+  final CustomField field;
+  final List<CustomField> customFields;
+  final AppLocalizations? l10n;
+  final ValueChanged<CustomFieldFilter> onChanged;
+  final VoidCallback onRemove;
+
+  const _CustomFieldFilterRow({
+    required this.cfFilter,
+    required this.field,
+    required this.customFields,
+    required this.l10n,
+    required this.onChanged,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: DropdownButtonFormField<int>(
+                value: cfFilter.fieldId,
+                decoration: InputDecoration(
+                  labelText: l10n?.filterFieldLabel ?? 'Feld',
+                  border: const OutlineInputBorder(),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+                items: customFields
+                    .map((f) =>
+                        DropdownMenuItem(value: f.id, child: Text(f.name)))
+                    .toList(),
+                onChanged: (v) {
+                  if (v == null) return;
+                  final newField = customFields.firstWhere((f) => f.id == v);
+                  onChanged(cfFilter.withField(v, newField.dataType, newField.name));
+                },
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: l10n?.actionDelete ?? 'Löschen',
+              onPressed: onRemove,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<CustomFieldCondition>(
+          value: cfFilter.condition,
+          decoration: InputDecoration(
+            labelText: l10n?.filterCondition ?? 'Bedingung',
+            border: const OutlineInputBorder(),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          ),
+          items: [
+            DropdownMenuItem(
+              value: CustomFieldCondition.present,
+              child: Text(l10n?.filterConditionPresent ?? 'Feld vorhanden'),
+            ),
+            DropdownMenuItem(
+              value: CustomFieldCondition.isNull,
+              child: Text(l10n?.filterConditionIsNull ?? 'Feld ist leer'),
+            ),
+            DropdownMenuItem(
+              value: CustomFieldCondition.equals,
+              child: Text(l10n?.filterConditionEquals ?? 'Wert ist gleich'),
+            ),
+          ],
+          onChanged: (v) {
+            if (v != null) onChanged(cfFilter.withCondition(v));
+          },
+        ),
+        if (cfFilter.condition == CustomFieldCondition.equals) ...[
+          const SizedBox(height: 8),
+          _buildValueInput(),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildValueInput() {
+    final dt = field.dataType;
+
+    if (dt == 'select' && field.selectOptions.isNotEmpty) {
+      final currentValue =
+          field.selectOptions.contains(cfFilter.value) ? cfFilter.value : null;
+      return DropdownButtonFormField<String>(
+        value: currentValue,
+        decoration: InputDecoration(
+          labelText: l10n?.filterValueEquals ?? 'Wert',
+          border: const OutlineInputBorder(),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+        items: field.selectOptions
+            .map((opt) => DropdownMenuItem(value: opt, child: Text(opt)))
+            .toList(),
+        onChanged: (v) => onChanged(cfFilter.withValue(v)),
+      );
+    }
+
+    if (dt == 'boolean') {
+      return DropdownButtonFormField<String>(
+        value: cfFilter.value,
+        decoration: InputDecoration(
+          labelText: l10n?.filterValueEquals ?? 'Wert',
+          border: const OutlineInputBorder(),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+        items: [
+          DropdownMenuItem(
+              value: 'true', child: Text(l10n?.filterBoolYes ?? 'Ja')),
+          DropdownMenuItem(
+              value: 'false', child: Text(l10n?.filterBoolNo ?? 'Nein')),
+        ],
+        onChanged: (v) => onChanged(cfFilter.withValue(v)),
+      );
+    }
+
+    TextInputType keyboardType = TextInputType.text;
+    List<TextInputFormatter> formatters = [];
+    if (dt == 'integer') {
+      keyboardType = TextInputType.number;
+      formatters = [FilteringTextInputFormatter.digitsOnly];
+    } else if (dt == 'float' || dt == 'monetary') {
+      keyboardType =
+          const TextInputType.numberWithOptions(decimal: true, signed: false);
+      formatters = [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))];
+    }
+
+    return TextFormField(
+      key: ValueKey('cf_${cfFilter.fieldId}_value'),
+      initialValue: cfFilter.value,
+      keyboardType: keyboardType,
+      inputFormatters: formatters,
+      decoration: InputDecoration(
+        labelText: l10n?.filterValueEquals ?? 'Wert',
+        border: const OutlineInputBorder(),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      onChanged: (v) => onChanged(cfFilter.withValue(v.isEmpty ? null : v)),
     );
   }
 }

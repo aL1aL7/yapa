@@ -272,6 +272,30 @@ class AppLocalizationsIt extends AppLocalizations {
   String get filterValueContains => 'Il valore contiene';
 
   @override
+  String get filterCondition => 'Condizione';
+
+  @override
+  String get filterConditionPresent => 'Campo presente';
+
+  @override
+  String get filterConditionIsNull => 'Campo è vuoto';
+
+  @override
+  String get filterConditionEquals => 'Il valore è uguale a';
+
+  @override
+  String get filterValueEquals => 'Valore';
+
+  @override
+  String get filterAddCustomField => 'Aggiungi un altro campo';
+
+  @override
+  String get filterBoolYes => 'Sì';
+
+  @override
+  String get filterBoolNo => 'No';
+
+  @override
   String get filterSectionTags => 'Tag';
 
   @override

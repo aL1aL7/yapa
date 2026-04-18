@@ -596,6 +596,54 @@ abstract class AppLocalizations {
   /// **'Wert enthält'**
   String get filterValueContains;
 
+  /// No description provided for @filterCondition.
+  ///
+  /// In de, this message translates to:
+  /// **'Bedingung'**
+  String get filterCondition;
+
+  /// No description provided for @filterConditionPresent.
+  ///
+  /// In de, this message translates to:
+  /// **'Feld vorhanden'**
+  String get filterConditionPresent;
+
+  /// No description provided for @filterConditionIsNull.
+  ///
+  /// In de, this message translates to:
+  /// **'Feld ist leer'**
+  String get filterConditionIsNull;
+
+  /// No description provided for @filterConditionEquals.
+  ///
+  /// In de, this message translates to:
+  /// **'Wert ist gleich'**
+  String get filterConditionEquals;
+
+  /// No description provided for @filterValueEquals.
+  ///
+  /// In de, this message translates to:
+  /// **'Wert'**
+  String get filterValueEquals;
+
+  /// No description provided for @filterAddCustomField.
+  ///
+  /// In de, this message translates to:
+  /// **'Weiteres Feld hinzufügen'**
+  String get filterAddCustomField;
+
+  /// No description provided for @filterBoolYes.
+  ///
+  /// In de, this message translates to:
+  /// **'Ja'**
+  String get filterBoolYes;
+
+  /// No description provided for @filterBoolNo.
+  ///
+  /// In de, this message translates to:
+  /// **'Nein'**
+  String get filterBoolNo;
+
   /// No description provided for @filterSectionTags.
   ///
   /// In de, this message translates to:

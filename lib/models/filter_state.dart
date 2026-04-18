@@ -1,10 +1,61 @@
+import 'dart:convert';
+
+enum CustomFieldCondition { present, isNull, equals }
+
+class CustomFieldFilter {
+  final int fieldId;
+  final String fieldName;
+  final String fieldDataType;
+  final CustomFieldCondition condition;
+  final String? value;
+
+  const CustomFieldFilter({
+    required this.fieldId,
+    required this.fieldName,
+    required this.fieldDataType,
+    required this.condition,
+    this.value,
+  });
+
+  CustomFieldFilter withField(int id, String dataType, String name) =>
+      CustomFieldFilter(
+        fieldId: id,
+        fieldName: name,
+        fieldDataType: dataType,
+        condition: condition,
+        value: null,
+      );
+
+  CustomFieldFilter withCondition(CustomFieldCondition c) => CustomFieldFilter(
+        fieldId: fieldId,
+        fieldName: fieldName,
+        fieldDataType: fieldDataType,
+        condition: c,
+        value: c == CustomFieldCondition.equals ? value : null,
+      );
+
+  CustomFieldFilter withValue(String? v) => CustomFieldFilter(
+        fieldId: fieldId,
+        fieldName: fieldName,
+        fieldDataType: fieldDataType,
+        condition: condition,
+        value: v,
+      );
+
+  bool get isComplete =>
+      condition == CustomFieldCondition.present ||
+      condition == CustomFieldCondition.isNull ||
+      (condition == CustomFieldCondition.equals &&
+          value != null &&
+          value!.isNotEmpty);
+}
+
 class FilterState {
   final String query;
   final List<int> tagIds;
   final int? correspondentId;
   final int? documentTypeId;
-  final String? customFieldId;
-  final String? customFieldValue;
+  final List<CustomFieldFilter> customFieldFilters;
   final String ordering;
 
   const FilterState({
@@ -12,8 +63,7 @@ class FilterState {
     this.tagIds = const [],
     this.correspondentId,
     this.documentTypeId,
-    this.customFieldId,
-    this.customFieldValue,
+    this.customFieldFilters = const [],
     this.ordering = '-created',
   });
 
@@ -22,8 +72,7 @@ class FilterState {
     List<int>? tagIds,
     Object? correspondentId = _sentinel,
     Object? documentTypeId = _sentinel,
-    Object? customFieldId = _sentinel,
-    Object? customFieldValue = _sentinel,
+    List<CustomFieldFilter>? customFieldFilters,
     String? ordering,
   }) =>
       FilterState(
@@ -35,12 +84,7 @@ class FilterState {
         documentTypeId: documentTypeId == _sentinel
             ? this.documentTypeId
             : documentTypeId as int?,
-        customFieldId: customFieldId == _sentinel
-            ? this.customFieldId
-            : customFieldId as String?,
-        customFieldValue: customFieldValue == _sentinel
-            ? this.customFieldValue
-            : customFieldValue as String?,
+        customFieldFilters: customFieldFilters ?? this.customFieldFilters,
         ordering: ordering ?? this.ordering,
       );
 
@@ -49,20 +93,59 @@ class FilterState {
       tagIds.isNotEmpty ||
       correspondentId != null ||
       documentTypeId != null ||
-      (customFieldId != null && customFieldValue != null);
+      customFieldFilters.any((f) => f.isComplete);
+
+  Map<String, dynamic> customFieldQueryParams() {
+    final params = <String, dynamic>{};
+    final conditions = <dynamic>[];
+
+    for (final f in customFieldFilters.where((f) => f.isComplete)) {
+      switch (f.condition) {
+        case CustomFieldCondition.present:
+          conditions.add([f.fieldName, 'exists', true]);
+        case CustomFieldCondition.isNull:
+          conditions.add([
+            'OR',
+            [
+              [f.fieldName, 'isnull', true],
+              [f.fieldName, 'exact', ''],
+            ]
+          ]);
+        case CustomFieldCondition.equals:
+          conditions.add([f.fieldName, 'exact', _parseValue(f.fieldDataType, f.value!)]);
+      }
+    }
+
+    if (conditions.length == 1) {
+      params['custom_field_query'] = jsonEncode(conditions.first);
+    } else if (conditions.length > 1) {
+      params['custom_field_query'] = jsonEncode(['AND', conditions]);
+    }
+
+    return params;
+  }
+
+  static dynamic _parseValue(String dataType, String value) {
+    switch (dataType) {
+      case 'integer':
+        return int.tryParse(value) ?? value;
+      case 'float':
+      case 'monetary':
+        return double.tryParse(value) ?? value;
+      case 'boolean':
+        return value == 'true';
+      default:
+        return value;
+    }
+  }
 
   Map<String, dynamic> toQueryParams() {
     final params = <String, dynamic>{};
     if (query.isNotEmpty) params['query'] = query;
-    if (tagIds.isNotEmpty) {
-      params['tags__id__all'] = tagIds.join(',');
-    }
+    if (tagIds.isNotEmpty) params['tags__id__all'] = tagIds.join(',');
     if (correspondentId != null) params['correspondent__id'] = correspondentId;
     if (documentTypeId != null) params['document_type__id'] = documentTypeId;
-    if (customFieldId != null && customFieldValue != null) {
-      params['custom_fields__field__id'] = customFieldId;
-      params['custom_fields__value__icontains'] = customFieldValue;
-    }
+    params.addAll(customFieldQueryParams());
     params['ordering'] = ordering;
     return params;
   }

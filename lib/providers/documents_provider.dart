@@ -59,7 +59,10 @@ class DocumentsProvider extends ChangeNotifier {
     final id = await StorageService().getDefaultViewId();
     if (id != null) {
       final view = _savedViews.where((v) => v.id == id).firstOrNull;
-      if (view != null) _selectedView = view;
+      if (view != null) {
+        _selectedView = view;
+        _filter = _filterFromView(view);
+      }
     }
   }
 
@@ -134,8 +137,42 @@ class DocumentsProvider extends ChangeNotifier {
 
   void selectView(SavedView? view) {
     _selectedView = view;
-    _filter = const FilterState();
+    _filter = view != null ? _filterFromView(view) : const FilterState();
     loadDocuments();
+  }
+
+  FilterState _filterFromView(SavedView view) {
+    String query = '';
+    final tagIds = <int>[];
+    int? correspondentId;
+    int? documentTypeId;
+
+    for (final rule in view.filterRules) {
+      final ruleType = rule['rule_type'] as int? ?? -1;
+      final value = rule['value']?.toString();
+      if (value == null) continue;
+      switch (ruleType) {
+        case 3:
+          correspondentId = int.tryParse(value);
+        case 4:
+          documentTypeId = int.tryParse(value);
+        case 6:
+        case 7:
+        case 22:
+          final id = int.tryParse(value);
+          if (id != null && !tagIds.contains(id)) tagIds.add(id);
+        case 20:
+          query = value;
+      }
+    }
+
+    return FilterState(
+      query: query,
+      tagIds: tagIds,
+      correspondentId: correspondentId,
+      documentTypeId: documentTypeId,
+      ordering: view.ordering,
+    );
   }
 
   void updateFilter(FilterState newFilter) {
@@ -179,6 +216,14 @@ class DocumentsProvider extends ChangeNotifier {
   StoragePath? storagePathById(int id) {
     try {
       return _storagePaths.firstWhere((s) => s.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  CustomField? customFieldById(int id) {
+    try {
+      return _customFields.firstWhere((f) => f.id == id);
     } catch (_) {
       return null;
     }

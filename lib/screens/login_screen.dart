@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.description_outlined, size: 72, color: theme.colorScheme.primary),
+                Image.asset('assets/icon/app_icon.png', width: 182, height: 128),
                 const SizedBox(height: 12),
                 Text(
                   'YAPA',

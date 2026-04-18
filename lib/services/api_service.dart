@@ -109,10 +109,7 @@ class ApiService {
                 'correspondent__id': filter.correspondentId,
               if (filter.documentTypeId != null)
                 'document_type__id': filter.documentTypeId,
-              if (filter.customFieldId != null && filter.customFieldValue != null) ...{
-                'custom_fields__field__id': filter.customFieldId,
-                'custom_fields__value__icontains': filter.customFieldValue,
-              },
+              ...filter.customFieldQueryParams(),
             }
           : filter.toQueryParams();
       final params = {
@@ -312,6 +309,17 @@ class ApiService {
     }
     if (statusCode == 404) {
       return ApiException(l?.apiErrorNotFound ?? 'Ressource nicht gefunden.', statusCode: statusCode);
+    }
+    if (statusCode == 400) {
+      final body = e.response?.data;
+      final detail = body is Map
+          ? body.entries.map((e) => '${e.key}: ${e.value}').join(' | ')
+          : body?.toString();
+      final suffix = detail != null ? '\n$detail' : '';
+      return ApiException(
+        '${l?.apiErrorServer('400') ?? 'Serverfehler (HTTP 400)'}$suffix',
+        statusCode: 400,
+      );
     }
     return ApiException(
       l?.apiErrorServer('${statusCode ?? 'unbekannt'}') ?? 'Serverfehler (HTTP ${statusCode ?? 'unbekannt'})',

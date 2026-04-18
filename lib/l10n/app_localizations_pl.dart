@@ -275,6 +275,30 @@ class AppLocalizationsPl extends AppLocalizations {
   String get filterValueContains => 'Wartość zawiera';
 
   @override
+  String get filterCondition => 'Warunek';
+
+  @override
+  String get filterConditionPresent => 'Pole obecne';
+
+  @override
+  String get filterConditionIsNull => 'Pole jest puste';
+
+  @override
+  String get filterConditionEquals => 'Wartość jest równa';
+
+  @override
+  String get filterValueEquals => 'Wartość';
+
+  @override
+  String get filterAddCustomField => 'Dodaj kolejne pole';
+
+  @override
+  String get filterBoolYes => 'Tak';
+
+  @override
+  String get filterBoolNo => 'Nie';
+
+  @override
   String get filterSectionTags => 'Tagi';
 
   @override

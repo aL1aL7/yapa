@@ -274,6 +274,30 @@ class AppLocalizationsCs extends AppLocalizations {
   String get filterValueContains => 'Hodnota obsahuje';
 
   @override
+  String get filterCondition => 'Podmínka';
+
+  @override
+  String get filterConditionPresent => 'Pole je přítomno';
+
+  @override
+  String get filterConditionIsNull => 'Pole je prázdné';
+
+  @override
+  String get filterConditionEquals => 'Hodnota se rovná';
+
+  @override
+  String get filterValueEquals => 'Hodnota';
+
+  @override
+  String get filterAddCustomField => 'Přidat další pole';
+
+  @override
+  String get filterBoolYes => 'Ano';
+
+  @override
+  String get filterBoolNo => 'Ne';
+
+  @override
   String get filterSectionTags => 'Štítky';
 
   @override
