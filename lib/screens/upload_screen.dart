@@ -4,9 +4,11 @@ import '../l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
+import '../providers/app_settings_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
 import '../services/api_service.dart';
+import '../widgets/tag_multiselect_field.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -251,27 +253,40 @@ class _UploadScreenState extends State<UploadScreen> {
             const SizedBox(height: 16),
 
             if (provider.tags.isNotEmpty) ...[
-              Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: provider.tags.map((tag) {
-                  final selected = _selectedTags.contains(tag.id);
-                  return FilterChip(
-                    label: Text(tag.name),
-                    selected: selected,
-                    onSelected: (v) => setState(() {
-                      if (v) {
-                        _selectedTags.add(tag.id);
-                      } else {
-                        _selectedTags.remove(tag.id);
-                      }
-                    }),
-                    visualDensity: VisualDensity.compact,
-                  );
-                }).toList(),
-              ),
+              if (context.watch<AppSettingsProvider>().tagsAsDropdown)
+                TagMultiSelectField(
+                  tags: provider.tags,
+                  selectedIds: _selectedTags,
+                  l10n: l10n,
+                  onChanged: (ids) => setState(() {
+                    _selectedTags
+                      ..clear()
+                      ..addAll(ids);
+                  }),
+                )
+              else ...[
+                Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: provider.tags.map((tag) {
+                    final selected = _selectedTags.contains(tag.id);
+                    return FilterChip(
+                      label: Text(tag.name),
+                      selected: selected,
+                      onSelected: (v) => setState(() {
+                        if (v) {
+                          _selectedTags.add(tag.id);
+                        } else {
+                          _selectedTags.remove(tag.id);
+                        }
+                      }),
+                      visualDensity: VisualDensity.compact,
+                    );
+                  }).toList(),
+                ),
+              ],
             ],
 
             const SizedBox(height: 80),

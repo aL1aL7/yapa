@@ -399,6 +399,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageLabel => 'Language';
 
   @override
+  String get settingsSectionDisplay => 'Display';
+
+  @override
+  String get settingsTagsAsDropdown => 'Tags as Dropdown';
+
+  @override
+  String get settingsTagsAsDropdownDesc =>
+      'Show tags as a multi-select list instead of chips';
+
+  @override
+  String get settingsSavedViewsAsDropdown => 'Views as Dropdown';
+
+  @override
+  String get settingsSavedViewsAsDropdownDesc =>
+      'Show saved views as a dropdown instead of chips';
+
+  @override
+  String get tagPickerTitle => 'Select tags';
+
+  @override
+  String get tagPickerNone => 'No tags selected';
+
+  @override
+  String tagPickerCount(int count) {
+    return '$count tags selected';
+  }
+
+  @override
   String get notificationsTitle => 'Notifications';
 
   @override

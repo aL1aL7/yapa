@@ -402,6 +402,34 @@ class AppLocalizationsCs extends AppLocalizations {
   String get settingsLanguageLabel => 'Jazyk';
 
   @override
+  String get settingsSectionDisplay => 'Zobrazení';
+
+  @override
+  String get settingsTagsAsDropdown => 'Štítky jako rozbalovací seznam';
+
+  @override
+  String get settingsTagsAsDropdownDesc =>
+      'Zobrazit štítky jako seznam s vícenásobným výběrem místo čipů';
+
+  @override
+  String get settingsSavedViewsAsDropdown => 'Pohledy jako rozbalovací seznam';
+
+  @override
+  String get settingsSavedViewsAsDropdownDesc =>
+      'Zobrazit uložené pohledy jako rozbalovací seznam místo čipů';
+
+  @override
+  String get tagPickerTitle => 'Vybrat štítky';
+
+  @override
+  String get tagPickerNone => 'Žádné štítky nevybrány';
+
+  @override
+  String tagPickerCount(int count) {
+    return 'Vybráno $count štítků';
+  }
+
+  @override
   String get notificationsTitle => 'Oznámení';
 
   @override

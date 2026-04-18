@@ -159,6 +159,21 @@
   "settingsLanguageSystem": "Lingua di sistema",
   "settingsLanguageLabel": "Lingua",
 
+  "settingsSectionDisplay": "Visualizzazione",
+  "settingsTagsAsDropdown": "Tag come menu a tendina",
+  "settingsTagsAsDropdownDesc": "Mostra i tag come elenco multi-selezione anziché come chip",
+  "settingsSavedViewsAsDropdown": "Viste come menu a tendina",
+  "settingsSavedViewsAsDropdownDesc": "Mostra le viste salvate come menu a tendina anziché come chip",
+
+  "tagPickerTitle": "Seleziona tag",
+  "tagPickerNone": "Nessun tag selezionato",
+  "tagPickerCount": "{count} tag selezionati",
+  "@tagPickerCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "notificationsTitle": "Notifiche",
   "notificationsConfirmAll": "Conferma tutto",
   "notificationsEmpty": "Nessuna notifica disponibile.",

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'l10n/global_l10n.dart';
 import 'providers/auth_provider.dart';
 import 'providers/documents_provider.dart';
+import 'providers/app_settings_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/notifications_provider.dart';
 import 'screens/login_screen.dart';
@@ -28,6 +29,7 @@ class YapaApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider(storage)..init()),
         ChangeNotifierProvider(create: (_) => LocaleProvider(storage)..init()),
+        ChangeNotifierProvider(create: (_) => AppSettingsProvider(storage)..init()),
       ],
       child: Consumer<LocaleProvider>(
         builder: (context, localeProvider, _) => MaterialApp(

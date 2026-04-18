@@ -402,6 +402,34 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsLanguageLabel => 'Langue';
 
   @override
+  String get settingsSectionDisplay => 'Affichage';
+
+  @override
+  String get settingsTagsAsDropdown => 'Étiquettes en liste déroulante';
+
+  @override
+  String get settingsTagsAsDropdownDesc =>
+      'Afficher les étiquettes sous forme de liste multi-sélection au lieu de puces';
+
+  @override
+  String get settingsSavedViewsAsDropdown => 'Vues en liste déroulante';
+
+  @override
+  String get settingsSavedViewsAsDropdownDesc =>
+      'Afficher les vues enregistrées en liste déroulante au lieu de puces';
+
+  @override
+  String get tagPickerTitle => 'Sélectionner des étiquettes';
+
+  @override
+  String get tagPickerNone => 'Aucune étiquette sélectionnée';
+
+  @override
+  String tagPickerCount(int count) {
+    return '$count étiquettes sélectionnées';
+  }
+
+  @override
   String get notificationsTitle => 'Notifications';
 
   @override

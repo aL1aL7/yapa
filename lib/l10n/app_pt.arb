@@ -159,6 +159,21 @@
   "settingsLanguageSystem": "Idioma do sistema",
   "settingsLanguageLabel": "Idioma",
 
+  "settingsSectionDisplay": "Apresentação",
+  "settingsTagsAsDropdown": "Etiquetas como lista",
+  "settingsTagsAsDropdownDesc": "Mostrar etiquetas como lista de seleção múltipla em vez de chips",
+  "settingsSavedViewsAsDropdown": "Vistas como lista",
+  "settingsSavedViewsAsDropdownDesc": "Mostrar vistas guardadas como lista em vez de chips",
+
+  "tagPickerTitle": "Selecionar etiquetas",
+  "tagPickerNone": "Nenhuma etiqueta selecionada",
+  "tagPickerCount": "{count} etiquetas selecionadas",
+  "@tagPickerCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "notificationsTitle": "Notificações",
   "notificationsConfirmAll": "Confirmar tudo",
   "notificationsEmpty": "Nenhuma notificação disponível.",

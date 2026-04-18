@@ -159,6 +159,21 @@
   "settingsLanguageSystem": "Jazyk systému",
   "settingsLanguageLabel": "Jazyk",
 
+  "settingsSectionDisplay": "Zobrazení",
+  "settingsTagsAsDropdown": "Štítky jako rozbalovací seznam",
+  "settingsTagsAsDropdownDesc": "Zobrazit štítky jako seznam s vícenásobným výběrem místo čipů",
+  "settingsSavedViewsAsDropdown": "Pohledy jako rozbalovací seznam",
+  "settingsSavedViewsAsDropdownDesc": "Zobrazit uložené pohledy jako rozbalovací seznam místo čipů",
+
+  "tagPickerTitle": "Vybrat štítky",
+  "tagPickerNone": "Žádné štítky nevybrány",
+  "tagPickerCount": "Vybráno {count} štítků",
+  "@tagPickerCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "notificationsTitle": "Oznámení",
   "notificationsConfirmAll": "Potvrdit vše",
   "notificationsEmpty": "Žádná oznámení k dispozici.",

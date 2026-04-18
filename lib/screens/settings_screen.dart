@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import '../providers/app_settings_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
 import '../providers/locale_provider.dart';
@@ -52,6 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final auth = context.watch<AuthProvider>();
     final provider = context.watch<DocumentsProvider>();
     final localeProvider = context.watch<LocaleProvider>();
+    final appSettings = context.watch<AppSettingsProvider>();
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -143,6 +145,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 );
               },
             ),
+          ),
+          const SizedBox(height: 8),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(l10n?.settingsSectionDisplay ?? 'Darstellung', style: theme.textTheme.labelLarge),
+          ),
+          SwitchListTile(
+            secondary: const Icon(Icons.label_outline),
+            title: Text(l10n?.settingsTagsAsDropdown ?? 'Tags als Dropdown'),
+            subtitle: Text(l10n?.settingsTagsAsDropdownDesc ?? 'Tags als Multi-Select-Liste anstelle von Chips anzeigen'),
+            value: appSettings.tagsAsDropdown,
+            onChanged: appSettings.setTagsAsDropdown,
+          ),
+          SwitchListTile(
+            secondary: const Icon(Icons.bookmark_outline),
+            title: Text(l10n?.settingsSavedViewsAsDropdown ?? 'Ansichten als Dropdown'),
+            subtitle: Text(l10n?.settingsSavedViewsAsDropdownDesc ?? 'Gespeicherte Ansichten als Dropdown statt Chips anzeigen'),
+            value: appSettings.savedViewsAsDropdown,
+            onChanged: appSettings.setSavedViewsAsDropdown,
           ),
           const SizedBox(height: 8),
           const Divider(),

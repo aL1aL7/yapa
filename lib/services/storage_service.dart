@@ -11,6 +11,8 @@ class StorageService {
   static const _keyAllowSelfSigned = 'allow_self_signed';
   static const _keyDefaultViewId = 'default_view_id';
   static const _keyLocale = 'locale';
+  static const _keyTagsAsDropdown = 'tags_as_dropdown';
+  static const _keySavedViewsAsDropdown = 'saved_views_as_dropdown';
 
   Future<void> saveToken(String token) =>
       _storage.write(key: _keyToken, value: token);
@@ -57,6 +59,18 @@ class StorageService {
       await _storage.write(key: _keyDefaultViewId, value: id.toString());
     }
   }
+
+  Future<bool> getTagsAsDropdown() async =>
+      (await _storage.read(key: _keyTagsAsDropdown)) == 'true';
+
+  Future<void> setTagsAsDropdown(bool value) =>
+      _storage.write(key: _keyTagsAsDropdown, value: value.toString());
+
+  Future<bool> getSavedViewsAsDropdown() async =>
+      (await _storage.read(key: _keySavedViewsAsDropdown)) == 'true';
+
+  Future<void> setSavedViewsAsDropdown(bool value) =>
+      _storage.write(key: _keySavedViewsAsDropdown, value: value.toString());
 
   Future<String?> getLocale() => _storage.read(key: _keyLocale);
 

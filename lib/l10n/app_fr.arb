@@ -159,6 +159,21 @@
   "settingsLanguageSystem": "Langue du système",
   "settingsLanguageLabel": "Langue",
 
+  "settingsSectionDisplay": "Affichage",
+  "settingsTagsAsDropdown": "Étiquettes en liste déroulante",
+  "settingsTagsAsDropdownDesc": "Afficher les étiquettes sous forme de liste multi-sélection au lieu de puces",
+  "settingsSavedViewsAsDropdown": "Vues en liste déroulante",
+  "settingsSavedViewsAsDropdownDesc": "Afficher les vues enregistrées en liste déroulante au lieu de puces",
+
+  "tagPickerTitle": "Sélectionner des étiquettes",
+  "tagPickerNone": "Aucune étiquette sélectionnée",
+  "tagPickerCount": "{count} étiquettes sélectionnées",
+  "@tagPickerCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "notificationsTitle": "Notifications",
   "notificationsConfirmAll": "Tout confirmer",
   "notificationsEmpty": "Aucune notification disponible.",

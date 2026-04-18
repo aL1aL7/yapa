@@ -4,8 +4,10 @@ import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/custom_field.dart';
 import '../models/filter_state.dart';
+import '../providers/app_settings_provider.dart';
 import '../providers/documents_provider.dart';
 import '../widgets/tag_chip.dart';
+import '../widgets/tag_multiselect_field.dart';
 
 class FilterSheet extends StatefulWidget {
   const FilterSheet({super.key});
@@ -65,26 +67,35 @@ class _FilterSheetState extends State<FilterSheet> {
                 if (provider.tags.isNotEmpty) ...[
                   _SectionTitle(l10n?.filterSectionTags ?? 'Tags'),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: provider.tags.map((tag) {
-                      final selected = _filter.tagIds.contains(tag.id);
-                      return TagChip(
-                        tag: tag,
-                        selected: selected,
-                        onTap: () => setState(() {
-                          final ids = List<int>.from(_filter.tagIds);
-                          if (selected) {
-                            ids.remove(tag.id);
-                          } else {
-                            ids.add(tag.id);
-                          }
-                          _filter = _filter.copyWith(tagIds: ids);
-                        }),
-                      );
-                    }).toList(),
-                  ),
+                  if (context.watch<AppSettingsProvider>().tagsAsDropdown)
+                    TagMultiSelectField(
+                      tags: provider.tags,
+                      selectedIds: Set<int>.from(_filter.tagIds),
+                      l10n: l10n,
+                      onChanged: (ids) =>
+                          setState(() => _filter = _filter.copyWith(tagIds: ids.toList())),
+                    )
+                  else
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: provider.tags.map((tag) {
+                        final selected = _filter.tagIds.contains(tag.id);
+                        return TagChip(
+                          tag: tag,
+                          selected: selected,
+                          onTap: () => setState(() {
+                            final ids = List<int>.from(_filter.tagIds);
+                            if (selected) {
+                              ids.remove(tag.id);
+                            } else {
+                              ids.add(tag.id);
+                            }
+                            _filter = _filter.copyWith(tagIds: ids);
+                          }),
+                        );
+                      }).toList(),
+                    ),
                   const SizedBox(height: 20),
                 ],
                 if (provider.correspondents.isNotEmpty) ...[

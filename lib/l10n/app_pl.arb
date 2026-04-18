@@ -159,6 +159,21 @@
   "settingsLanguageSystem": "Język systemu",
   "settingsLanguageLabel": "Język",
 
+  "settingsSectionDisplay": "Wygląd",
+  "settingsTagsAsDropdown": "Tagi jako lista rozwijana",
+  "settingsTagsAsDropdownDesc": "Wyświetlaj tagi jako listę wielokrotnego wyboru zamiast chipów",
+  "settingsSavedViewsAsDropdown": "Widoki jako lista rozwijana",
+  "settingsSavedViewsAsDropdownDesc": "Wyświetlaj zapisane widoki jako listę rozwijaną zamiast chipów",
+
+  "tagPickerTitle": "Wybierz tagi",
+  "tagPickerNone": "Nie wybrano tagów",
+  "tagPickerCount": "Wybrano {count} tagów",
+  "@tagPickerCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "notificationsTitle": "Powiadomienia",
   "notificationsConfirmAll": "Potwierdź wszystkie",
   "notificationsEmpty": "Brak dostępnych powiadomień.",

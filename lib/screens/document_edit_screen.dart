@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/document.dart';
 import '../models/custom_field.dart';
+import '../providers/app_settings_provider.dart';
 import '../providers/documents_provider.dart';
 import '../services/api_service.dart';
+import '../widgets/tag_multiselect_field.dart';
 
 class DocumentEditScreen extends StatefulWidget {
   final Document document;
@@ -218,27 +221,40 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
             const SizedBox(height: 16),
 
             if (provider.tags.isNotEmpty) ...[
-              Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: provider.tags.map((tag) {
-                  final selected = _tags.contains(tag.id);
-                  return FilterChip(
-                    label: Text(tag.name),
-                    selected: selected,
-                    onSelected: (v) => setState(() {
-                      if (v) {
-                        _tags.add(tag.id);
-                      } else {
-                        _tags.remove(tag.id);
-                      }
-                    }),
-                    visualDensity: VisualDensity.compact,
-                  );
-                }).toList(),
-              ),
+              if (context.watch<AppSettingsProvider>().tagsAsDropdown)
+                TagMultiSelectField(
+                  tags: provider.tags,
+                  selectedIds: _tags,
+                  l10n: l10n,
+                  onChanged: (ids) => setState(() {
+                    _tags
+                      ..clear()
+                      ..addAll(ids);
+                  }),
+                )
+              else ...[
+                Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: provider.tags.map((tag) {
+                    final selected = _tags.contains(tag.id);
+                    return FilterChip(
+                      label: Text(tag.name),
+                      selected: selected,
+                      onSelected: (v) => setState(() {
+                        if (v) {
+                          _tags.add(tag.id);
+                        } else {
+                          _tags.remove(tag.id);
+                        }
+                      }),
+                      visualDensity: VisualDensity.compact,
+                    );
+                  }).toList(),
+                ),
+              ],
               const SizedBox(height: 16),
             ],
 

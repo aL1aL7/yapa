@@ -402,6 +402,34 @@ class AppLocalizationsPl extends AppLocalizations {
   String get settingsLanguageLabel => 'Język';
 
   @override
+  String get settingsSectionDisplay => 'Wygląd';
+
+  @override
+  String get settingsTagsAsDropdown => 'Tagi jako lista rozwijana';
+
+  @override
+  String get settingsTagsAsDropdownDesc =>
+      'Wyświetlaj tagi jako listę wielokrotnego wyboru zamiast chipów';
+
+  @override
+  String get settingsSavedViewsAsDropdown => 'Widoki jako lista rozwijana';
+
+  @override
+  String get settingsSavedViewsAsDropdownDesc =>
+      'Wyświetlaj zapisane widoki jako listę rozwijaną zamiast chipów';
+
+  @override
+  String get tagPickerTitle => 'Wybierz tagi';
+
+  @override
+  String get tagPickerNone => 'Nie wybrano tagów';
+
+  @override
+  String tagPickerCount(int count) {
+    return 'Wybrano $count tagów';
+  }
+
+  @override
   String get notificationsTitle => 'Powiadomienia';
 
   @override

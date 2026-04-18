@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/filter_state.dart';
+import '../providers/app_settings_provider.dart';
 import '../providers/documents_provider.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/document_card.dart';
@@ -170,7 +171,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           return Column(
             children: [
               if (provider.savedViews.isNotEmpty)
-                _ViewSelectorBar(provider: provider),
+                Consumer<AppSettingsProvider>(
+                  builder: (_, settings, __) => settings.savedViewsAsDropdown
+                      ? _ViewSelectorDropdown(provider: provider)
+                      : _ViewSelectorBar(provider: provider),
+                ),
 
               if (provider.isLoading)
                 const Expanded(child: Center(child: CircularProgressIndicator()))
@@ -307,6 +312,58 @@ class _ViewSelectorBar extends StatelessWidget {
                     selected: selected?.id == view.id,
                     onTap: () => provider.selectView(view),
                   ),
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ViewSelectorDropdown extends StatelessWidget {
+  final DocumentsProvider provider;
+
+  const _ViewSelectorDropdown({required this.provider});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final views = provider.savedViews;
+    final selected = provider.selectedView;
+
+    return Container(
+      color: theme.colorScheme.surfaceContainerLow,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<int?>(
+          value: selected?.id,
+          isExpanded: true,
+          icon: const Icon(Icons.arrow_drop_down),
+          onChanged: (id) {
+            if (id == null) {
+              provider.selectView(null);
+            } else {
+              final view = views.firstWhere((v) => v.id == id);
+              provider.selectView(view);
+            }
+          },
+          items: [
+            DropdownMenuItem<int?>(
+              value: null,
+              child: Row(children: [
+                const Icon(Icons.folder_outlined, size: 18),
+                const SizedBox(width: 8),
+                Text(l10n?.documentsAll ?? 'Alle Dokumente'),
+              ]),
+            ),
+            ...views.map((view) => DropdownMenuItem<int?>(
+                  value: view.id,
+                  child: Row(children: [
+                    const Icon(Icons.bookmark_outline, size: 18),
+                    const SizedBox(width: 8),
+                    Text(view.name),
+                  ]),
                 )),
           ],
         ),

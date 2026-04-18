@@ -159,6 +159,21 @@
   "settingsLanguageSystem": "System language",
   "settingsLanguageLabel": "Language",
 
+  "settingsSectionDisplay": "Display",
+  "settingsTagsAsDropdown": "Tags as Dropdown",
+  "settingsTagsAsDropdownDesc": "Show tags as a multi-select list instead of chips",
+  "settingsSavedViewsAsDropdown": "Views as Dropdown",
+  "settingsSavedViewsAsDropdownDesc": "Show saved views as a dropdown instead of chips",
+
+  "tagPickerTitle": "Select tags",
+  "tagPickerNone": "No tags selected",
+  "tagPickerCount": "{count} tags selected",
+  "@tagPickerCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "notificationsTitle": "Notifications",
   "notificationsConfirmAll": "Confirm all",
   "notificationsEmpty": "No notifications available.",

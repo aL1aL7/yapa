@@ -9,7 +9,7 @@ YAPA lets you browse, search, filter, upload, and edit your documents directly f
 
 ### Login & Security
 - Connects to any self-hosted Paperless-ngx instance via HTTPS (HTTP is rejected)
-- Token-based authentication (username + password → API token)
+- Two login modes: **username + password** (fetches an API token automatically) or **direct API token** entry
 - All credentials are stored securely using the Android Keystore (`flutter_secure_storage`)
 - Optional support for self-signed TLS certificates (scoped to the configured hostname)
 
@@ -17,12 +17,12 @@ YAPA lets you browse, search, filter, upload, and edit your documents directly f
 - Paginated document list with infinite scroll
 - Full-text search across all documents
 - Active filter chips show the current filter state at a glance and can be removed individually
-- SavedViews selector bar for quick access to server-side saved views
+- SavedViews selector for quick access to server-side saved views (chips bar or dropdown — configurable)
 - Additional filters can be applied on top of a selected SavedView
 
 ### Filter & Sorting
 The filter sheet allows combining multiple criteria:
-- **Tags** — select one or more tags (must all be present)
+- **Tags** — select one or more tags (chips or multi-select dropdown — configurable)
 - **Correspondent** — filter by a single correspondent
 - **Document type** — filter by document type
 - **Custom fields** — add one or more custom field conditions per filter:
@@ -40,14 +40,14 @@ The filter sheet allows combining multiple criteria:
 
 ### Document Editing
 - Edit title, created date, correspondent, document type, storage path
-- Add or remove tags via filter chips
+- Add or remove tags via filter chips or multi-select dropdown (configurable)
 - Edit existing custom field values; remove individual fields from the document
 - Supported custom field types: text, integer, decimal (float/monetary), boolean (switch), date (date picker), select (dropdown), URL
 
 ### Document Upload
 - Pick a file from device storage (PDF, PNG, JPG, JPEG, TIFF, GIF, WEBP)
 - Take a photo directly with the camera
-- Set title, correspondent, document type, storage path, and tags before uploading
+- Set title, correspondent, document type, storage path, and tags before uploading (tags as chips or multi-select dropdown — configurable)
 - File name is pre-filled as the document title
 
 ### Notifications
@@ -59,6 +59,9 @@ The filter sheet allows combining multiple criteria:
 - Displays server URL and logged-in username
 - Set a default SavedView that is automatically applied on startup
 - Language selector (overrides system language)
+- **Display options:**
+  - Tags as multi-select dropdown instead of chips (applies to filter, edit, and upload)
+  - SavedViews as dropdown instead of chip bar
 - App version display
 - Logout
 

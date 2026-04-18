@@ -848,6 +848,54 @@ abstract class AppLocalizations {
   /// **'Sprache'**
   String get settingsLanguageLabel;
 
+  /// No description provided for @settingsSectionDisplay.
+  ///
+  /// In de, this message translates to:
+  /// **'Darstellung'**
+  String get settingsSectionDisplay;
+
+  /// No description provided for @settingsTagsAsDropdown.
+  ///
+  /// In de, this message translates to:
+  /// **'Tags als Dropdown'**
+  String get settingsTagsAsDropdown;
+
+  /// No description provided for @settingsTagsAsDropdownDesc.
+  ///
+  /// In de, this message translates to:
+  /// **'Tags als Multi-Select-Liste anstelle von Chips anzeigen'**
+  String get settingsTagsAsDropdownDesc;
+
+  /// No description provided for @settingsSavedViewsAsDropdown.
+  ///
+  /// In de, this message translates to:
+  /// **'Ansichten als Dropdown'**
+  String get settingsSavedViewsAsDropdown;
+
+  /// No description provided for @settingsSavedViewsAsDropdownDesc.
+  ///
+  /// In de, this message translates to:
+  /// **'Gespeicherte Ansichten als Dropdown statt Chips anzeigen'**
+  String get settingsSavedViewsAsDropdownDesc;
+
+  /// No description provided for @tagPickerTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Tags auswählen'**
+  String get tagPickerTitle;
+
+  /// No description provided for @tagPickerNone.
+  ///
+  /// In de, this message translates to:
+  /// **'Keine Tags ausgewählt'**
+  String get tagPickerNone;
+
+  /// No description provided for @tagPickerCount.
+  ///
+  /// In de, this message translates to:
+  /// **'{count} Tags ausgewählt'**
+  String tagPickerCount(int count);
+
   /// No description provided for @notificationsTitle.
   ///
   /// In de, this message translates to:

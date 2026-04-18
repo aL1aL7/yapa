@@ -401,6 +401,34 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsLanguageLabel => 'Idioma';
 
   @override
+  String get settingsSectionDisplay => 'Visualización';
+
+  @override
+  String get settingsTagsAsDropdown => 'Etiquetas como desplegable';
+
+  @override
+  String get settingsTagsAsDropdownDesc =>
+      'Mostrar etiquetas como lista multi-selección en lugar de chips';
+
+  @override
+  String get settingsSavedViewsAsDropdown => 'Vistas como desplegable';
+
+  @override
+  String get settingsSavedViewsAsDropdownDesc =>
+      'Mostrar vistas guardadas como desplegable en lugar de chips';
+
+  @override
+  String get tagPickerTitle => 'Seleccionar etiquetas';
+
+  @override
+  String get tagPickerNone => 'Ninguna etiqueta seleccionada';
+
+  @override
+  String tagPickerCount(int count) {
+    return '$count etiquetas seleccionadas';
+  }
+
+  @override
   String get notificationsTitle => 'Notificaciones';
 
   @override
