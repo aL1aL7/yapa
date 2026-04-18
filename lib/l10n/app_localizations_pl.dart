@@ -323,6 +323,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get filterSectionDocumentType => 'Typ dokumentu';
 
   @override
+  String get filterSectionStoragePath => 'Ścieżka przechowywania';
+
+  @override
   String get filterSectionCustomField => 'Pole niestandardowe';
 
   @override

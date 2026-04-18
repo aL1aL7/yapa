@@ -462,6 +462,18 @@ class _ActiveFilterBar extends StatelessWidget {
       }
     }
 
+    if (filter.storagePathId != null) {
+      final s = provider.storagePathById(filter.storagePathId!);
+      if (s != null) {
+        chips.add(_FilterChip(
+          label: s.name,
+          icon: Icons.folder_outlined,
+          onRemove: () =>
+              provider.updateFilter(filter.copyWith(storagePathId: null)),
+        ));
+      }
+    }
+
     for (final cf in filter.customFieldFilters.where((f) => f.isComplete)) {
       final fieldName =
           provider.customFieldById(cf.fieldId)?.name ?? 'Feld ${cf.fieldId}';

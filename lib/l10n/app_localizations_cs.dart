@@ -322,6 +322,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get filterSectionDocumentType => 'Typ dokumentu';
 
   @override
+  String get filterSectionStoragePath => 'Cesta úložiště';
+
+  @override
   String get filterSectionCustomField => 'Vlastní pole';
 
   @override

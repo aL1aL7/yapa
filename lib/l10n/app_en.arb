@@ -131,6 +131,7 @@
   "filterSectionTags": "Tags",
   "filterSectionCorrespondent": "Correspondent",
   "filterSectionDocumentType": "Document type",
+  "filterSectionStoragePath": "Storage path",
   "filterSectionCustomField": "Custom field",
   "filterSectionSorting": "Sorting",
   "filterSortCreatedNewest": "Created (newest first)",

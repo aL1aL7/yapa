@@ -131,6 +131,7 @@
   "filterSectionTags": "Štítky",
   "filterSectionCorrespondent": "Korespondent",
   "filterSectionDocumentType": "Typ dokumentu",
+  "filterSectionStoragePath": "Cesta úložiště",
   "filterSectionCustomField": "Vlastní pole",
   "filterSectionSorting": "Řazení",
   "filterSortCreatedNewest": "Vytvořeno (nejnovější nejdříve)",

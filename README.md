@@ -30,6 +30,7 @@ The filter sheet allows combining multiple criteria:
 - **Tags** — select one or more tags (chips or multi-select dropdown — configurable); tag chips are coloured to match the colours configured in Paperless-ngx, with a stronger fill to indicate selection
 - **Correspondent** — filter by a single correspondent
 - **Document type** — filter by document type
+- **Storage path** — filter by a single storage path
 - **Custom fields** — add one or more custom field conditions per filter:
   - *Field is present* — document has a value for this field
   - *Field is empty* — document has no value for this field

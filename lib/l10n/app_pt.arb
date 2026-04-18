@@ -131,6 +131,7 @@
   "filterSectionTags": "Etiquetas",
   "filterSectionCorrespondent": "Correspondente",
   "filterSectionDocumentType": "Tipo de documento",
+  "filterSectionStoragePath": "Caminho de armazenamento",
   "filterSectionCustomField": "Campo personalizado",
   "filterSectionSorting": "Ordenação",
   "filterSortCreatedNewest": "Criado (mais recente primeiro)",

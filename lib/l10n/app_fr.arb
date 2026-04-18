@@ -131,6 +131,7 @@
   "filterSectionTags": "Étiquettes",
   "filterSectionCorrespondent": "Correspondant",
   "filterSectionDocumentType": "Type de document",
+  "filterSectionStoragePath": "Chemin de stockage",
   "filterSectionCustomField": "Champ personnalisé",
   "filterSectionSorting": "Tri",
   "filterSortCreatedNewest": "Créé (plus récent en premier)",

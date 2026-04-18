@@ -131,6 +131,7 @@
   "filterSectionTags": "Tagi",
   "filterSectionCorrespondent": "Korespondent",
   "filterSectionDocumentType": "Typ dokumentu",
+  "filterSectionStoragePath": "Ścieżka przechowywania",
   "filterSectionCustomField": "Pole niestandardowe",
   "filterSectionSorting": "Sortowanie",
   "filterSortCreatedNewest": "Utworzono (najnowsze pierwsze)",

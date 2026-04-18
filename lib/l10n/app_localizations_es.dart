@@ -321,6 +321,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get filterSectionDocumentType => 'Tipo de documento';
 
   @override
+  String get filterSectionStoragePath => 'Ruta de almacenamiento';
+
+  @override
   String get filterSectionCustomField => 'Campo personalizado';
 
   @override

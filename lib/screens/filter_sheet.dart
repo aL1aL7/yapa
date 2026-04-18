@@ -136,6 +136,25 @@ class _FilterSheetState extends State<FilterSheet> {
                   ),
                   const SizedBox(height: 20),
                 ],
+                if (provider.storagePaths.isNotEmpty) ...[
+                  _SectionTitle(l10n?.filterSectionStoragePath ?? 'Speicherpfad'),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<int?>(
+                    initialValue: _filter.storagePathId,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
+                    items: [
+                      DropdownMenuItem(value: null, child: Text(l10n?.filterAll ?? 'Alle')),
+                      ...provider.storagePaths.map((s) =>
+                          DropdownMenuItem(value: s.id, child: Text(s.name))),
+                    ],
+                    onChanged: (v) => setState(() =>
+                        _filter = _filter.copyWith(storagePathId: v)),
+                  ),
+                  const SizedBox(height: 20),
+                ],
                 if (provider.customFields.isNotEmpty) ...[
                   _SectionTitle(l10n?.filterSectionCustomField ?? 'Benutzerdefiniertes Feld'),
                   const SizedBox(height: 8),

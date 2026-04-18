@@ -692,6 +692,12 @@ abstract class AppLocalizations {
   /// **'Dokumenttyp'**
   String get filterSectionDocumentType;
 
+  /// No description provided for @filterSectionStoragePath.
+  ///
+  /// In de, this message translates to:
+  /// **'Speicherpfad'**
+  String get filterSectionStoragePath;
+
   /// No description provided for @filterSectionCustomField.
   ///
   /// In de, this message translates to:

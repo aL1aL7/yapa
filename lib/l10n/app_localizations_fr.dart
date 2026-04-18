@@ -321,6 +321,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get filterSectionDocumentType => 'Type de document';
 
   @override
+  String get filterSectionStoragePath => 'Chemin de stockage';
+
+  @override
   String get filterSectionCustomField => 'Champ personnalisé';
 
   @override

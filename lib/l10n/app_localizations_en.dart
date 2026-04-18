@@ -319,6 +319,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterSectionDocumentType => 'Document type';
 
   @override
+  String get filterSectionStoragePath => 'Storage path';
+
+  @override
   String get filterSectionCustomField => 'Custom field';
 
   @override

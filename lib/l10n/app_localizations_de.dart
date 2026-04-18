@@ -320,6 +320,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filterSectionDocumentType => 'Dokumenttyp';
 
   @override
+  String get filterSectionStoragePath => 'Speicherpfad';
+
+  @override
   String get filterSectionCustomField => 'Benutzerdefiniertes Feld';
 
   @override

@@ -55,6 +55,7 @@ class FilterState {
   final List<int> tagIds;
   final int? correspondentId;
   final int? documentTypeId;
+  final int? storagePathId;
   final List<CustomFieldFilter> customFieldFilters;
   final String ordering;
 
@@ -63,6 +64,7 @@ class FilterState {
     this.tagIds = const [],
     this.correspondentId,
     this.documentTypeId,
+    this.storagePathId,
     this.customFieldFilters = const [],
     this.ordering = '-created',
   });
@@ -72,6 +74,7 @@ class FilterState {
     List<int>? tagIds,
     Object? correspondentId = _sentinel,
     Object? documentTypeId = _sentinel,
+    Object? storagePathId = _sentinel,
     List<CustomFieldFilter>? customFieldFilters,
     String? ordering,
   }) =>
@@ -84,6 +87,9 @@ class FilterState {
         documentTypeId: documentTypeId == _sentinel
             ? this.documentTypeId
             : documentTypeId as int?,
+        storagePathId: storagePathId == _sentinel
+            ? this.storagePathId
+            : storagePathId as int?,
         customFieldFilters: customFieldFilters ?? this.customFieldFilters,
         ordering: ordering ?? this.ordering,
       );
@@ -93,6 +99,7 @@ class FilterState {
       tagIds.isNotEmpty ||
       correspondentId != null ||
       documentTypeId != null ||
+      storagePathId != null ||
       customFieldFilters.any((f) => f.isComplete);
 
   Map<String, dynamic> customFieldQueryParams() {
@@ -145,6 +152,7 @@ class FilterState {
     if (tagIds.isNotEmpty) params['tags__id__all'] = tagIds.join(',');
     if (correspondentId != null) params['correspondent__id'] = correspondentId;
     if (documentTypeId != null) params['document_type__id'] = documentTypeId;
+    if (storagePathId != null) params['storage_path__id'] = storagePathId;
     params.addAll(customFieldQueryParams());
     params['ordering'] = ordering;
     return params;
