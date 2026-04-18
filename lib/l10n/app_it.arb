@@ -1,0 +1,174 @@
+{
+  "@@locale": "it",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Documenti",
+  "navNotifications": "Attività file",
+  "navSettings": "Impostazioni",
+
+  "actionCancel": "Annulla",
+  "actionConfirm": "Capito",
+  "actionRetry": "Riprova",
+  "actionRefresh": "Aggiorna",
+  "actionLogout": "Disconnetti",
+  "actionClearAll": "Cancella tutto",
+  "actionDelete": "Elimina",
+  "actionSave": "Salva",
+
+  "loginServerUrl": "URL server",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Nome utente",
+  "loginPassword": "Password",
+  "loginButton": "Accedi",
+  "loginAllowSelfSigned": "Consenti certificati autofirmati",
+  "loginSecurityWarningTitle": "Avviso di sicurezza",
+  "loginSecurityWarningText": "Consentire certificati autofirmati riduce la sicurezza. Abilitare solo se sai cosa stai facendo e ti fidi del server.",
+  "loginValidateServerUrl": "Inserisci l'URL del server",
+  "loginValidateHttps": "Sono consentite solo connessioni HTTPS (https://...)",
+  "loginValidateUsername": "Inserisci il nome utente",
+  "loginValidatePassword": "Inserisci la password",
+
+  "documentsSearch": "Cerca documenti...",
+  "documentsCount": "{count, plural, =1{1 documento} other{{count} documenti}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Tutti i documenti",
+  "documentsEmpty": "Nessun documento disponibile.",
+  "documentsEmptyWithFilter": "Nessun documento trovato.\nRegolare i filtri?",
+  "documentsResetFilter": "Reimposta filtri",
+
+  "detailMenuDetails": "Dettagli",
+  "detailMenuDownload": "Scarica",
+  "detailMenuDelete": "Elimina",
+  "detailDownloadSaved": "Salvato: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Download non riuscito.",
+  "detailDeleteTitle": "Elimina documento",
+  "detailDeleteConfirm": "Il documento verrà eliminato definitivamente. Questa azione non può essere annullata.",
+  "detailDeleteFailed": "Eliminazione non riuscita.",
+  "detailEdit": "Modifica",
+  "detailLoading": "Caricamento documento...",
+  "detailLoadError": "Impossibile caricare il documento.",
+  "detailLoadErrorDetail": "Impossibile caricare il documento:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Salva documento",
+  "detailScreenTitle": "Dettagli",
+  "detailFieldTitle": "Titolo",
+  "detailFieldCreated": "Creato",
+  "detailFieldModified": "Modificato",
+  "detailFieldAdded": "Aggiunto",
+  "detailFieldCorrespondent": "Corrispondente",
+  "detailFieldDocumentType": "Tipo documento",
+  "detailFieldStoragePath": "Percorso di archiviazione",
+  "detailFieldArchiveNumber": "Numero archivio",
+  "detailFieldOriginalFile": "File originale",
+  "detailSectionTags": "Tag",
+  "detailSectionCustomFields": "Campi personalizzati",
+  "detailSectionContent": "Contenuto (OCR)",
+
+  "editTitle": "Modifica",
+  "editSaveError": "Errore durante il salvataggio.",
+  "editFieldTitle": "Titolo",
+  "editFieldCreatedDate": "Data di creazione",
+  "editFieldCorrespondent": "Corrispondente",
+  "editFieldDocumentType": "Tipo documento",
+  "editFieldStoragePath": "Percorso di archiviazione",
+  "editDropdownNone": "— Nessun {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Carica documento",
+  "uploadButton": "Carica",
+  "uploadFailed": "Caricamento non riuscito.",
+  "uploadProcessing": "Il documento è in elaborazione...",
+  "uploadSectionFile": "File",
+  "uploadPickFile": "Scegli file",
+  "uploadTakePhoto": "Scatta foto",
+  "uploadSectionMetadata": "Metadati",
+  "uploadPhotoTitle": "Foto {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filtro",
+  "filterReset": "Reimposta",
+  "filterApply": "Applica filtro",
+  "filterAll": "Tutti",
+  "filterNone": "Nessuno",
+  "filterFieldLabel": "Campo",
+  "filterValueContains": "Il valore contiene",
+  "filterSectionTags": "Tag",
+  "filterSectionCorrespondent": "Corrispondente",
+  "filterSectionDocumentType": "Tipo documento",
+  "filterSectionCustomField": "Campo personalizzato",
+  "filterSectionSorting": "Ordinamento",
+  "filterSortCreatedNewest": "Creato (più recente prima)",
+  "filterSortCreatedOldest": "Creato (più vecchio prima)",
+  "filterSortModifiedNewest": "Modificato (più recente prima)",
+  "filterSortTitleAZ": "Titolo (A-Z)",
+  "filterSortTitleZA": "Titolo (Z-A)",
+  "filterSortAddedNewest": "Aggiunto (più recente prima)",
+
+  "settingsTitle": "Impostazioni",
+  "settingsSectionConnection": "Connessione",
+  "settingsServer": "Server",
+  "settingsUser": "Utente",
+  "settingsSectionView": "Vista",
+  "settingsDefaultView": "Vista predefinita all'avvio",
+  "settingsNoSavedViews": "Nessuna vista salvata disponibile.",
+  "settingsSectionSecurity": "Sicurezza",
+  "settingsHttpsOnly": "Solo connessioni HTTPS",
+  "settingsHttpsOnlyDesc": "Attivo per impostazione predefinita e non disattivabile",
+  "settingsSectionAccount": "Account",
+  "settingsLogout": "Disconnetti",
+  "settingsLogoutDesc": "Elimina token e dati salvati",
+  "settingsLogoutDialogTitle": "Disconnetti",
+  "settingsLogoutDialogContent": "Il token salvato e i dati di connessione verranno eliminati. Continuare?",
+  "settingsSectionLanguage": "Lingua",
+  "settingsLanguageSystem": "Lingua di sistema",
+  "settingsLanguageLabel": "Lingua",
+
+  "notificationsTitle": "Notifiche",
+  "notificationsConfirmAll": "Conferma tutto",
+  "notificationsEmpty": "Nessuna notifica disponibile.",
+  "notificationsUnknownFile": "File sconosciuto",
+  "notificationsDismiss": "Ignora",
+  "statusSuccess": "Completato",
+  "statusFailure": "Errore",
+  "statusRunning": "In esecuzione",
+  "statusPending": "In attesa",
+  "statusRevoked": "Annullato",
+
+  "apiErrorHttpsOnly": "Sono consentite solo connessioni HTTPS.",
+  "apiErrorNoToken": "Nessun token nella risposta del server",
+  "apiErrorTimeout": "Timeout di connessione. Controlla l'URL del server.",
+  "apiErrorSsl": "Errore certificato SSL. Consenti certificati autofirmati nelle impostazioni.",
+  "apiErrorConnection": "Errore di connessione. Controlla l'URL del server e la rete.",
+  "apiErrorUnauthorized": "Credenziali non valide.",
+  "apiErrorForbidden": "Accesso negato.",
+  "apiErrorNotFound": "Risorsa non trovata.",
+  "apiErrorServer": "Errore server (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

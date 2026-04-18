@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'l10n/global_l10n.dart';
 import 'providers/auth_provider.dart';
 import 'providers/documents_provider.dart';
+import 'providers/locale_provider.dart';
 import 'providers/notifications_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/documents_screen.dart';
@@ -19,26 +23,54 @@ class YapaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthProvider(StorageService())..init(),
-      child: MaterialApp(
-        title: 'YAPA',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF1565C0),
-            brightness: Brightness.light,
+    final storage = StorageService();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider(storage)..init()),
+        ChangeNotifierProvider(create: (_) => LocaleProvider(storage)..init()),
+      ],
+      child: Consumer<LocaleProvider>(
+        builder: (context, localeProvider, _) => MaterialApp(
+          title: 'YAPA',
+          debugShowCheckedModeBanner: false,
+          locale: localeProvider.locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('de'),
+            Locale('en'),
+            Locale('es'),
+            Locale('fr'),
+            Locale('it'),
+            Locale('pl'),
+            Locale('pt'),
+            Locale('cs'),
+          ],
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF1565C0),
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
           ),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF1565C0),
-            brightness: Brightness.dark,
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF1565C0),
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
           ),
-          useMaterial3: true,
+          builder: (context, child) {
+            final l10n = AppLocalizations.of(context);
+            if (l10n != null) setCurrentL10n(l10n);
+            return child!;
+          },
+          home: const _AppRoot(),
         ),
-        home: const _AppRoot(),
       ),
     );
   }
@@ -84,6 +116,7 @@ class _MainShellState extends State<_MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final unread = context.watch<NotificationsProvider>().unacknowledgedCount;
 
     return Scaffold(
@@ -99,10 +132,10 @@ class _MainShellState extends State<_MainShell> {
         selectedIndex: _selectedIndex,
         onDestinationSelected: (i) => setState(() => _selectedIndex = i),
         destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.folder_outlined),
-            selectedIcon: Icon(Icons.folder),
-            label: 'Dokumente',
+          NavigationDestination(
+            icon: const Icon(Icons.folder_outlined),
+            selectedIcon: const Icon(Icons.folder),
+            label: l10n?.navDocuments ?? 'Dokumente',
           ),
           NavigationDestination(
             icon: Badge(
@@ -115,12 +148,12 @@ class _MainShellState extends State<_MainShell> {
               label: Text(unread > 9 ? '9+' : '$unread'),
               child: const Icon(Icons.notifications),
             ),
-            label: 'Dateiaufgaben',
+            label: l10n?.navNotifications ?? 'Dateiaufgaben',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Einstellungen',
+          NavigationDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: l10n?.navSettings ?? 'Einstellungen',
           ),
         ],
       ),

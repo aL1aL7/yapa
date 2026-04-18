@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import '../l10n/global_l10n.dart';
 import '../models/document.dart';
 import '../models/tag.dart';
 import '../models/custom_field.dart';
@@ -28,7 +29,7 @@ class ApiService {
 
   ApiService({required this.baseUrl, required String token, this.allowSelfSigned = false}) {
     if (!baseUrl.startsWith('https://')) {
-      throw const ApiException('Nur HTTPS-Verbindungen erlaubt.');
+      throw ApiException(currentL10n?.apiErrorHttpsOnly ?? 'Nur HTTPS-Verbindungen erlaubt.');
     }
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl.endsWith('/') ? baseUrl : '$baseUrl/',
@@ -58,7 +59,7 @@ class ApiService {
     bool allowSelfSigned = false,
   }) async {
     if (!baseUrl.startsWith('https://')) {
-      throw const ApiException('Nur HTTPS-Verbindungen erlaubt.');
+      throw ApiException(currentL10n?.apiErrorHttpsOnly ?? 'Nur HTTPS-Verbindungen erlaubt.');
     }
     final url = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
     final dio = Dio(BaseOptions(
@@ -83,7 +84,7 @@ class ApiService {
         data: {'username': username, 'password': password},
       );
       final token = response.data['token'] as String?;
-      if (token == null) throw const ApiException('Kein Token in Serverantwort');
+      if (token == null) throw ApiException(currentL10n?.apiErrorNoToken ?? 'Kein Token in Serverantwort');
       return token;
     } on DioException catch (e) {
       throw _mapDioError(e);
@@ -288,29 +289,32 @@ class ApiService {
   }
 
   static ApiException _mapDioError(DioException e) {
+    final l = currentL10n;
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
-      return const ApiException('Verbindungs-Timeout. Bitte Server-URL prüfen.');
+      return ApiException(l?.apiErrorTimeout ?? 'Verbindungs-Timeout. Bitte Server-URL prüfen.');
     }
     if (e.type == DioExceptionType.connectionError) {
+      final isSSL = e.error.toString().contains('HandshakeException') ||
+          e.error.toString().contains('certificate');
       return ApiException(
-        e.error.toString().contains('HandshakeException') || e.error.toString().contains('certificate')
-            ? 'SSL-Zertifikatsfehler. Selbst-signierte Zertifikate in den Einstellungen erlauben.'
-            : 'Verbindungsfehler. Bitte Server-URL und Netzwerk prüfen.',
+        isSSL
+            ? (l?.apiErrorSsl ?? 'SSL-Zertifikatsfehler. Selbst-signierte Zertifikate in den Einstellungen erlauben.')
+            : (l?.apiErrorConnection ?? 'Verbindungsfehler. Bitte Server-URL und Netzwerk prüfen.'),
       );
     }
     final statusCode = e.response?.statusCode;
     if (statusCode == 401) {
-      return ApiException('Ungültige Anmeldedaten.', statusCode: statusCode);
+      return ApiException(l?.apiErrorUnauthorized ?? 'Ungültige Anmeldedaten.', statusCode: statusCode);
     }
     if (statusCode == 403) {
-      return ApiException('Zugriff verweigert.', statusCode: statusCode);
+      return ApiException(l?.apiErrorForbidden ?? 'Zugriff verweigert.', statusCode: statusCode);
     }
     if (statusCode == 404) {
-      return ApiException('Ressource nicht gefunden.', statusCode: statusCode);
+      return ApiException(l?.apiErrorNotFound ?? 'Ressource nicht gefunden.', statusCode: statusCode);
     }
     return ApiException(
-      'Serverfehler (HTTP ${statusCode ?? 'unbekannt'})',
+      l?.apiErrorServer('${statusCode ?? 'unbekannt'}') ?? 'Serverfehler (HTTP ${statusCode ?? 'unbekannt'})',
       statusCode: statusCode,
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,7 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   Future<void> _takePhoto() async {
+    final l10n = AppLocalizations.of(context);
     final picker = ImagePicker();
     final image = await picker.pickImage(
       source: ImageSource.camera,
@@ -59,12 +61,16 @@ class _UploadScreenState extends State<UploadScreen> {
     );
     if (image == null) return;
     final bytes = await image.readAsBytes();
-    final name = image.name.isNotEmpty ? image.name : 'foto_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final name = image.name.isNotEmpty
+        ? image.name
+        : 'foto_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final now = DateTime.now();
     setState(() {
       _fileBytes = bytes;
       _fileName = name;
       if (_titleController.text.isEmpty) {
-        _titleController.text = 'Foto ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}';
+        _titleController.text = l10n?.uploadPhotoTitle('${now.day}.${now.month}.${now.year}')
+            ?? 'Foto ${now.day}.${now.month}.${now.year}';
       }
     });
   }
@@ -85,18 +91,22 @@ class _UploadScreenState extends State<UploadScreen> {
         tagIds: _selectedTags.toList(),
       );
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Dokument wird verarbeitet...'),
+        SnackBar(
+          content: Text(l10n?.uploadProcessing ?? 'Dokument wird verarbeitet...'),
           behavior: SnackBarBehavior.floating,
         ),
       );
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
+      final msg = e is ApiException
+          ? e.message
+          : (AppLocalizations.of(context)?.uploadFailed ?? 'Upload fehlgeschlagen.');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e is ApiException ? e.message : 'Upload fehlgeschlagen.'),
+          content: Text(msg),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
@@ -108,13 +118,14 @@ class _UploadScreenState extends State<UploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final provider = context.watch<DocumentsProvider>();
     final theme = Theme.of(context);
     final hasFile = _fileBytes != null;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dokument hochladen'),
+        title: Text(l10n?.uploadTitle ?? 'Dokument hochladen'),
         actions: [
           if (_uploading)
             const Padding(
@@ -124,7 +135,7 @@ class _UploadScreenState extends State<UploadScreen> {
           else
             TextButton(
               onPressed: hasFile ? _upload : null,
-              child: const Text('Hochladen'),
+              child: Text(l10n?.uploadButton ?? 'Hochladen'),
             ),
         ],
       ),
@@ -133,14 +144,13 @@ class _UploadScreenState extends State<UploadScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // File selection
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Datei', style: theme.textTheme.labelLarge),
+                    Text(l10n?.uploadSectionFile ?? 'Datei', style: theme.textTheme.labelLarge),
                     const SizedBox(height: 12),
                     if (hasFile) ...[
                       Row(
@@ -171,7 +181,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         Expanded(
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.folder_open),
-                            label: const Text('Datei wählen'),
+                            label: Text(l10n?.uploadPickFile ?? 'Datei wählen'),
                             onPressed: _pickFile,
                           ),
                         ),
@@ -179,7 +189,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         Expanded(
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.camera_alt),
-                            label: const Text('Foto aufnehmen'),
+                            label: Text(l10n?.uploadTakePhoto ?? 'Foto aufnehmen'),
                             onPressed: _takePhoto,
                           ),
                         ),
@@ -191,55 +201,57 @@ class _UploadScreenState extends State<UploadScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Metadata
-            Text('Metadaten', style: theme.textTheme.labelLarge),
+            Text(l10n?.uploadSectionMetadata ?? 'Metadaten', style: theme.textTheme.labelLarge),
             const SizedBox(height: 8),
 
             TextFormField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Titel',
-                prefixIcon: Icon(Icons.title),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n?.editFieldTitle ?? 'Titel',
+                prefixIcon: const Icon(Icons.title),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
 
             _DropdownField<int>(
-              label: 'Korrespondent',
+              label: l10n?.editFieldCorrespondent ?? 'Korrespondent',
               icon: Icons.person_outline,
               value: _selectedCorrespondent,
               items: provider.correspondents
                   .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
                   .toList(),
               onChanged: (v) => setState(() => _selectedCorrespondent = v),
+              l10n: l10n,
             ),
             const SizedBox(height: 12),
 
             _DropdownField<int>(
-              label: 'Dokumenttyp',
+              label: l10n?.editFieldDocumentType ?? 'Dokumenttyp',
               icon: Icons.description_outlined,
               value: _selectedDocumentType,
               items: provider.documentTypes
                   .map((d) => DropdownMenuItem(value: d.id, child: Text(d.name)))
                   .toList(),
               onChanged: (v) => setState(() => _selectedDocumentType = v),
+              l10n: l10n,
             ),
             const SizedBox(height: 12),
 
             _DropdownField<int>(
-              label: 'Speicherpfad',
+              label: l10n?.editFieldStoragePath ?? 'Speicherpfad',
               icon: Icons.folder_outlined,
               value: _selectedStoragePath,
               items: provider.storagePaths
                   .map((s) => DropdownMenuItem(value: s.id, child: Text(s.name)))
                   .toList(),
               onChanged: (v) => setState(() => _selectedStoragePath = v),
+              l10n: l10n,
             ),
             const SizedBox(height: 16),
 
             if (provider.tags.isNotEmpty) ...[
-              Text('Tags', style: theme.textTheme.labelLarge),
+              Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -276,6 +288,7 @@ class _DropdownField<T> extends StatelessWidget {
   final T? value;
   final List<DropdownMenuItem<T>> items;
   final ValueChanged<T?> onChanged;
+  final AppLocalizations? l10n;
 
   const _DropdownField({
     required this.label,
@@ -283,6 +296,7 @@ class _DropdownField<T> extends StatelessWidget {
     required this.value,
     required this.items,
     required this.onChanged,
+    this.l10n,
   });
 
   @override
@@ -295,7 +309,10 @@ class _DropdownField<T> extends StatelessWidget {
         border: const OutlineInputBorder(),
       ),
       items: [
-        DropdownMenuItem<T>(value: null, child: Text('— Kein $label —')),
+        DropdownMenuItem<T>(
+          value: null,
+          child: Text(l10n?.editDropdownNone(label) ?? '— Kein $label —'),
+        ),
         ...items,
       ],
       onChanged: onChanged,

@@ -10,6 +10,7 @@ class StorageService {
   static const _keyUsername = 'username';
   static const _keyAllowSelfSigned = 'allow_self_signed';
   static const _keyDefaultViewId = 'default_view_id';
+  static const _keyLocale = 'locale';
 
   Future<void> saveToken(String token) =>
       _storage.write(key: _keyToken, value: token);
@@ -50,6 +51,16 @@ class StorageService {
       await _storage.delete(key: _keyDefaultViewId);
     } else {
       await _storage.write(key: _keyDefaultViewId, value: id.toString());
+    }
+  }
+
+  Future<String?> getLocale() => _storage.read(key: _keyLocale);
+
+  Future<void> setLocale(String? languageCode) async {
+    if (languageCode == null) {
+      await _storage.delete(key: _keyLocale);
+    } else {
+      await _storage.write(key: _keyLocale, value: languageCode);
     }
   }
 }

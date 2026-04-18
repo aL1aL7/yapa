@@ -1,13 +1,15 @@
 name: yapa
 description: "Yet Another Paperless-ngx App - Mobile client for paperless-ngx"
 publish_to: 'none'
-version: 1.2.1+19
+version: 1.2.1+20
 
 environment:
   sdk: ^3.11.4
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
@@ -38,5 +40,6 @@ flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/icon/app_icon.png

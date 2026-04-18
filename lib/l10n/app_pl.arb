@@ -1,0 +1,174 @@
+{
+  "@@locale": "pl",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Dokumenty",
+  "navNotifications": "Zadania plików",
+  "navSettings": "Ustawienia",
+
+  "actionCancel": "Anuluj",
+  "actionConfirm": "Rozumiem",
+  "actionRetry": "Spróbuj ponownie",
+  "actionRefresh": "Odśwież",
+  "actionLogout": "Wyloguj",
+  "actionClearAll": "Wyczyść wszystko",
+  "actionDelete": "Usuń",
+  "actionSave": "Zapisz",
+
+  "loginServerUrl": "URL serwera",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Nazwa użytkownika",
+  "loginPassword": "Hasło",
+  "loginButton": "Zaloguj się",
+  "loginAllowSelfSigned": "Zezwalaj na certyfikaty z podpisem własnym",
+  "loginSecurityWarningTitle": "Ostrzeżenie bezpieczeństwa",
+  "loginSecurityWarningText": "Zezwolenie na certyfikaty z podpisem własnym obniża bezpieczeństwo. Włącz tylko jeśli wiesz co robisz i ufasz serwerowi.",
+  "loginValidateServerUrl": "Proszę podać URL serwera",
+  "loginValidateHttps": "Dozwolone są tylko połączenia HTTPS (https://...)",
+  "loginValidateUsername": "Proszę podać nazwę użytkownika",
+  "loginValidatePassword": "Proszę podać hasło",
+
+  "documentsSearch": "Szukaj dokumentów...",
+  "documentsCount": "{count, plural, =1{1 dokument} few{{count} dokumenty} many{{count} dokumentów} other{{count} dokumentu}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Wszystkie dokumenty",
+  "documentsEmpty": "Brak dostępnych dokumentów.",
+  "documentsEmptyWithFilter": "Nie znaleziono dokumentów.\nDostosować filtry?",
+  "documentsResetFilter": "Resetuj filtry",
+
+  "detailMenuDetails": "Szczegóły",
+  "detailMenuDownload": "Pobierz",
+  "detailMenuDelete": "Usuń",
+  "detailDownloadSaved": "Zapisano: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Pobieranie nie powiodło się.",
+  "detailDeleteTitle": "Usuń dokument",
+  "detailDeleteConfirm": "Dokument zostanie trwale usunięty. Tej operacji nie można cofnąć.",
+  "detailDeleteFailed": "Usuwanie nie powiodło się.",
+  "detailEdit": "Edytuj",
+  "detailLoading": "Ładowanie dokumentu...",
+  "detailLoadError": "Nie można załadować dokumentu.",
+  "detailLoadErrorDetail": "Nie można załadować dokumentu:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Zapisz dokument",
+  "detailScreenTitle": "Szczegóły",
+  "detailFieldTitle": "Tytuł",
+  "detailFieldCreated": "Utworzono",
+  "detailFieldModified": "Zmodyfikowano",
+  "detailFieldAdded": "Dodano",
+  "detailFieldCorrespondent": "Korespondent",
+  "detailFieldDocumentType": "Typ dokumentu",
+  "detailFieldStoragePath": "Ścieżka przechowywania",
+  "detailFieldArchiveNumber": "Numer archiwum",
+  "detailFieldOriginalFile": "Oryginalny plik",
+  "detailSectionTags": "Tagi",
+  "detailSectionCustomFields": "Pola niestandardowe",
+  "detailSectionContent": "Zawartość (OCR)",
+
+  "editTitle": "Edytuj",
+  "editSaveError": "Błąd podczas zapisywania.",
+  "editFieldTitle": "Tytuł",
+  "editFieldCreatedDate": "Data utworzenia",
+  "editFieldCorrespondent": "Korespondent",
+  "editFieldDocumentType": "Typ dokumentu",
+  "editFieldStoragePath": "Ścieżka przechowywania",
+  "editDropdownNone": "— Brak: {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Prześlij dokument",
+  "uploadButton": "Prześlij",
+  "uploadFailed": "Przesyłanie nie powiodło się.",
+  "uploadProcessing": "Dokument jest przetwarzany...",
+  "uploadSectionFile": "Plik",
+  "uploadPickFile": "Wybierz plik",
+  "uploadTakePhoto": "Zrób zdjęcie",
+  "uploadSectionMetadata": "Metadane",
+  "uploadPhotoTitle": "Zdjęcie {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filtr",
+  "filterReset": "Resetuj",
+  "filterApply": "Zastosuj filtr",
+  "filterAll": "Wszystkie",
+  "filterNone": "Żaden",
+  "filterFieldLabel": "Pole",
+  "filterValueContains": "Wartość zawiera",
+  "filterSectionTags": "Tagi",
+  "filterSectionCorrespondent": "Korespondent",
+  "filterSectionDocumentType": "Typ dokumentu",
+  "filterSectionCustomField": "Pole niestandardowe",
+  "filterSectionSorting": "Sortowanie",
+  "filterSortCreatedNewest": "Utworzono (najnowsze pierwsze)",
+  "filterSortCreatedOldest": "Utworzono (najstarsze pierwsze)",
+  "filterSortModifiedNewest": "Zmodyfikowano (najnowsze pierwsze)",
+  "filterSortTitleAZ": "Tytuł (A-Z)",
+  "filterSortTitleZA": "Tytuł (Z-A)",
+  "filterSortAddedNewest": "Dodano (najnowsze pierwsze)",
+
+  "settingsTitle": "Ustawienia",
+  "settingsSectionConnection": "Połączenie",
+  "settingsServer": "Serwer",
+  "settingsUser": "Użytkownik",
+  "settingsSectionView": "Widok",
+  "settingsDefaultView": "Domyślny widok przy uruchomieniu",
+  "settingsNoSavedViews": "Brak zapisanych widoków.",
+  "settingsSectionSecurity": "Bezpieczeństwo",
+  "settingsHttpsOnly": "Tylko połączenia HTTPS",
+  "settingsHttpsOnlyDesc": "Domyślnie aktywne i nie można wyłączyć",
+  "settingsSectionAccount": "Konto",
+  "settingsLogout": "Wyloguj",
+  "settingsLogoutDesc": "Usuń token i zapisane dane",
+  "settingsLogoutDialogTitle": "Wyloguj",
+  "settingsLogoutDialogContent": "Zapisany token i dane połączenia zostaną usunięte. Kontynuować?",
+  "settingsSectionLanguage": "Język",
+  "settingsLanguageSystem": "Język systemu",
+  "settingsLanguageLabel": "Język",
+
+  "notificationsTitle": "Powiadomienia",
+  "notificationsConfirmAll": "Potwierdź wszystkie",
+  "notificationsEmpty": "Brak dostępnych powiadomień.",
+  "notificationsUnknownFile": "Nieznany plik",
+  "notificationsDismiss": "Odrzuć",
+  "statusSuccess": "Sukces",
+  "statusFailure": "Błąd",
+  "statusRunning": "W toku",
+  "statusPending": "Oczekuje",
+  "statusRevoked": "Anulowano",
+
+  "apiErrorHttpsOnly": "Dozwolone są tylko połączenia HTTPS.",
+  "apiErrorNoToken": "Brak tokenu w odpowiedzi serwera",
+  "apiErrorTimeout": "Przekroczono limit czasu połączenia. Sprawdź URL serwera.",
+  "apiErrorSsl": "Błąd certyfikatu SSL. Zezwól na certyfikaty z podpisem własnym w ustawieniach.",
+  "apiErrorConnection": "Błąd połączenia. Sprawdź URL serwera i sieć.",
+  "apiErrorUnauthorized": "Nieprawidłowe dane logowania.",
+  "apiErrorForbidden": "Odmowa dostępu.",
+  "apiErrorNotFound": "Zasób nie znaleziony.",
+  "apiErrorServer": "Błąd serwera (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

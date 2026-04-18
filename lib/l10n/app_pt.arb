@@ -1,0 +1,174 @@
+{
+  "@@locale": "pt",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Documentos",
+  "navNotifications": "Tarefas de ficheiros",
+  "navSettings": "Definições",
+
+  "actionCancel": "Cancelar",
+  "actionConfirm": "Entendido",
+  "actionRetry": "Tentar novamente",
+  "actionRefresh": "Atualizar",
+  "actionLogout": "Terminar sessão",
+  "actionClearAll": "Limpar tudo",
+  "actionDelete": "Eliminar",
+  "actionSave": "Guardar",
+
+  "loginServerUrl": "URL do servidor",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Nome de utilizador",
+  "loginPassword": "Palavra-passe",
+  "loginButton": "Entrar",
+  "loginAllowSelfSigned": "Permitir certificados autoassinados",
+  "loginSecurityWarningTitle": "Aviso de segurança",
+  "loginSecurityWarningText": "Permitir certificados autoassinados reduz a segurança. Ative apenas se souber o que está a fazer e confiar no servidor.",
+  "loginValidateServerUrl": "Por favor, introduza o URL do servidor",
+  "loginValidateHttps": "Apenas são permitidas ligações HTTPS (https://...)",
+  "loginValidateUsername": "Por favor, introduza o nome de utilizador",
+  "loginValidatePassword": "Por favor, introduza a palavra-passe",
+
+  "documentsSearch": "Pesquisar documentos...",
+  "documentsCount": "{count, plural, =1{1 documento} other{{count} documentos}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Todos os documentos",
+  "documentsEmpty": "Nenhum documento disponível.",
+  "documentsEmptyWithFilter": "Nenhum documento encontrado.\nAjustar filtros?",
+  "documentsResetFilter": "Repor filtros",
+
+  "detailMenuDetails": "Detalhes",
+  "detailMenuDownload": "Transferir",
+  "detailMenuDelete": "Eliminar",
+  "detailDownloadSaved": "Guardado: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Falha na transferência.",
+  "detailDeleteTitle": "Eliminar documento",
+  "detailDeleteConfirm": "O documento será eliminado permanentemente. Esta ação não pode ser desfeita.",
+  "detailDeleteFailed": "Falha ao eliminar.",
+  "detailEdit": "Editar",
+  "detailLoading": "A carregar documento...",
+  "detailLoadError": "Não foi possível carregar o documento.",
+  "detailLoadErrorDetail": "Não foi possível carregar o documento:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Guardar documento",
+  "detailScreenTitle": "Detalhes",
+  "detailFieldTitle": "Título",
+  "detailFieldCreated": "Criado",
+  "detailFieldModified": "Modificado",
+  "detailFieldAdded": "Adicionado",
+  "detailFieldCorrespondent": "Correspondente",
+  "detailFieldDocumentType": "Tipo de documento",
+  "detailFieldStoragePath": "Caminho de armazenamento",
+  "detailFieldArchiveNumber": "Número de arquivo",
+  "detailFieldOriginalFile": "Ficheiro original",
+  "detailSectionTags": "Etiquetas",
+  "detailSectionCustomFields": "Campos personalizados",
+  "detailSectionContent": "Conteúdo (OCR)",
+
+  "editTitle": "Editar",
+  "editSaveError": "Erro ao guardar.",
+  "editFieldTitle": "Título",
+  "editFieldCreatedDate": "Data de criação",
+  "editFieldCorrespondent": "Correspondente",
+  "editFieldDocumentType": "Tipo de documento",
+  "editFieldStoragePath": "Caminho de armazenamento",
+  "editDropdownNone": "— Sem {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Carregar documento",
+  "uploadButton": "Carregar",
+  "uploadFailed": "Falha no carregamento.",
+  "uploadProcessing": "O documento está a ser processado...",
+  "uploadSectionFile": "Ficheiro",
+  "uploadPickFile": "Escolher ficheiro",
+  "uploadTakePhoto": "Tirar foto",
+  "uploadSectionMetadata": "Metadados",
+  "uploadPhotoTitle": "Foto {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filtro",
+  "filterReset": "Repor",
+  "filterApply": "Aplicar filtro",
+  "filterAll": "Todos",
+  "filterNone": "Nenhum",
+  "filterFieldLabel": "Campo",
+  "filterValueContains": "Valor contém",
+  "filterSectionTags": "Etiquetas",
+  "filterSectionCorrespondent": "Correspondente",
+  "filterSectionDocumentType": "Tipo de documento",
+  "filterSectionCustomField": "Campo personalizado",
+  "filterSectionSorting": "Ordenação",
+  "filterSortCreatedNewest": "Criado (mais recente primeiro)",
+  "filterSortCreatedOldest": "Criado (mais antigo primeiro)",
+  "filterSortModifiedNewest": "Modificado (mais recente primeiro)",
+  "filterSortTitleAZ": "Título (A-Z)",
+  "filterSortTitleZA": "Título (Z-A)",
+  "filterSortAddedNewest": "Adicionado (mais recente primeiro)",
+
+  "settingsTitle": "Definições",
+  "settingsSectionConnection": "Ligação",
+  "settingsServer": "Servidor",
+  "settingsUser": "Utilizador",
+  "settingsSectionView": "Vista",
+  "settingsDefaultView": "Vista predefinida no arranque",
+  "settingsNoSavedViews": "Nenhuma vista guardada disponível.",
+  "settingsSectionSecurity": "Segurança",
+  "settingsHttpsOnly": "Apenas ligações HTTPS",
+  "settingsHttpsOnlyDesc": "Ativo por predefinição e não pode ser desativado",
+  "settingsSectionAccount": "Conta",
+  "settingsLogout": "Terminar sessão",
+  "settingsLogoutDesc": "Eliminar token e dados guardados",
+  "settingsLogoutDialogTitle": "Terminar sessão",
+  "settingsLogoutDialogContent": "O token guardado e os dados de ligação serão eliminados. Continuar?",
+  "settingsSectionLanguage": "Idioma",
+  "settingsLanguageSystem": "Idioma do sistema",
+  "settingsLanguageLabel": "Idioma",
+
+  "notificationsTitle": "Notificações",
+  "notificationsConfirmAll": "Confirmar tudo",
+  "notificationsEmpty": "Nenhuma notificação disponível.",
+  "notificationsUnknownFile": "Ficheiro desconhecido",
+  "notificationsDismiss": "Ignorar",
+  "statusSuccess": "Sucesso",
+  "statusFailure": "Erro",
+  "statusRunning": "Em execução",
+  "statusPending": "Pendente",
+  "statusRevoked": "Cancelado",
+
+  "apiErrorHttpsOnly": "Apenas são permitidas ligações HTTPS.",
+  "apiErrorNoToken": "Nenhum token na resposta do servidor",
+  "apiErrorTimeout": "Tempo limite de ligação excedido. Verifique o URL do servidor.",
+  "apiErrorSsl": "Erro de certificado SSL. Permita certificados autoassinados nas definições.",
+  "apiErrorConnection": "Erro de ligação. Verifique o URL do servidor e a rede.",
+  "apiErrorUnauthorized": "Credenciais inválidas.",
+  "apiErrorForbidden": "Acesso negado.",
+  "apiErrorNotFound": "Recurso não encontrado.",
+  "apiErrorServer": "Erro do servidor (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

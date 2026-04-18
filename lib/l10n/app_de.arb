@@ -1,0 +1,174 @@
+{
+  "@@locale": "de",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Dokumente",
+  "navNotifications": "Dateiaufgaben",
+  "navSettings": "Einstellungen",
+
+  "actionCancel": "Abbrechen",
+  "actionConfirm": "Verstanden",
+  "actionRetry": "Erneut versuchen",
+  "actionRefresh": "Aktualisieren",
+  "actionLogout": "Abmelden",
+  "actionClearAll": "Alle löschen",
+  "actionDelete": "Löschen",
+  "actionSave": "Speichern",
+
+  "loginServerUrl": "Server-URL",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Benutzername",
+  "loginPassword": "Passwort",
+  "loginButton": "Anmelden",
+  "loginAllowSelfSigned": "Selbst-signierte Zertifikate erlauben",
+  "loginSecurityWarningTitle": "Sicherheitswarnung",
+  "loginSecurityWarningText": "Das Erlauben selbst-signierter Zertifikate verringert die Sicherheit. Nur aktivieren, wenn du weißt, was du tust und dem Server vertraust.",
+  "loginValidateServerUrl": "Bitte Server-URL eingeben",
+  "loginValidateHttps": "Nur HTTPS-Verbindungen erlaubt (https://...)",
+  "loginValidateUsername": "Bitte Benutzername eingeben",
+  "loginValidatePassword": "Bitte Passwort eingeben",
+
+  "documentsSearch": "Dokumente suchen...",
+  "documentsCount": "{count, plural, =1{1 Dokument} other{{count} Dokumente}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Alle Dokumente",
+  "documentsEmpty": "Keine Dokumente vorhanden.",
+  "documentsEmptyWithFilter": "Keine Dokumente gefunden.\nFilter anpassen?",
+  "documentsResetFilter": "Filter zurücksetzen",
+
+  "detailMenuDetails": "Details",
+  "detailMenuDownload": "Herunterladen",
+  "detailMenuDelete": "Löschen",
+  "detailDownloadSaved": "Gespeichert: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Download fehlgeschlagen.",
+  "detailDeleteTitle": "Dokument löschen",
+  "detailDeleteConfirm": "Das Dokument wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+  "detailDeleteFailed": "Löschen fehlgeschlagen.",
+  "detailEdit": "Bearbeiten",
+  "detailLoading": "Dokument wird geladen...",
+  "detailLoadError": "Dokument konnte nicht geladen werden.",
+  "detailLoadErrorDetail": "Dokument konnte nicht geladen werden:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Dokument speichern",
+  "detailScreenTitle": "Details",
+  "detailFieldTitle": "Titel",
+  "detailFieldCreated": "Erstellt",
+  "detailFieldModified": "Geändert",
+  "detailFieldAdded": "Hinzugefügt",
+  "detailFieldCorrespondent": "Korrespondent",
+  "detailFieldDocumentType": "Dokumenttyp",
+  "detailFieldStoragePath": "Speicherpfad",
+  "detailFieldArchiveNumber": "Archivnummer",
+  "detailFieldOriginalFile": "Originaldatei",
+  "detailSectionTags": "Tags",
+  "detailSectionCustomFields": "Benutzerdefinierte Felder",
+  "detailSectionContent": "Inhalt (OCR)",
+
+  "editTitle": "Bearbeiten",
+  "editSaveError": "Fehler beim Speichern.",
+  "editFieldTitle": "Titel",
+  "editFieldCreatedDate": "Erstelldatum",
+  "editFieldCorrespondent": "Korrespondent",
+  "editFieldDocumentType": "Dokumenttyp",
+  "editFieldStoragePath": "Speicherpfad",
+  "editDropdownNone": "— Kein {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Dokument hochladen",
+  "uploadButton": "Hochladen",
+  "uploadFailed": "Upload fehlgeschlagen.",
+  "uploadProcessing": "Dokument wird verarbeitet...",
+  "uploadSectionFile": "Datei",
+  "uploadPickFile": "Datei wählen",
+  "uploadTakePhoto": "Foto aufnehmen",
+  "uploadSectionMetadata": "Metadaten",
+  "uploadPhotoTitle": "Foto {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filter",
+  "filterReset": "Zurücksetzen",
+  "filterApply": "Filter anwenden",
+  "filterAll": "Alle",
+  "filterNone": "Keines",
+  "filterFieldLabel": "Feld",
+  "filterValueContains": "Wert enthält",
+  "filterSectionTags": "Tags",
+  "filterSectionCorrespondent": "Korrespondent",
+  "filterSectionDocumentType": "Dokumenttyp",
+  "filterSectionCustomField": "Benutzerdefiniertes Feld",
+  "filterSectionSorting": "Sortierung",
+  "filterSortCreatedNewest": "Erstellt (neueste zuerst)",
+  "filterSortCreatedOldest": "Erstellt (älteste zuerst)",
+  "filterSortModifiedNewest": "Geändert (neueste zuerst)",
+  "filterSortTitleAZ": "Titel (A-Z)",
+  "filterSortTitleZA": "Titel (Z-A)",
+  "filterSortAddedNewest": "Hinzugefügt (neueste zuerst)",
+
+  "settingsTitle": "Einstellungen",
+  "settingsSectionConnection": "Verbindung",
+  "settingsServer": "Server",
+  "settingsUser": "Benutzer",
+  "settingsSectionView": "Ansicht",
+  "settingsDefaultView": "Standard-Ansicht beim Start",
+  "settingsNoSavedViews": "Keine gespeicherten Ansichten vorhanden.",
+  "settingsSectionSecurity": "Sicherheit",
+  "settingsHttpsOnly": "Nur HTTPS-Verbindungen",
+  "settingsHttpsOnlyDesc": "Standardmäßig aktiv und nicht deaktivierbar",
+  "settingsSectionAccount": "Konto",
+  "settingsLogout": "Abmelden",
+  "settingsLogoutDesc": "Token und gespeicherte Daten löschen",
+  "settingsLogoutDialogTitle": "Abmelden",
+  "settingsLogoutDialogContent": "Gespeicherter Token und Verbindungsdaten werden gelöscht. Fortfahren?",
+  "settingsSectionLanguage": "Sprache",
+  "settingsLanguageSystem": "Systemsprache",
+  "settingsLanguageLabel": "Sprache",
+
+  "notificationsTitle": "Benachrichtigungen",
+  "notificationsConfirmAll": "Alle bestätigen",
+  "notificationsEmpty": "Keine Benachrichtigungen vorhanden.",
+  "notificationsUnknownFile": "Unbekannte Datei",
+  "notificationsDismiss": "Verwerfen",
+  "statusSuccess": "Erfolgreich",
+  "statusFailure": "Fehler",
+  "statusRunning": "Läuft",
+  "statusPending": "Wartend",
+  "statusRevoked": "Abgebrochen",
+
+  "apiErrorHttpsOnly": "Nur HTTPS-Verbindungen erlaubt.",
+  "apiErrorNoToken": "Kein Token in Serverantwort",
+  "apiErrorTimeout": "Verbindungs-Timeout. Bitte Server-URL prüfen.",
+  "apiErrorSsl": "SSL-Zertifikatsfehler. Selbst-signierte Zertifikate in den Einstellungen erlauben.",
+  "apiErrorConnection": "Verbindungsfehler. Bitte Server-URL und Netzwerk prüfen.",
+  "apiErrorUnauthorized": "Ungültige Anmeldedaten.",
+  "apiErrorForbidden": "Zugriff verweigert.",
+  "apiErrorNotFound": "Ressource nicht gefunden.",
+  "apiErrorServer": "Serverfehler (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

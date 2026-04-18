@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../providers/documents_provider.dart';
 import '../providers/auth_provider.dart';
@@ -68,6 +69,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.read<AuthProvider>();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -97,8 +99,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Dokumente suchen...',
+                decoration: InputDecoration(
+                  hintText: l10n?.documentsSearch ?? 'Dokumente suchen...',
                   border: InputBorder.none,
                 ),
                 textInputAction: TextInputAction.search,
@@ -147,7 +149,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 child: Row(children: [
                   const Icon(Icons.refresh),
                   const SizedBox(width: 8),
-                  const Text('Aktualisieren'),
+                  Text(l10n?.actionRefresh ?? 'Aktualisieren'),
                 ]),
               ),
               PopupMenuItem(
@@ -155,7 +157,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 child: Row(children: [
                   const Icon(Icons.logout),
                   const SizedBox(width: 8),
-                  const Text('Abmelden'),
+                  Text(l10n?.actionLogout ?? 'Abmelden'),
                 ]),
               ),
             ],
@@ -166,7 +168,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         builder: (context, provider, _) {
           return Column(
             children: [
-              // Ansichten-Leiste (nur wenn Ansichten vorhanden)
               if (provider.savedViews.isNotEmpty)
                 _ViewSelectorBar(provider: provider),
 
@@ -216,7 +217,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                   child: Row(
                     children: [
                       Text(
-                        '${provider.totalCount} Dokument${provider.totalCount != 1 ? 'e' : ''}',
+                        l10n?.documentsCount(provider.totalCount) ??
+                            '${provider.totalCount} Dokument${provider.totalCount != 1 ? 'e' : ''}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.outline,
                             ),
@@ -277,6 +279,7 @@ class _ViewSelectorBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final views = provider.savedViews;
     final selected = provider.selectedView;
@@ -288,9 +291,8 @@ class _ViewSelectorBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(
           children: [
-            // "Alle Dokumente" Chip
             _ViewChip(
-              label: 'Alle Dokumente',
+              label: l10n?.documentsAll ?? 'Alle Dokumente',
               icon: Icons.folder_outlined,
               selected: selected == null,
               onTap: () => provider.selectView(null),
@@ -351,6 +353,7 @@ class _ActiveFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final filter = provider.filter;
     final chips = <Widget>[];
@@ -420,7 +423,7 @@ class _ActiveFilterBar extends StatelessWidget {
           ),
           TextButton(
             onPressed: provider.resetFilter,
-            child: const Text('Alle löschen'),
+            child: Text(l10n?.actionClearAll ?? 'Alle löschen'),
           ),
         ],
       ),
@@ -456,26 +459,29 @@ class _ErrorView extends StatelessWidget {
   const _ErrorView({required this.error, required this.onRetry});
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.cloud_off,
-                  size: 56, color: Theme.of(context).colorScheme.error),
-              const SizedBox(height: 16),
-              Text(error, textAlign: TextAlign.center),
-              const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Erneut versuchen'),
-              ),
-            ],
-          ),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off,
+                size: 56, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: 16),
+            Text(error, textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n?.actionRetry ?? 'Erneut versuchen'),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
 
 class _EmptyView extends StatelessWidget {
@@ -484,29 +490,32 @@ class _EmptyView extends StatelessWidget {
   const _EmptyView({required this.hasFilters, required this.onReset});
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.inbox_outlined,
-                  size: 56, color: Theme.of(context).colorScheme.outline),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.inbox_outlined,
+                size: 56, color: Theme.of(context).colorScheme.outline),
+            const SizedBox(height: 16),
+            Text(
+              hasFilters
+                  ? (l10n?.documentsEmptyWithFilter ?? 'Keine Dokumente gefunden.\nFilter anpassen?')
+                  : (l10n?.documentsEmpty ?? 'Keine Dokumente vorhanden.'),
+              textAlign: TextAlign.center,
+            ),
+            if (hasFilters) ...[
               const SizedBox(height: 16),
-              Text(
-                hasFilters
-                    ? 'Keine Dokumente gefunden.\nFilter anpassen?'
-                    : 'Keine Dokumente vorhanden.',
-                textAlign: TextAlign.center,
-              ),
-              if (hasFilters) ...[
-                const SizedBox(height: 16),
-                OutlinedButton(
-                    onPressed: onReset,
-                    child: const Text('Filter zurücksetzen')),
-              ],
+              OutlinedButton(
+                  onPressed: onReset,
+                  child: Text(l10n?.documentsResetFilter ?? 'Filter zurücksetzen')),
             ],
-          ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

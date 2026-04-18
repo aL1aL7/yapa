@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/task_notification.dart';
@@ -28,18 +29,19 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final provider = context.watch<NotificationsProvider>();
     final unread = provider.unacknowledgedCount;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Benachrichtigungen'),
+        title: Text(l10n?.notificationsTitle ?? 'Benachrichtigungen'),
         actions: [
           if (unread > 0)
             TextButton.icon(
               onPressed: () => _acknowledgeAll(context, provider),
               icon: const Icon(Icons.done_all),
-              label: const Text('Alle bestätigen'),
+              label: Text(l10n?.notificationsConfirmAll ?? 'Alle bestätigen'),
             ),
         ],
       ),
@@ -48,6 +50,8 @@ class NotificationsScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, NotificationsProvider provider) {
+    final l10n = AppLocalizations.of(context);
+
     if (provider.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -75,7 +79,7 @@ class NotificationsScreen extends StatelessWidget {
                       FilledButton.icon(
                         onPressed: provider.load,
                         icon: const Icon(Icons.refresh),
-                        label: const Text('Erneut versuchen'),
+                        label: Text(l10n?.actionRetry ?? 'Erneut versuchen'),
                       ),
                     ],
                   ),
@@ -104,7 +108,7 @@ class NotificationsScreen extends StatelessWidget {
                         color: Theme.of(context).colorScheme.outline),
                     const SizedBox(height: 16),
                     Text(
-                      'Keine Benachrichtigungen vorhanden.',
+                      l10n?.notificationsEmpty ?? 'Keine Benachrichtigungen vorhanden.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.outline,
                           ),
@@ -159,22 +163,23 @@ class _TaskCardState extends State<_TaskCard> {
     }
   }
 
-  (IconData, Color, String) _statusInfo(String status, ThemeData theme) {
+  (IconData, Color, String) _statusInfo(String status, ThemeData theme, AppLocalizations? l10n) {
     return switch (status) {
-      'SUCCESS' => (Icons.check_circle_outline, Colors.green, 'Erfolgreich'),
-      'FAILURE' => (Icons.error_outline, theme.colorScheme.error, 'Fehler'),
-      'STARTED' => (Icons.pending_outlined, theme.colorScheme.primary, 'Läuft'),
-      'PENDING' => (Icons.schedule_outlined, theme.colorScheme.outline, 'Wartend'),
-      'REVOKED' => (Icons.cancel_outlined, theme.colorScheme.outline, 'Abgebrochen'),
+      'SUCCESS' => (Icons.check_circle_outline, Colors.green, l10n?.statusSuccess ?? 'Erfolgreich'),
+      'FAILURE' => (Icons.error_outline, theme.colorScheme.error, l10n?.statusFailure ?? 'Fehler'),
+      'STARTED' => (Icons.pending_outlined, theme.colorScheme.primary, l10n?.statusRunning ?? 'Läuft'),
+      'PENDING' => (Icons.schedule_outlined, theme.colorScheme.outline, l10n?.statusPending ?? 'Wartend'),
+      'REVOKED' => (Icons.cancel_outlined, theme.colorScheme.outline, l10n?.statusRevoked ?? 'Abgebrochen'),
       _ => (Icons.info_outline, theme.colorScheme.outline, status),
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final task = widget.task;
-    final (icon, color, statusLabel) = _statusInfo(task.status, theme);
+    final (icon, color, statusLabel) = _statusInfo(task.status, theme, l10n);
     final dateFormat = DateFormat('dd.MM.yyyy HH:mm');
     final date = task.dateDone ?? task.dateCreated;
     final isUnread = !task.acknowledged;
@@ -199,12 +204,11 @@ class _TaskCardState extends State<_TaskCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // --- Header row ---
                     Row(
                       children: [
                         Expanded(
                           child: Text(
-                            task.taskFileName ?? 'Unbekannte Datei',
+                            task.taskFileName ?? (l10n?.notificationsUnknownFile ?? 'Unbekannte Datei'),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: isUnread
                                   ? FontWeight.bold
@@ -238,7 +242,6 @@ class _TaskCardState extends State<_TaskCard> {
                       ],
                     ),
 
-                    // --- Preview (collapsed) ---
                     if (!_expanded && hasResult) ...[
                       const SizedBox(height: 4),
                       Text(
@@ -251,7 +254,6 @@ class _TaskCardState extends State<_TaskCard> {
                       ),
                     ],
 
-                    // --- Full content (expanded) ---
                     if (_expanded && hasResult) ...[
                       const SizedBox(height: 8),
                       SelectableText(
@@ -262,7 +264,6 @@ class _TaskCardState extends State<_TaskCard> {
                       ),
                     ],
 
-                    // --- Date row ---
                     const SizedBox(height: 6),
                     Row(
                       children: [
@@ -277,12 +278,11 @@ class _TaskCardState extends State<_TaskCard> {
                       ],
                     ),
 
-                    // --- Dismiss chip (expanded + unread only) ---
                     if (_expanded && isUnread) ...[
                       const SizedBox(height: 10),
                       ActionChip(
                         avatar: const Icon(Icons.check, size: 16),
-                        label: const Text('Verwerfen'),
+                        label: Text(l10n?.notificationsDismiss ?? 'Verwerfen'),
                         onPressed: _acknowledge,
                         visualDensity: VisualDensity.compact,
                       ),

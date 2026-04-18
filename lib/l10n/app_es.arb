@@ -1,0 +1,174 @@
+{
+  "@@locale": "es",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Documentos",
+  "navNotifications": "Tareas de archivos",
+  "navSettings": "Ajustes",
+
+  "actionCancel": "Cancelar",
+  "actionConfirm": "Entendido",
+  "actionRetry": "Reintentar",
+  "actionRefresh": "Actualizar",
+  "actionLogout": "Cerrar sesión",
+  "actionClearAll": "Borrar todo",
+  "actionDelete": "Eliminar",
+  "actionSave": "Guardar",
+
+  "loginServerUrl": "URL del servidor",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Usuario",
+  "loginPassword": "Contraseña",
+  "loginButton": "Iniciar sesión",
+  "loginAllowSelfSigned": "Permitir certificados autofirmados",
+  "loginSecurityWarningTitle": "Advertencia de seguridad",
+  "loginSecurityWarningText": "Permitir certificados autofirmados reduce la seguridad. Solo actívalo si sabes lo que haces y confías en el servidor.",
+  "loginValidateServerUrl": "Por favor, introduce la URL del servidor",
+  "loginValidateHttps": "Solo se permiten conexiones HTTPS (https://...)",
+  "loginValidateUsername": "Por favor, introduce tu usuario",
+  "loginValidatePassword": "Por favor, introduce tu contraseña",
+
+  "documentsSearch": "Buscar documentos...",
+  "documentsCount": "{count, plural, =1{1 documento} other{{count} documentos}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Todos los documentos",
+  "documentsEmpty": "No hay documentos disponibles.",
+  "documentsEmptyWithFilter": "No se encontraron documentos.\n¿Ajustar filtros?",
+  "documentsResetFilter": "Restablecer filtros",
+
+  "detailMenuDetails": "Detalles",
+  "detailMenuDownload": "Descargar",
+  "detailMenuDelete": "Eliminar",
+  "detailDownloadSaved": "Guardado: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Error al descargar.",
+  "detailDeleteTitle": "Eliminar documento",
+  "detailDeleteConfirm": "El documento se eliminará permanentemente. Esta acción no se puede deshacer.",
+  "detailDeleteFailed": "Error al eliminar.",
+  "detailEdit": "Editar",
+  "detailLoading": "Cargando documento...",
+  "detailLoadError": "No se pudo cargar el documento.",
+  "detailLoadErrorDetail": "No se pudo cargar el documento:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Guardar documento",
+  "detailScreenTitle": "Detalles",
+  "detailFieldTitle": "Título",
+  "detailFieldCreated": "Creado",
+  "detailFieldModified": "Modificado",
+  "detailFieldAdded": "Añadido",
+  "detailFieldCorrespondent": "Corresponsal",
+  "detailFieldDocumentType": "Tipo de documento",
+  "detailFieldStoragePath": "Ruta de almacenamiento",
+  "detailFieldArchiveNumber": "Número de archivo",
+  "detailFieldOriginalFile": "Archivo original",
+  "detailSectionTags": "Etiquetas",
+  "detailSectionCustomFields": "Campos personalizados",
+  "detailSectionContent": "Contenido (OCR)",
+
+  "editTitle": "Editar",
+  "editSaveError": "Error al guardar.",
+  "editFieldTitle": "Título",
+  "editFieldCreatedDate": "Fecha de creación",
+  "editFieldCorrespondent": "Corresponsal",
+  "editFieldDocumentType": "Tipo de documento",
+  "editFieldStoragePath": "Ruta de almacenamiento",
+  "editDropdownNone": "— Sin {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Subir documento",
+  "uploadButton": "Subir",
+  "uploadFailed": "Error al subir.",
+  "uploadProcessing": "El documento se está procesando...",
+  "uploadSectionFile": "Archivo",
+  "uploadPickFile": "Elegir archivo",
+  "uploadTakePhoto": "Tomar foto",
+  "uploadSectionMetadata": "Metadatos",
+  "uploadPhotoTitle": "Foto {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filtro",
+  "filterReset": "Restablecer",
+  "filterApply": "Aplicar filtro",
+  "filterAll": "Todos",
+  "filterNone": "Ninguno",
+  "filterFieldLabel": "Campo",
+  "filterValueContains": "El valor contiene",
+  "filterSectionTags": "Etiquetas",
+  "filterSectionCorrespondent": "Corresponsal",
+  "filterSectionDocumentType": "Tipo de documento",
+  "filterSectionCustomField": "Campo personalizado",
+  "filterSectionSorting": "Ordenación",
+  "filterSortCreatedNewest": "Creado (más reciente primero)",
+  "filterSortCreatedOldest": "Creado (más antiguo primero)",
+  "filterSortModifiedNewest": "Modificado (más reciente primero)",
+  "filterSortTitleAZ": "Título (A-Z)",
+  "filterSortTitleZA": "Título (Z-A)",
+  "filterSortAddedNewest": "Añadido (más reciente primero)",
+
+  "settingsTitle": "Ajustes",
+  "settingsSectionConnection": "Conexión",
+  "settingsServer": "Servidor",
+  "settingsUser": "Usuario",
+  "settingsSectionView": "Vista",
+  "settingsDefaultView": "Vista predeterminada al inicio",
+  "settingsNoSavedViews": "No hay vistas guardadas disponibles.",
+  "settingsSectionSecurity": "Seguridad",
+  "settingsHttpsOnly": "Solo conexiones HTTPS",
+  "settingsHttpsOnlyDesc": "Activo por defecto y no se puede desactivar",
+  "settingsSectionAccount": "Cuenta",
+  "settingsLogout": "Cerrar sesión",
+  "settingsLogoutDesc": "Eliminar token y datos guardados",
+  "settingsLogoutDialogTitle": "Cerrar sesión",
+  "settingsLogoutDialogContent": "El token guardado y los datos de conexión se eliminarán. ¿Continuar?",
+  "settingsSectionLanguage": "Idioma",
+  "settingsLanguageSystem": "Idioma del sistema",
+  "settingsLanguageLabel": "Idioma",
+
+  "notificationsTitle": "Notificaciones",
+  "notificationsConfirmAll": "Confirmar todo",
+  "notificationsEmpty": "No hay notificaciones disponibles.",
+  "notificationsUnknownFile": "Archivo desconocido",
+  "notificationsDismiss": "Descartar",
+  "statusSuccess": "Correcto",
+  "statusFailure": "Error",
+  "statusRunning": "En curso",
+  "statusPending": "Pendiente",
+  "statusRevoked": "Cancelado",
+
+  "apiErrorHttpsOnly": "Solo se permiten conexiones HTTPS.",
+  "apiErrorNoToken": "No se recibió token del servidor",
+  "apiErrorTimeout": "Tiempo de espera agotado. Comprueba la URL del servidor.",
+  "apiErrorSsl": "Error de certificado SSL. Permite certificados autofirmados en los ajustes.",
+  "apiErrorConnection": "Error de conexión. Comprueba la URL del servidor y la red.",
+  "apiErrorUnauthorized": "Credenciales no válidas.",
+  "apiErrorForbidden": "Acceso denegado.",
+  "apiErrorNotFound": "Recurso no encontrado.",
+  "apiErrorServer": "Error del servidor (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

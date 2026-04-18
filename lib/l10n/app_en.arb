@@ -1,0 +1,174 @@
+{
+  "@@locale": "en",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Documents",
+  "navNotifications": "File Tasks",
+  "navSettings": "Settings",
+
+  "actionCancel": "Cancel",
+  "actionConfirm": "Understood",
+  "actionRetry": "Try again",
+  "actionRefresh": "Refresh",
+  "actionLogout": "Log out",
+  "actionClearAll": "Clear all",
+  "actionDelete": "Delete",
+  "actionSave": "Save",
+
+  "loginServerUrl": "Server URL",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Username",
+  "loginPassword": "Password",
+  "loginButton": "Sign in",
+  "loginAllowSelfSigned": "Allow self-signed certificates",
+  "loginSecurityWarningTitle": "Security warning",
+  "loginSecurityWarningText": "Allowing self-signed certificates reduces security. Only enable if you know what you are doing and trust the server.",
+  "loginValidateServerUrl": "Please enter the server URL",
+  "loginValidateHttps": "Only HTTPS connections allowed (https://...)",
+  "loginValidateUsername": "Please enter your username",
+  "loginValidatePassword": "Please enter your password",
+
+  "documentsSearch": "Search documents...",
+  "documentsCount": "{count, plural, =1{1 document} other{{count} documents}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "All documents",
+  "documentsEmpty": "No documents available.",
+  "documentsEmptyWithFilter": "No documents found.\nAdjust filters?",
+  "documentsResetFilter": "Reset filters",
+
+  "detailMenuDetails": "Details",
+  "detailMenuDownload": "Download",
+  "detailMenuDelete": "Delete",
+  "detailDownloadSaved": "Saved: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Download failed.",
+  "detailDeleteTitle": "Delete document",
+  "detailDeleteConfirm": "The document will be permanently deleted. This action cannot be undone.",
+  "detailDeleteFailed": "Delete failed.",
+  "detailEdit": "Edit",
+  "detailLoading": "Loading document...",
+  "detailLoadError": "Could not load document.",
+  "detailLoadErrorDetail": "Could not load document:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Save document",
+  "detailScreenTitle": "Details",
+  "detailFieldTitle": "Title",
+  "detailFieldCreated": "Created",
+  "detailFieldModified": "Modified",
+  "detailFieldAdded": "Added",
+  "detailFieldCorrespondent": "Correspondent",
+  "detailFieldDocumentType": "Document type",
+  "detailFieldStoragePath": "Storage path",
+  "detailFieldArchiveNumber": "Archive number",
+  "detailFieldOriginalFile": "Original file",
+  "detailSectionTags": "Tags",
+  "detailSectionCustomFields": "Custom fields",
+  "detailSectionContent": "Content (OCR)",
+
+  "editTitle": "Edit",
+  "editSaveError": "Error saving.",
+  "editFieldTitle": "Title",
+  "editFieldCreatedDate": "Created date",
+  "editFieldCorrespondent": "Correspondent",
+  "editFieldDocumentType": "Document type",
+  "editFieldStoragePath": "Storage path",
+  "editDropdownNone": "— No {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Upload document",
+  "uploadButton": "Upload",
+  "uploadFailed": "Upload failed.",
+  "uploadProcessing": "Document is being processed...",
+  "uploadSectionFile": "File",
+  "uploadPickFile": "Choose file",
+  "uploadTakePhoto": "Take photo",
+  "uploadSectionMetadata": "Metadata",
+  "uploadPhotoTitle": "Photo {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filter",
+  "filterReset": "Reset",
+  "filterApply": "Apply filter",
+  "filterAll": "All",
+  "filterNone": "None",
+  "filterFieldLabel": "Field",
+  "filterValueContains": "Value contains",
+  "filterSectionTags": "Tags",
+  "filterSectionCorrespondent": "Correspondent",
+  "filterSectionDocumentType": "Document type",
+  "filterSectionCustomField": "Custom field",
+  "filterSectionSorting": "Sorting",
+  "filterSortCreatedNewest": "Created (newest first)",
+  "filterSortCreatedOldest": "Created (oldest first)",
+  "filterSortModifiedNewest": "Modified (newest first)",
+  "filterSortTitleAZ": "Title (A-Z)",
+  "filterSortTitleZA": "Title (Z-A)",
+  "filterSortAddedNewest": "Added (newest first)",
+
+  "settingsTitle": "Settings",
+  "settingsSectionConnection": "Connection",
+  "settingsServer": "Server",
+  "settingsUser": "User",
+  "settingsSectionView": "View",
+  "settingsDefaultView": "Default view on start",
+  "settingsNoSavedViews": "No saved views available.",
+  "settingsSectionSecurity": "Security",
+  "settingsHttpsOnly": "HTTPS connections only",
+  "settingsHttpsOnlyDesc": "Active by default and cannot be disabled",
+  "settingsSectionAccount": "Account",
+  "settingsLogout": "Log out",
+  "settingsLogoutDesc": "Delete token and saved data",
+  "settingsLogoutDialogTitle": "Log out",
+  "settingsLogoutDialogContent": "Saved token and connection data will be deleted. Continue?",
+  "settingsSectionLanguage": "Language",
+  "settingsLanguageSystem": "System language",
+  "settingsLanguageLabel": "Language",
+
+  "notificationsTitle": "Notifications",
+  "notificationsConfirmAll": "Confirm all",
+  "notificationsEmpty": "No notifications available.",
+  "notificationsUnknownFile": "Unknown file",
+  "notificationsDismiss": "Dismiss",
+  "statusSuccess": "Success",
+  "statusFailure": "Error",
+  "statusRunning": "Running",
+  "statusPending": "Pending",
+  "statusRevoked": "Cancelled",
+
+  "apiErrorHttpsOnly": "Only HTTPS connections allowed.",
+  "apiErrorNoToken": "No token in server response",
+  "apiErrorTimeout": "Connection timeout. Please check server URL.",
+  "apiErrorSsl": "SSL certificate error. Allow self-signed certificates in settings.",
+  "apiErrorConnection": "Connection error. Please check server URL and network.",
+  "apiErrorUnauthorized": "Invalid credentials.",
+  "apiErrorForbidden": "Access denied.",
+  "apiErrorNotFound": "Resource not found.",
+  "apiErrorServer": "Server error (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

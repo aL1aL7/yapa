@@ -1,0 +1,174 @@
+{
+  "@@locale": "cs",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Dokumenty",
+  "navNotifications": "Úlohy souborů",
+  "navSettings": "Nastavení",
+
+  "actionCancel": "Zrušit",
+  "actionConfirm": "Rozumím",
+  "actionRetry": "Zkusit znovu",
+  "actionRefresh": "Obnovit",
+  "actionLogout": "Odhlásit se",
+  "actionClearAll": "Vymazat vše",
+  "actionDelete": "Smazat",
+  "actionSave": "Uložit",
+
+  "loginServerUrl": "URL serveru",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Uživatelské jméno",
+  "loginPassword": "Heslo",
+  "loginButton": "Přihlásit se",
+  "loginAllowSelfSigned": "Povolit certifikáty s vlastním podpisem",
+  "loginSecurityWarningTitle": "Bezpečnostní upozornění",
+  "loginSecurityWarningText": "Povolení certifikátů s vlastním podpisem snižuje bezpečnost. Aktivujte pouze pokud víte, co děláte, a důvěřujete serveru.",
+  "loginValidateServerUrl": "Zadejte prosím URL serveru",
+  "loginValidateHttps": "Povolena jsou pouze připojení HTTPS (https://...)",
+  "loginValidateUsername": "Zadejte prosím uživatelské jméno",
+  "loginValidatePassword": "Zadejte prosím heslo",
+
+  "documentsSearch": "Hledat dokumenty...",
+  "documentsCount": "{count, plural, =1{1 dokument} few{{count} dokumenty} many{{count} dokumentů} other{{count} dokumentů}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Všechny dokumenty",
+  "documentsEmpty": "Žádné dokumenty k dispozici.",
+  "documentsEmptyWithFilter": "Žádné dokumenty nenalezeny.\nUpravit filtry?",
+  "documentsResetFilter": "Resetovat filtry",
+
+  "detailMenuDetails": "Podrobnosti",
+  "detailMenuDownload": "Stáhnout",
+  "detailMenuDelete": "Smazat",
+  "detailDownloadSaved": "Uloženo: {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Stahování selhalo.",
+  "detailDeleteTitle": "Smazat dokument",
+  "detailDeleteConfirm": "Dokument bude trvale smazán. Tuto akci nelze vrátit zpět.",
+  "detailDeleteFailed": "Mazání selhalo.",
+  "detailEdit": "Upravit",
+  "detailLoading": "Načítání dokumentu...",
+  "detailLoadError": "Dokument se nepodařilo načíst.",
+  "detailLoadErrorDetail": "Dokument se nepodařilo načíst:\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Uložit dokument",
+  "detailScreenTitle": "Podrobnosti",
+  "detailFieldTitle": "Název",
+  "detailFieldCreated": "Vytvořeno",
+  "detailFieldModified": "Změněno",
+  "detailFieldAdded": "Přidáno",
+  "detailFieldCorrespondent": "Korespondent",
+  "detailFieldDocumentType": "Typ dokumentu",
+  "detailFieldStoragePath": "Cesta úložiště",
+  "detailFieldArchiveNumber": "Číslo archivu",
+  "detailFieldOriginalFile": "Původní soubor",
+  "detailSectionTags": "Štítky",
+  "detailSectionCustomFields": "Vlastní pole",
+  "detailSectionContent": "Obsah (OCR)",
+
+  "editTitle": "Upravit",
+  "editSaveError": "Chyba při ukládání.",
+  "editFieldTitle": "Název",
+  "editFieldCreatedDate": "Datum vytvoření",
+  "editFieldCorrespondent": "Korespondent",
+  "editFieldDocumentType": "Typ dokumentu",
+  "editFieldStoragePath": "Cesta úložiště",
+  "editDropdownNone": "— Žádný {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Nahrát dokument",
+  "uploadButton": "Nahrát",
+  "uploadFailed": "Nahrávání selhalo.",
+  "uploadProcessing": "Dokument se zpracovává...",
+  "uploadSectionFile": "Soubor",
+  "uploadPickFile": "Vybrat soubor",
+  "uploadTakePhoto": "Vyfotit",
+  "uploadSectionMetadata": "Metadata",
+  "uploadPhotoTitle": "Foto {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filtr",
+  "filterReset": "Resetovat",
+  "filterApply": "Použít filtr",
+  "filterAll": "Vše",
+  "filterNone": "Žádný",
+  "filterFieldLabel": "Pole",
+  "filterValueContains": "Hodnota obsahuje",
+  "filterSectionTags": "Štítky",
+  "filterSectionCorrespondent": "Korespondent",
+  "filterSectionDocumentType": "Typ dokumentu",
+  "filterSectionCustomField": "Vlastní pole",
+  "filterSectionSorting": "Řazení",
+  "filterSortCreatedNewest": "Vytvořeno (nejnovější nejdříve)",
+  "filterSortCreatedOldest": "Vytvořeno (nejstarší nejdříve)",
+  "filterSortModifiedNewest": "Změněno (nejnovější nejdříve)",
+  "filterSortTitleAZ": "Název (A-Z)",
+  "filterSortTitleZA": "Název (Z-A)",
+  "filterSortAddedNewest": "Přidáno (nejnovější nejdříve)",
+
+  "settingsTitle": "Nastavení",
+  "settingsSectionConnection": "Připojení",
+  "settingsServer": "Server",
+  "settingsUser": "Uživatel",
+  "settingsSectionView": "Zobrazení",
+  "settingsDefaultView": "Výchozí zobrazení při spuštění",
+  "settingsNoSavedViews": "Žádná uložená zobrazení k dispozici.",
+  "settingsSectionSecurity": "Zabezpečení",
+  "settingsHttpsOnly": "Pouze připojení HTTPS",
+  "settingsHttpsOnlyDesc": "Ve výchozím nastavení aktivní a nelze deaktivovat",
+  "settingsSectionAccount": "Účet",
+  "settingsLogout": "Odhlásit se",
+  "settingsLogoutDesc": "Smazat token a uložená data",
+  "settingsLogoutDialogTitle": "Odhlásit se",
+  "settingsLogoutDialogContent": "Uložený token a data připojení budou smazána. Pokračovat?",
+  "settingsSectionLanguage": "Jazyk",
+  "settingsLanguageSystem": "Jazyk systému",
+  "settingsLanguageLabel": "Jazyk",
+
+  "notificationsTitle": "Oznámení",
+  "notificationsConfirmAll": "Potvrdit vše",
+  "notificationsEmpty": "Žádná oznámení k dispozici.",
+  "notificationsUnknownFile": "Neznámý soubor",
+  "notificationsDismiss": "Zamítnout",
+  "statusSuccess": "Úspěch",
+  "statusFailure": "Chyba",
+  "statusRunning": "Probíhá",
+  "statusPending": "Čeká",
+  "statusRevoked": "Zrušeno",
+
+  "apiErrorHttpsOnly": "Povolena jsou pouze připojení HTTPS.",
+  "apiErrorNoToken": "Žádný token v odpovědi serveru",
+  "apiErrorTimeout": "Časový limit připojení. Zkontrolujte URL serveru.",
+  "apiErrorSsl": "Chyba certifikátu SSL. Povolte certifikáty s vlastním podpisem v nastavení.",
+  "apiErrorConnection": "Chyba připojení. Zkontrolujte URL serveru a síť.",
+  "apiErrorUnauthorized": "Neplatné přihlašovací údaje.",
+  "apiErrorForbidden": "Přístup odepřen.",
+  "apiErrorNotFound": "Zdroj nenalezen.",
+  "apiErrorServer": "Chyba serveru (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

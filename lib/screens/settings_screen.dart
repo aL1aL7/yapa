@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
+import '../providers/locale_provider.dart';
 import '../services/storage_service.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -33,49 +35,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _defaultViewId = id);
   }
 
+  static const _supportedLocales = [
+    (code: 'de', name: 'Deutsch'),
+    (code: 'en', name: 'English'),
+    (code: 'es', name: 'Español'),
+    (code: 'fr', name: 'Français'),
+    (code: 'it', name: 'Italiano'),
+    (code: 'pl', name: 'Polski'),
+    (code: 'pt', name: 'Português'),
+    (code: 'cs', name: 'Čeština'),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthProvider>();
     final provider = context.watch<DocumentsProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Einstellungen')),
+      appBar: AppBar(title: Text(l10n?.settingsTitle ?? 'Einstellungen')),
       body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Text('Verbindung', style: theme.textTheme.labelLarge),
+            child: Text(l10n?.settingsSectionConnection ?? 'Verbindung', style: theme.textTheme.labelLarge),
           ),
           ListTile(
             leading: const Icon(Icons.dns_outlined),
-            title: const Text('Server'),
+            title: Text(l10n?.settingsServer ?? 'Server'),
             subtitle: Text(auth.serverUrl ?? '—'),
           ),
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('Benutzer'),
+            title: Text(l10n?.settingsUser ?? 'Benutzer'),
             subtitle: Text(auth.username ?? '—'),
           ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Text('Ansicht', style: theme.textTheme.labelLarge),
+            child: Text(l10n?.settingsSectionView ?? 'Ansicht', style: theme.textTheme.labelLarge),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: _defaultViewLoaded
                 ? DropdownButtonFormField<int?>(
                     initialValue: _defaultViewId,
-                    decoration: const InputDecoration(
-                      labelText: 'Standard-Ansicht beim Start',
-                      prefixIcon: Icon(Icons.bookmark_outline),
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n?.settingsDefaultView ?? 'Standard-Ansicht beim Start',
+                      prefixIcon: const Icon(Icons.bookmark_outline),
+                      border: const OutlineInputBorder(),
                     ),
                     items: [
-                      const DropdownMenuItem<int?>(
+                      DropdownMenuItem<int?>(
                         value: null,
-                        child: Text('Alle Dokumente'),
+                        child: Text(l10n?.documentsAll ?? 'Alle Dokumente'),
                       ),
                       ...provider.savedViews.map((v) => DropdownMenuItem(
                             value: v.id,
@@ -90,35 +105,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
           ),
           if (provider.savedViews.isEmpty && _defaultViewLoaded)
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
               child: Text(
-                'Keine gespeicherten Ansichten vorhanden.',
-                style: TextStyle(fontSize: 12),
+                l10n?.settingsNoSavedViews ?? 'Keine gespeicherten Ansichten vorhanden.',
+                style: const TextStyle(fontSize: 12),
               ),
             ),
           const SizedBox(height: 8),
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Text('Sicherheit', style: theme.textTheme.labelLarge),
+            child: Text(l10n?.settingsSectionLanguage ?? 'Sprache', style: theme.textTheme.labelLarge),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: DropdownButtonFormField<String?>(
+              value: localeProvider.locale?.languageCode,
+              decoration: InputDecoration(
+                labelText: l10n?.settingsLanguageLabel ?? 'Sprache',
+                prefixIcon: const Icon(Icons.language),
+                border: const OutlineInputBorder(),
+              ),
+              items: [
+                DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text(l10n?.settingsLanguageSystem ?? 'Systemsprache'),
+                ),
+                ..._supportedLocales.map((loc) => DropdownMenuItem(
+                      value: loc.code,
+                      child: Text(loc.name),
+                    )),
+              ],
+              onChanged: (code) {
+                localeProvider.setLocale(
+                  code == null ? null : Locale(code),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(l10n?.settingsSectionSecurity ?? 'Sicherheit', style: theme.textTheme.labelLarge),
           ),
           ListTile(
             leading: const Icon(Icons.security),
-            title: const Text('Nur HTTPS-Verbindungen'),
-            subtitle: const Text('Standardmäßig aktiv und nicht deaktivierbar'),
+            title: Text(l10n?.settingsHttpsOnly ?? 'Nur HTTPS-Verbindungen'),
+            subtitle: Text(l10n?.settingsHttpsOnlyDesc ?? 'Standardmäßig aktiv und nicht deaktivierbar'),
             trailing: const Icon(Icons.lock, color: Colors.green),
           ),
           const Divider(),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Text('Konto', style: theme.textTheme.labelLarge),
+            child: Text(l10n?.settingsSectionAccount ?? 'Konto', style: theme.textTheme.labelLarge),
           ),
           ListTile(
             leading: Icon(Icons.logout, color: theme.colorScheme.error),
-            title: Text('Abmelden',
-                style: TextStyle(color: theme.colorScheme.error)),
-            subtitle: const Text('Token und gespeicherte Daten löschen'),
+            title: Text(
+              l10n?.settingsLogout ?? 'Abmelden',
+              style: TextStyle(color: theme.colorScheme.error),
+            ),
+            subtitle: Text(l10n?.settingsLogoutDesc ?? 'Token und gespeicherte Daten löschen'),
             onTap: () => _confirmLogout(context, auth),
           ),
           const Divider(),
@@ -146,7 +195,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Yet Another Paperless-ngx App',
+                      l10n?.appDescription ?? 'Yet Another Paperless-ngx App',
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: theme.colorScheme.outline),
                     ),
@@ -169,20 +218,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _confirmLogout(BuildContext context, AuthProvider auth) {
+    final l10n = AppLocalizations.of(context);
     showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Abmelden'),
-        content: const Text(
-            'Gespeicherter Token und Verbindungsdaten werden gelöscht. Fortfahren?'),
+        title: Text(l10n?.settingsLogoutDialogTitle ?? 'Abmelden'),
+        content: Text(
+            l10n?.settingsLogoutDialogContent ??
+                'Gespeicherter Token und Verbindungsdaten werden gelöscht. Fortfahren?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Abbrechen'),
+            child: Text(l10n?.actionCancel ?? 'Abbrechen'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Abmelden'),
+            child: Text(l10n?.settingsLogout ?? 'Abmelden'),
           ),
         ],
       ),

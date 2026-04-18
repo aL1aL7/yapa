@@ -1,0 +1,174 @@
+{
+  "@@locale": "fr",
+
+  "appTagline": "Yet Another Paperless App",
+  "appDescription": "Yet Another Paperless-ngx App",
+
+  "navDocuments": "Documents",
+  "navNotifications": "Tâches de fichiers",
+  "navSettings": "Paramètres",
+
+  "actionCancel": "Annuler",
+  "actionConfirm": "Compris",
+  "actionRetry": "Réessayer",
+  "actionRefresh": "Actualiser",
+  "actionLogout": "Se déconnecter",
+  "actionClearAll": "Tout effacer",
+  "actionDelete": "Supprimer",
+  "actionSave": "Enregistrer",
+
+  "loginServerUrl": "URL du serveur",
+  "loginServerUrlHint": "https://paperless.example.com",
+  "loginUsername": "Nom d'utilisateur",
+  "loginPassword": "Mot de passe",
+  "loginButton": "Se connecter",
+  "loginAllowSelfSigned": "Autoriser les certificats auto-signés",
+  "loginSecurityWarningTitle": "Avertissement de sécurité",
+  "loginSecurityWarningText": "Autoriser les certificats auto-signés réduit la sécurité. N'activez cette option que si vous savez ce que vous faites et faites confiance au serveur.",
+  "loginValidateServerUrl": "Veuillez saisir l'URL du serveur",
+  "loginValidateHttps": "Seules les connexions HTTPS sont autorisées (https://...)",
+  "loginValidateUsername": "Veuillez saisir votre nom d'utilisateur",
+  "loginValidatePassword": "Veuillez saisir votre mot de passe",
+
+  "documentsSearch": "Rechercher des documents...",
+  "documentsCount": "{count, plural, =1{1 document} other{{count} documents}}",
+  "@documentsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "documentsAll": "Tous les documents",
+  "documentsEmpty": "Aucun document disponible.",
+  "documentsEmptyWithFilter": "Aucun document trouvé.\nAjuster les filtres ?",
+  "documentsResetFilter": "Réinitialiser les filtres",
+
+  "detailMenuDetails": "Détails",
+  "detailMenuDownload": "Télécharger",
+  "detailMenuDelete": "Supprimer",
+  "detailDownloadSaved": "Enregistré : {path}",
+  "@detailDownloadSaved": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "detailDownloadFailed": "Échec du téléchargement.",
+  "detailDeleteTitle": "Supprimer le document",
+  "detailDeleteConfirm": "Le document sera supprimé définitivement. Cette action est irréversible.",
+  "detailDeleteFailed": "Échec de la suppression.",
+  "detailEdit": "Modifier",
+  "detailLoading": "Chargement du document...",
+  "detailLoadError": "Impossible de charger le document.",
+  "detailLoadErrorDetail": "Impossible de charger le document :\n{error}",
+  "@detailLoadErrorDetail": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "detailSaveDialog": "Enregistrer le document",
+  "detailScreenTitle": "Détails",
+  "detailFieldTitle": "Titre",
+  "detailFieldCreated": "Créé",
+  "detailFieldModified": "Modifié",
+  "detailFieldAdded": "Ajouté",
+  "detailFieldCorrespondent": "Correspondant",
+  "detailFieldDocumentType": "Type de document",
+  "detailFieldStoragePath": "Chemin de stockage",
+  "detailFieldArchiveNumber": "Numéro d'archive",
+  "detailFieldOriginalFile": "Fichier original",
+  "detailSectionTags": "Étiquettes",
+  "detailSectionCustomFields": "Champs personnalisés",
+  "detailSectionContent": "Contenu (OCR)",
+
+  "editTitle": "Modifier",
+  "editSaveError": "Erreur lors de l'enregistrement.",
+  "editFieldTitle": "Titre",
+  "editFieldCreatedDate": "Date de création",
+  "editFieldCorrespondent": "Correspondant",
+  "editFieldDocumentType": "Type de document",
+  "editFieldStoragePath": "Chemin de stockage",
+  "editDropdownNone": "— Aucun(e) {label} —",
+  "@editDropdownNone": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+
+  "uploadTitle": "Téléverser un document",
+  "uploadButton": "Téléverser",
+  "uploadFailed": "Échec du téléversement.",
+  "uploadProcessing": "Le document est en cours de traitement...",
+  "uploadSectionFile": "Fichier",
+  "uploadPickFile": "Choisir un fichier",
+  "uploadTakePhoto": "Prendre une photo",
+  "uploadSectionMetadata": "Métadonnées",
+  "uploadPhotoTitle": "Photo {date}",
+  "@uploadPhotoTitle": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+
+  "filterTitle": "Filtres",
+  "filterReset": "Réinitialiser",
+  "filterApply": "Appliquer le filtre",
+  "filterAll": "Tous",
+  "filterNone": "Aucun",
+  "filterFieldLabel": "Champ",
+  "filterValueContains": "La valeur contient",
+  "filterSectionTags": "Étiquettes",
+  "filterSectionCorrespondent": "Correspondant",
+  "filterSectionDocumentType": "Type de document",
+  "filterSectionCustomField": "Champ personnalisé",
+  "filterSectionSorting": "Tri",
+  "filterSortCreatedNewest": "Créé (plus récent en premier)",
+  "filterSortCreatedOldest": "Créé (plus ancien en premier)",
+  "filterSortModifiedNewest": "Modifié (plus récent en premier)",
+  "filterSortTitleAZ": "Titre (A-Z)",
+  "filterSortTitleZA": "Titre (Z-A)",
+  "filterSortAddedNewest": "Ajouté (plus récent en premier)",
+
+  "settingsTitle": "Paramètres",
+  "settingsSectionConnection": "Connexion",
+  "settingsServer": "Serveur",
+  "settingsUser": "Utilisateur",
+  "settingsSectionView": "Affichage",
+  "settingsDefaultView": "Vue par défaut au démarrage",
+  "settingsNoSavedViews": "Aucune vue enregistrée disponible.",
+  "settingsSectionSecurity": "Sécurité",
+  "settingsHttpsOnly": "Connexions HTTPS uniquement",
+  "settingsHttpsOnlyDesc": "Actif par défaut et ne peut pas être désactivé",
+  "settingsSectionAccount": "Compte",
+  "settingsLogout": "Se déconnecter",
+  "settingsLogoutDesc": "Supprimer le token et les données enregistrées",
+  "settingsLogoutDialogTitle": "Se déconnecter",
+  "settingsLogoutDialogContent": "Le token enregistré et les données de connexion seront supprimés. Continuer ?",
+  "settingsSectionLanguage": "Langue",
+  "settingsLanguageSystem": "Langue du système",
+  "settingsLanguageLabel": "Langue",
+
+  "notificationsTitle": "Notifications",
+  "notificationsConfirmAll": "Tout confirmer",
+  "notificationsEmpty": "Aucune notification disponible.",
+  "notificationsUnknownFile": "Fichier inconnu",
+  "notificationsDismiss": "Ignorer",
+  "statusSuccess": "Succès",
+  "statusFailure": "Erreur",
+  "statusRunning": "En cours",
+  "statusPending": "En attente",
+  "statusRevoked": "Annulé",
+
+  "apiErrorHttpsOnly": "Seules les connexions HTTPS sont autorisées.",
+  "apiErrorNoToken": "Aucun token dans la réponse du serveur",
+  "apiErrorTimeout": "Délai de connexion dépassé. Vérifiez l'URL du serveur.",
+  "apiErrorSsl": "Erreur de certificat SSL. Autorisez les certificats auto-signés dans les paramètres.",
+  "apiErrorConnection": "Erreur de connexion. Vérifiez l'URL du serveur et le réseau.",
+  "apiErrorUnauthorized": "Identifiants invalides.",
+  "apiErrorForbidden": "Accès refusé.",
+  "apiErrorNotFound": "Ressource introuvable.",
+  "apiErrorServer": "Erreur serveur (HTTP {code})",
+  "@apiErrorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  }
+}

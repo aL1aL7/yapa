@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/filter_state.dart';
 import '../providers/documents_provider.dart';
@@ -22,6 +23,7 @@ class _FilterSheetState extends State<FilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final provider = context.watch<DocumentsProvider>();
     final theme = Theme.of(context);
 
@@ -36,14 +38,14 @@ class _FilterSheetState extends State<FilterSheet> {
             padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
             child: Row(
               children: [
-                Text('Filter', style: theme.textTheme.titleLarge),
+                Text(l10n?.filterTitle ?? 'Filter', style: theme.textTheme.titleLarge),
                 const Spacer(),
                 if (_filter.hasActiveFilters)
                   TextButton(
                     onPressed: () {
                       setState(() => _filter = const FilterState());
                     },
-                    child: const Text('Zurücksetzen'),
+                    child: Text(l10n?.filterReset ?? 'Zurücksetzen'),
                   ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -59,7 +61,7 @@ class _FilterSheetState extends State<FilterSheet> {
               padding: const EdgeInsets.all(16),
               children: [
                 if (provider.tags.isNotEmpty) ...[
-                  _SectionTitle('Tags'),
+                  _SectionTitle(l10n?.filterSectionTags ?? 'Tags'),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -84,7 +86,7 @@ class _FilterSheetState extends State<FilterSheet> {
                   const SizedBox(height: 20),
                 ],
                 if (provider.correspondents.isNotEmpty) ...[
-                  _SectionTitle('Korrespondent'),
+                  _SectionTitle(l10n?.filterSectionCorrespondent ?? 'Korrespondent'),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<int?>(
                     initialValue: _filter.correspondentId,
@@ -93,7 +95,7 @@ class _FilterSheetState extends State<FilterSheet> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     items: [
-                      const DropdownMenuItem(value: null, child: Text('Alle')),
+                      DropdownMenuItem(value: null, child: Text(l10n?.filterAll ?? 'Alle')),
                       ...provider.correspondents.map((c) =>
                           DropdownMenuItem(value: c.id, child: Text(c.name))),
                     ],
@@ -103,7 +105,7 @@ class _FilterSheetState extends State<FilterSheet> {
                   const SizedBox(height: 20),
                 ],
                 if (provider.documentTypes.isNotEmpty) ...[
-                  _SectionTitle('Dokumenttyp'),
+                  _SectionTitle(l10n?.filterSectionDocumentType ?? 'Dokumenttyp'),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<int?>(
                     initialValue: _filter.documentTypeId,
@@ -112,7 +114,7 @@ class _FilterSheetState extends State<FilterSheet> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     items: [
-                      const DropdownMenuItem(value: null, child: Text('Alle')),
+                      DropdownMenuItem(value: null, child: Text(l10n?.filterAll ?? 'Alle')),
                       ...provider.documentTypes.map((d) =>
                           DropdownMenuItem(value: d.id, child: Text(d.name))),
                     ],
@@ -122,17 +124,17 @@ class _FilterSheetState extends State<FilterSheet> {
                   const SizedBox(height: 20),
                 ],
                 if (provider.customFields.isNotEmpty) ...[
-                  _SectionTitle('Benutzerdefiniertes Feld'),
+                  _SectionTitle(l10n?.filterSectionCustomField ?? 'Benutzerdefiniertes Feld'),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String?>(
                     initialValue: _filter.customFieldId,
-                    decoration: const InputDecoration(
-                      labelText: 'Feld',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: InputDecoration(
+                      labelText: l10n?.filterFieldLabel ?? 'Feld',
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     items: [
-                      const DropdownMenuItem(value: null, child: Text('Keines')),
+                      DropdownMenuItem(value: null, child: Text(l10n?.filterNone ?? 'Keines')),
                       ...provider.customFields.map((f) =>
                           DropdownMenuItem(value: f.id.toString(), child: Text(f.name))),
                     ],
@@ -143,10 +145,10 @@ class _FilterSheetState extends State<FilterSheet> {
                     const SizedBox(height: 12),
                     TextFormField(
                       initialValue: _filter.customFieldValue,
-                      decoration: const InputDecoration(
-                        labelText: 'Wert enthält',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: InputDecoration(
+                        labelText: l10n?.filterValueContains ?? 'Wert enthält',
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
                       onChanged: (v) => setState(() =>
                           _filter = _filter.copyWith(customFieldValue: v.isEmpty ? null : v)),
@@ -154,7 +156,7 @@ class _FilterSheetState extends State<FilterSheet> {
                   ],
                   const SizedBox(height: 20),
                 ],
-                _SectionTitle('Sortierung'),
+                _SectionTitle(l10n?.filterSectionSorting ?? 'Sortierung'),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   initialValue: _filter.ordering,
@@ -162,13 +164,13 @@ class _FilterSheetState extends State<FilterSheet> {
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: '-created', child: Text('Erstellt (neueste zuerst)')),
-                    DropdownMenuItem(value: 'created', child: Text('Erstellt (älteste zuerst)')),
-                    DropdownMenuItem(value: '-modified', child: Text('Geändert (neueste zuerst)')),
-                    DropdownMenuItem(value: 'title', child: Text('Titel (A-Z)')),
-                    DropdownMenuItem(value: '-title', child: Text('Titel (Z-A)')),
-                    DropdownMenuItem(value: '-added', child: Text('Hinzugefügt (neueste zuerst)')),
+                  items: [
+                    DropdownMenuItem(value: '-created', child: Text(l10n?.filterSortCreatedNewest ?? 'Erstellt (neueste zuerst)')),
+                    DropdownMenuItem(value: 'created', child: Text(l10n?.filterSortCreatedOldest ?? 'Erstellt (älteste zuerst)')),
+                    DropdownMenuItem(value: '-modified', child: Text(l10n?.filterSortModifiedNewest ?? 'Geändert (neueste zuerst)')),
+                    DropdownMenuItem(value: 'title', child: Text(l10n?.filterSortTitleAZ ?? 'Titel (A-Z)')),
+                    DropdownMenuItem(value: '-title', child: Text(l10n?.filterSortTitleZA ?? 'Titel (Z-A)')),
+                    DropdownMenuItem(value: '-added', child: Text(l10n?.filterSortAddedNewest ?? 'Hinzugefügt (neueste zuerst)')),
                   ],
                   onChanged: (v) {
                     if (v != null) setState(() => _filter = _filter.copyWith(ordering: v));
@@ -189,7 +191,7 @@ class _FilterSheetState extends State<FilterSheet> {
               style: FilledButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
-              child: const Text('Filter anwenden'),
+              child: Text(l10n?.filterApply ?? 'Filter anwenden'),
             ),
           ),
         ],

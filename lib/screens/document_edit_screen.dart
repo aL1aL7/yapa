@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/document.dart';
@@ -105,9 +106,12 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
+      final msg = e is ApiException
+          ? e.message
+          : (AppLocalizations.of(context)?.editSaveError ?? 'Fehler beim Speichern.');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e is ApiException ? e.message : 'Fehler beim Speichern.'),
+          content: Text(msg),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
@@ -119,13 +123,14 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final provider = context.watch<DocumentsProvider>();
     final theme = Theme.of(context);
     final dateFormat = DateFormat('dd.MM.yyyy');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bearbeiten'),
+        title: Text(l10n?.editTitle ?? 'Bearbeiten'),
         actions: [
           if (_saving)
             const Padding(
@@ -138,7 +143,7 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
             FilledButton.icon(
               onPressed: _save,
               icon: const Icon(Icons.save_outlined, size: 18),
-              label: const Text('Speichern'),
+              label: Text(l10n?.actionSave ?? 'Speichern'),
               style: FilledButton.styleFrom(
                 visualDensity: VisualDensity.compact,
               ),
@@ -151,72 +156,69 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Title
             TextFormField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Titel',
-                prefixIcon: Icon(Icons.title),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n?.editFieldTitle ?? 'Titel',
+                prefixIcon: const Icon(Icons.title),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
 
-            // Created date
             InkWell(
               onTap: _pickDate,
               borderRadius: BorderRadius.circular(4),
               child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Erstelldatum',
-                  prefixIcon: Icon(Icons.calendar_today_outlined),
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.edit_calendar_outlined),
+                decoration: InputDecoration(
+                  labelText: l10n?.editFieldCreatedDate ?? 'Erstelldatum',
+                  prefixIcon: const Icon(Icons.calendar_today_outlined),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: const Icon(Icons.edit_calendar_outlined),
                 ),
                 child: Text(dateFormat.format(_created)),
               ),
             ),
             const SizedBox(height: 12),
 
-            // Correspondent
             _buildDropdown<int>(
-              label: 'Korrespondent',
+              label: l10n?.editFieldCorrespondent ?? 'Korrespondent',
               icon: Icons.person_outline,
               value: _correspondent,
               items: provider.correspondents
                   .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
                   .toList(),
               onChanged: (v) => setState(() => _correspondent = v),
+              l10n: l10n,
             ),
             const SizedBox(height: 12),
 
-            // Document type
             _buildDropdown<int>(
-              label: 'Dokumenttyp',
+              label: l10n?.editFieldDocumentType ?? 'Dokumenttyp',
               icon: Icons.description_outlined,
               value: _documentType,
               items: provider.documentTypes
                   .map((d) => DropdownMenuItem(value: d.id, child: Text(d.name)))
                   .toList(),
               onChanged: (v) => setState(() => _documentType = v),
+              l10n: l10n,
             ),
             const SizedBox(height: 12),
 
-            // Storage path
             _buildDropdown<int>(
-              label: 'Speicherpfad',
+              label: l10n?.editFieldStoragePath ?? 'Speicherpfad',
               icon: Icons.folder_outlined,
               value: _storagePath,
               items: provider.storagePaths
                   .map((s) => DropdownMenuItem(value: s.id, child: Text(s.name)))
                   .toList(),
               onChanged: (v) => setState(() => _storagePath = v),
+              l10n: l10n,
             ),
             const SizedBox(height: 16),
 
-            // Tags
             if (provider.tags.isNotEmpty) ...[
-              Text('Tags', style: theme.textTheme.labelLarge),
+              Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -240,9 +242,8 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
               const SizedBox(height: 16),
             ],
 
-            // Custom fields
             if (provider.customFields.isNotEmpty) ...[
-              Text('Benutzerdefinierte Felder', style: theme.textTheme.labelLarge),
+              Text(l10n?.detailSectionCustomFields ?? 'Benutzerdefinierte Felder', style: theme.textTheme.labelLarge),
               const SizedBox(height: 8),
               ...provider.customFields.map((cf) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -263,6 +264,7 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
     required T? value,
     required List<DropdownMenuItem<T>> items,
     required ValueChanged<T?> onChanged,
+    AppLocalizations? l10n,
   }) {
     return DropdownButtonFormField<T>(
       initialValue: value,
@@ -272,7 +274,10 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
         border: const OutlineInputBorder(),
       ),
       items: [
-        DropdownMenuItem<T>(value: null, child: Text('— Kein $label —')),
+        DropdownMenuItem<T>(
+          value: null,
+          child: Text(l10n?.editDropdownNone(label) ?? '— Kein $label —'),
+        ),
         ...items,
       ],
       onChanged: onChanged,
@@ -322,7 +327,7 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
           ),
           keyboardType: TextInputType.url,
         );
-      default: // string
+      default:
         return TextFormField(
           controller: _customFieldControllers[cf.id],
           decoration: InputDecoration(

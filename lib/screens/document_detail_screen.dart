@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +59,6 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   }
 
   static String _sanitizeFileName(String name) {
-    // Strip path separators and traversal sequences to prevent path traversal
     return name
         .replaceAll(RegExp(r'[/\\]'), '_')
         .replaceAll(RegExp(r'\.\.+'), '_')
@@ -69,6 +69,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   Future<void> _downloadDocument() async {
     if (_downloading) return;
     setState(() => _downloading = true);
+    final l10n = AppLocalizations.of(context);
 
     try {
       final bytes = _pdfBytes ?? await _pdfBytesFuture;
@@ -80,7 +81,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       final fileName = _sanitizeFileName(rawName);
 
       final savedPath = await FilePicker.saveFile(
-        dialogTitle: 'Dokument speichern',
+        dialogTitle: l10n?.detailSaveDialog ?? 'Dokument speichern',
         fileName: fileName,
         bytes: bytes,
       );
@@ -90,15 +91,16 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       if (savedPath != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gespeichert: $savedPath'),
+            content: Text(l10n?.detailDownloadSaved(savedPath) ?? 'Gespeichert: $savedPath'),
             behavior: SnackBarBehavior.floating,
           ),
         );
       }
-      // savedPath == null bedeutet: Nutzer hat abgebrochen → kein Feedback nötig
     } catch (e) {
       if (mounted) {
-        final msg = e is ApiException ? e.message : 'Download fehlgeschlagen.';
+        final msg = e is ApiException
+            ? e.message
+            : (AppLocalizations.of(context)?.detailDownloadFailed ?? 'Download fehlgeschlagen.');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(msg),
@@ -127,6 +129,8 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (_loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -158,11 +162,11 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
               }
             },
             itemBuilder: (_) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: _MenuAction.details,
                 child: ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text('Details'),
+                  leading: const Icon(Icons.info_outline),
+                  title: Text(l10n?.detailMenuDetails ?? 'Details'),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -176,7 +180,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.download_outlined),
-                  title: const Text('Herunterladen'),
+                  title: Text(l10n?.detailMenuDownload ?? 'Herunterladen'),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -185,9 +189,10 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                 child: ListTile(
                   leading: Icon(Icons.delete_outline,
                       color: Theme.of(context).colorScheme.error),
-                  title: Text('Löschen',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.error)),
+                  title: Text(
+                    l10n?.detailMenuDelete ?? 'Löschen',
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -202,7 +207,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
           child: FilledButton.icon(
             onPressed: _openEdit,
             icon: const Icon(Icons.edit_outlined),
-            label: const Text('Bearbeiten'),
+            label: Text(l10n?.detailEdit ?? 'Bearbeiten'),
           ),
         ),
       ),
@@ -210,23 +215,25 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   }
 
   Future<void> _confirmDelete() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Dokument löschen'),
-        content: const Text(
-            'Das Dokument wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.'),
+        title: Text(l10n?.detailDeleteTitle ?? 'Dokument löschen'),
+        content: Text(
+            l10n?.detailDeleteConfirm ??
+                'Das Dokument wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Abbrechen'),
+            child: Text(l10n?.actionCancel ?? 'Abbrechen'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(ctx).colorScheme.error,
             ),
-            child: const Text('Löschen'),
+            child: Text(l10n?.actionDelete ?? 'Löschen'),
           ),
         ],
       ),
@@ -238,7 +245,9 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.message : 'Löschen fehlgeschlagen.';
+      final msg = e is ApiException
+          ? e.message
+          : (AppLocalizations.of(context)?.detailDeleteFailed ?? 'Löschen fehlgeschlagen.');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(msg),
@@ -274,19 +283,21 @@ class _PdfViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (pdfFuture == null) return const Center(child: CircularProgressIndicator());
 
     return FutureBuilder<Uint8List>(
       future: pdfFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Dokument wird geladen...'),
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(l10n?.detailLoading ?? 'Dokument wird geladen...'),
               ],
             ),
           );
@@ -302,8 +313,9 @@ class _PdfViewer extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     snapshot.error is ApiException
-                        ? 'Dokument konnte nicht geladen werden:\n${snapshot.error}'
-                        : 'Dokument konnte nicht geladen werden.',
+                        ? (l10n?.detailLoadErrorDetail('${snapshot.error}') ??
+                            'Dokument konnte nicht geladen werden:\n${snapshot.error}')
+                        : (l10n?.detailLoadError ?? 'Dokument konnte nicht geladen werden.'),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -330,9 +342,10 @@ class _DocumentDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final provider = context.watch<DocumentsProvider>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Details')),
+      appBar: AppBar(title: Text(l10n?.detailScreenTitle ?? 'Details')),
       body: _DetailsContent(document: document, provider: provider),
     );
   }
@@ -346,6 +359,7 @@ class _DetailsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final dateFormat = DateFormat('dd.MM.yyyy HH:mm');
     final correspondent = document.correspondent != null
@@ -363,56 +377,56 @@ class _DetailsContent extends StatelessWidget {
       children: [
         _DetailTile(
           icon: Icons.title,
-          label: 'Titel',
+          label: l10n?.detailFieldTitle ?? 'Titel',
           value: document.title.isNotEmpty ? document.title : '—',
         ),
         _DetailTile(
           icon: Icons.calendar_today_outlined,
-          label: 'Erstellt',
+          label: l10n?.detailFieldCreated ?? 'Erstellt',
           value: dateFormat.format(document.created),
         ),
         _DetailTile(
           icon: Icons.update,
-          label: 'Geändert',
+          label: l10n?.detailFieldModified ?? 'Geändert',
           value: dateFormat.format(document.modified),
         ),
         _DetailTile(
           icon: Icons.add_circle_outline,
-          label: 'Hinzugefügt',
+          label: l10n?.detailFieldAdded ?? 'Hinzugefügt',
           value: dateFormat.format(document.added),
         ),
         if (correspondent != null)
           _DetailTile(
             icon: Icons.person_outline,
-            label: 'Korrespondent',
+            label: l10n?.detailFieldCorrespondent ?? 'Korrespondent',
             value: correspondent.name,
           ),
         if (docType != null)
           _DetailTile(
             icon: Icons.description_outlined,
-            label: 'Dokumenttyp',
+            label: l10n?.detailFieldDocumentType ?? 'Dokumenttyp',
             value: docType.name,
           ),
         if (storagePath != null)
           _DetailTile(
             icon: Icons.folder_outlined,
-            label: 'Speicherpfad',
+            label: l10n?.detailFieldStoragePath ?? 'Speicherpfad',
             value: storagePath.name,
           ),
         if (document.archiveSerialNumber.isNotEmpty)
           _DetailTile(
             icon: Icons.tag,
-            label: 'Archivnummer',
+            label: l10n?.detailFieldArchiveNumber ?? 'Archivnummer',
             value: document.archiveSerialNumber,
           ),
         _DetailTile(
           icon: Icons.insert_drive_file_outlined,
-          label: 'Originaldatei',
+          label: l10n?.detailFieldOriginalFile ?? 'Originaldatei',
           value: document.originalFileName,
         ),
         if (document.tags.isNotEmpty) ...[
           const SizedBox(height: 12),
-          Text('Tags', style: theme.textTheme.labelLarge),
+          Text(l10n?.detailSectionTags ?? 'Tags', style: theme.textTheme.labelLarge),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -426,7 +440,7 @@ class _DetailsContent extends StatelessWidget {
         ],
         if (document.customFields.isNotEmpty) ...[
           const SizedBox(height: 16),
-          Text('Benutzerdefinierte Felder', style: theme.textTheme.labelLarge),
+          Text(l10n?.detailSectionCustomFields ?? 'Benutzerdefinierte Felder', style: theme.textTheme.labelLarge),
           const SizedBox(height: 8),
           ...document.customFields.map((cf) {
             final fieldId = cf['field'] as int?;
@@ -443,7 +457,7 @@ class _DetailsContent extends StatelessWidget {
         ],
         if (document.content != null && document.content!.isNotEmpty) ...[
           const SizedBox(height: 16),
-          Text('Inhalt (OCR)', style: theme.textTheme.labelLarge),
+          Text(l10n?.detailSectionContent ?? 'Inhalt (OCR)', style: theme.textTheme.labelLarge),
           const SizedBox(height: 8),
           SelectableText(
             document.content!,

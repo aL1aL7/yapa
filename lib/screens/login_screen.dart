@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/storage_service.dart';
@@ -59,16 +60,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String? _validateUrl(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Bitte Server-URL eingeben';
+    final l10n = AppLocalizations.of(context);
+    if (value == null || value.trim().isEmpty) {
+      return l10n?.loginValidateServerUrl ?? 'Bitte Server-URL eingeben';
+    }
     final trimmed = value.trim();
     if (!trimmed.startsWith('https://')) {
-      return 'Nur HTTPS-Verbindungen erlaubt (https://...)';
+      return l10n?.loginValidateHttps ?? 'Nur HTTPS-Verbindungen erlaubt (https://...)';
     }
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
@@ -90,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Text(
-                  'Yet Another Paperless App',
+                  l10n?.appTagline ?? 'Yet Another Paperless App',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
                 ),
@@ -141,11 +146,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _serverController,
                         keyboardType: TextInputType.url,
                         autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Server-URL',
-                          hintText: 'https://paperless.example.com',
-                          prefixIcon: Icon(Icons.dns_outlined),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n?.loginServerUrl ?? 'Server-URL',
+                          hintText: l10n?.loginServerUrlHint ?? 'https://paperless.example.com',
+                          prefixIcon: const Icon(Icons.dns_outlined),
+                          border: const OutlineInputBorder(),
                         ),
                         validator: _validateUrl,
                       ),
@@ -153,20 +158,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _usernameController,
                         autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Benutzername',
-                          prefixIcon: Icon(Icons.person_outline),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n?.loginUsername ?? 'Benutzername',
+                          prefixIcon: const Icon(Icons.person_outline),
+                          border: const OutlineInputBorder(),
                         ),
-                        validator: (v) =>
-                            v == null || v.trim().isEmpty ? 'Bitte Benutzername eingeben' : null,
+                        validator: (v) => v == null || v.trim().isEmpty
+                            ? (l10n?.loginValidateUsername ?? 'Bitte Benutzername eingeben')
+                            : null,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _passwordController,
                         obscureText: _obscurePassword,
                         decoration: InputDecoration(
-                          labelText: 'Passwort',
+                          labelText: l10n?.loginPassword ?? 'Passwort',
                           prefixIcon: const Icon(Icons.lock_outline),
                           border: const OutlineInputBorder(),
                           suffixIcon: IconButton(
@@ -177,8 +183,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() => _obscurePassword = !_obscurePassword),
                           ),
                         ),
-                        validator: (v) =>
-                            v == null || v.isEmpty ? 'Bitte Passwort eingeben' : null,
+                        validator: (v) => v == null || v.isEmpty
+                            ? (l10n?.loginValidatePassword ?? 'Bitte Passwort eingeben')
+                            : null,
                         onFieldSubmitted: (_) => _login(),
                       ),
                       const SizedBox(height: 8),
@@ -209,8 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }
                                 },
                               ),
-                              const Expanded(
-                                child: Text('Selbst-signierte Zertifikate erlauben'),
+                              Expanded(
+                                child: Text(l10n?.loginAllowSelfSigned ?? 'Selbst-signierte Zertifikate erlauben'),
                               ),
                             ],
                           ),
@@ -237,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: 20,
                                   child: CircularProgressIndicator(strokeWidth: 2),
                                 )
-                              : const Text('Anmelden'),
+                              : Text(l10n?.loginButton ?? 'Anmelden'),
                         ),
                       ),
                     ],
@@ -260,6 +267,7 @@ class _SelfSignedWarningDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -277,7 +285,7 @@ class _SelfSignedWarningDialog extends StatelessWidget {
               Icon(Icons.warning_amber_outlined, color: theme.colorScheme.tertiary, size: 20),
               const SizedBox(width: 8),
               Text(
-                'Sicherheitswarnung',
+                l10n?.loginSecurityWarningTitle ?? 'Sicherheitswarnung',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onTertiaryContainer,
@@ -287,8 +295,9 @@ class _SelfSignedWarningDialog extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Das Erlauben selbst-signierter Zertifikate verringert die Sicherheit. '
-            'Nur aktivieren, wenn du weißt, was du tust und dem Server vertraust.',
+            l10n?.loginSecurityWarningText ??
+                'Das Erlauben selbst-signierter Zertifikate verringert die Sicherheit. '
+                'Nur aktivieren, wenn du weißt, was du tust und dem Server vertraust.',
             style: TextStyle(
               fontSize: 13,
               color: theme.colorScheme.onTertiaryContainer,
@@ -298,9 +307,15 @@ class _SelfSignedWarningDialog extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(onPressed: onCancel, child: const Text('Abbrechen')),
+              TextButton(
+                onPressed: onCancel,
+                child: Text(l10n?.actionCancel ?? 'Abbrechen'),
+              ),
               const SizedBox(width: 8),
-              FilledButton.tonal(onPressed: onConfirm, child: const Text('Verstanden')),
+              FilledButton.tonal(
+                onPressed: onConfirm,
+                child: Text(l10n?.actionConfirm ?? 'Verstanden'),
+              ),
             ],
           ),
         ],
