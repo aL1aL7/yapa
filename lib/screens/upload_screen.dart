@@ -8,6 +8,7 @@ import '../providers/app_settings_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/documents_provider.dart';
 import '../services/api_service.dart';
+import '../widgets/tag_chip.dart';
 import '../widgets/tag_multiselect_field.dart';
 
 class UploadScreen extends StatefulWidget {
@@ -272,17 +273,16 @@ class _UploadScreenState extends State<UploadScreen> {
                   runSpacing: 4,
                   children: provider.tags.map((tag) {
                     final selected = _selectedTags.contains(tag.id);
-                    return FilterChip(
-                      label: Text(tag.name),
+                    return TagChip(
+                      tag: tag,
                       selected: selected,
-                      onSelected: (v) => setState(() {
-                        if (v) {
-                          _selectedTags.add(tag.id);
-                        } else {
+                      onTap: () => setState(() {
+                        if (selected) {
                           _selectedTags.remove(tag.id);
+                        } else {
+                          _selectedTags.add(tag.id);
                         }
                       }),
-                      visualDensity: VisualDensity.compact,
                     );
                   }).toList(),
                 ),

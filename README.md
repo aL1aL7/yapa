@@ -19,10 +19,11 @@ YAPA lets you browse, search, filter, upload, and edit your documents directly f
 - Active filter chips show the current filter state at a glance and can be removed individually
 - SavedViews selector for quick access to server-side saved views (chips bar or dropdown — configurable)
 - Additional filters can be applied on top of a selected SavedView
+- Tapping a tag on any document card instantly adds it as a filter; tapping it again removes it
 
 ### Filter & Sorting
 The filter sheet allows combining multiple criteria:
-- **Tags** — select one or more tags (chips or multi-select dropdown — configurable)
+- **Tags** — select one or more tags (chips or multi-select dropdown — configurable); tag chips are coloured to match the colours configured in Paperless-ngx, with a stronger fill to indicate selection
 - **Correspondent** — filter by a single correspondent
 - **Document type** — filter by document type
 - **Custom fields** — add one or more custom field conditions per filter:
@@ -40,14 +41,14 @@ The filter sheet allows combining multiple criteria:
 
 ### Document Editing
 - Edit title, created date, correspondent, document type, storage path
-- Add or remove tags via filter chips or multi-select dropdown (configurable)
+- Add or remove tags via colour-coded chips or multi-select dropdown (configurable)
 - Edit existing custom field values; remove individual fields from the document
 - Supported custom field types: text, integer, decimal (float/monetary), boolean (switch), date (date picker), select (dropdown), URL
 
 ### Document Upload
 - Pick a file from device storage (PDF, PNG, JPG, JPEG, TIFF, GIF, WEBP)
 - Take a photo directly with the camera
-- Set title, correspondent, document type, storage path, and tags before uploading (tags as chips or multi-select dropdown — configurable)
+- Set title, correspondent, document type, storage path, and tags before uploading (tags as colour-coded chips or multi-select dropdown — configurable)
 - File name is pre-filled as the document title
 
 ### Notifications

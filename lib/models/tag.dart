@@ -17,7 +17,7 @@ class Tag {
         id: json['id'] as int,
         name: json['name'] as String,
         slug: json['slug'] as String? ?? '',
-        color: json['colour'] as String? ?? '#a6cee3',
+        color: json['color'] as String? ?? '#a6cee3',
         documentCount: json['document_count'] as int? ?? 0,
       );
 }

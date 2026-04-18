@@ -8,6 +8,7 @@ import '../models/custom_field.dart';
 import '../providers/app_settings_provider.dart';
 import '../providers/documents_provider.dart';
 import '../services/api_service.dart';
+import '../widgets/tag_chip.dart';
 import '../widgets/tag_multiselect_field.dart';
 
 class DocumentEditScreen extends StatefulWidget {
@@ -240,17 +241,16 @@ class _DocumentEditScreenState extends State<DocumentEditScreen> {
                   runSpacing: 4,
                   children: provider.tags.map((tag) {
                     final selected = _tags.contains(tag.id);
-                    return FilterChip(
-                      label: Text(tag.name),
+                    return TagChip(
+                      tag: tag,
                       selected: selected,
-                      onSelected: (v) => setState(() {
-                        if (v) {
-                          _tags.add(tag.id);
-                        } else {
+                      onTap: () => setState(() {
+                        if (selected) {
                           _tags.remove(tag.id);
+                        } else {
+                          _tags.add(tag.id);
                         }
                       }),
-                      visualDensity: VisualDensity.compact,
                     );
                   }).toList(),
                 ),
