@@ -35,11 +35,8 @@ class NotificationsProvider extends ChangeNotifier {
   // Throws ApiException on failure — callers handle UX (e.g. SnackBar)
   Future<void> acknowledgeTask(int id) async {
     await _api.acknowledgeTasks([id]);
-    final idx = _tasks.indexWhere((t) => t.id == id);
-    if (idx >= 0) {
-      _tasks[idx] = _tasks[idx].copyWith(acknowledged: true);
-      notifyListeners();
-    }
+    // Refresh from server so the acknowledged task disappears from the list.
+    await load();
   }
 
   // Throws ApiException on failure — callers handle UX (e.g. SnackBar)
@@ -47,7 +44,7 @@ class NotificationsProvider extends ChangeNotifier {
     final ids = _tasks.where((t) => !t.acknowledged).map((t) => t.id).toList();
     if (ids.isEmpty) return;
     await _api.acknowledgeTasks(ids);
-    _tasks = _tasks.map((t) => t.copyWith(acknowledged: true)).toList();
-    notifyListeners();
+    // Refresh from server so all acknowledged tasks disappear from the list.
+    await load();
   }
 }
