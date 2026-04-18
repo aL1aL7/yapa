@@ -6,32 +6,18 @@ import '../models/task_notification.dart';
 import '../providers/notifications_provider.dart';
 import '../services/api_service.dart';
 
-class NotificationsScreen extends StatefulWidget {
+class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
 
-  @override
-  State<NotificationsScreen> createState() => _NotificationsScreenState();
-}
-
-class _NotificationsScreenState extends State<NotificationsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Reload whenever the screen is shown so the list is always fresh.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<NotificationsProvider>().load();
-    });
-  }
-
-  Future<void> _acknowledgeAll(NotificationsProvider provider) async {
+  Future<void> _acknowledgeAll(BuildContext context, NotificationsProvider provider) async {
     try {
       await provider.acknowledgeAll();
     } on ApiException catch (e) {
-      if (mounted) _showError(e.message);
+      if (context.mounted) _showError(context, e.message);
     }
   }
 
-  void _showError(String message) {
+  void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -53,7 +39,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         actions: [
           if (unread > 0)
             TextButton.icon(
-              onPressed: () => _acknowledgeAll(provider),
+              onPressed: () => _acknowledgeAll(context, provider),
               icon: const Icon(Icons.done_all),
               label: Text(l10n?.notificationsConfirmAll ?? 'Alle bestätigen'),
             ),

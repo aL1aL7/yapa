@@ -132,7 +132,11 @@ class _MainShellState extends State<_MainShell> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
-        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+        onDestinationSelected: (i) {
+          setState(() => _selectedIndex = i);
+          // Reload tasks every time the notifications tab is opened.
+          if (i == 1) context.read<NotificationsProvider>().load();
+        },
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.folder_outlined),
