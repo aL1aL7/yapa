@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Pre-Android-12 Auto-Backup rules.
+    Excludes all app data from backup so that credentials and tokens
+    are never copied to Google Drive or elsewhere.
+-->
+<full-backup-content>
+    <exclude domain="root" />
+    <exclude domain="database" />
+    <exclude domain="sharedpref" />
+    <exclude domain="external" />
+    <exclude domain="file" />
+</full-backup-content>

@@ -1,6 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageService {
+  // flutter_secure_storage 10.x already uses a secure, non-deprecated cipher
+  // backend by default. The previous `encryptedSharedPreferences` option was
+  // based on Google's deprecated Jetpack Security library and is itself
+  // deprecated in v10 — data is transparently migrated to the new ciphers.
   static const _storage = FlutterSecureStorage(
     aOptions: AndroidOptions(),
   );
@@ -13,6 +17,7 @@ class StorageService {
   static const _keyLocale = 'locale';
   static const _keyTagsAsDropdown = 'tags_as_dropdown';
   static const _keySavedViewsAsDropdown = 'saved_views_as_dropdown';
+  static const _keyCertFingerprint = 'cert_fingerprint';
 
   Future<void> saveToken(String token) =>
       _storage.write(key: _keyToken, value: token);
@@ -71,6 +76,17 @@ class StorageService {
 
   Future<void> setSavedViewsAsDropdown(bool value) =>
       _storage.write(key: _keySavedViewsAsDropdown, value: value.toString());
+
+  Future<String?> getCertFingerprint() =>
+      _storage.read(key: _keyCertFingerprint);
+
+  Future<void> setCertFingerprint(String? fingerprint) async {
+    if (fingerprint == null) {
+      await _storage.delete(key: _keyCertFingerprint);
+    } else {
+      await _storage.write(key: _keyCertFingerprint, value: fingerprint);
+    }
+  }
 
   Future<String?> getLocale() => _storage.read(key: _keyLocale);
 

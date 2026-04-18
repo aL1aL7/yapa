@@ -27,6 +27,7 @@ class AuthProvider extends ChangeNotifier {
     final creds = await _storage.getCredentials();
     final token = await _storage.getToken();
     final allowSelfSigned = await _storage.getAllowSelfSigned();
+    final pinnedFingerprint = await _storage.getCertFingerprint();
 
     if (token != null && creds.serverUrl != null) {
       _serverUrl = creds.serverUrl;
@@ -35,6 +36,7 @@ class AuthProvider extends ChangeNotifier {
         baseUrl: _serverUrl!,
         token: token,
         allowSelfSigned: allowSelfSigned,
+        pinnedCertSha256: pinnedFingerprint,
       );
       _status = AuthStatus.authenticated;
     } else {
@@ -54,20 +56,32 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final token = await ApiService.authenticate(
+      final result = await ApiService.authenticate(
         baseUrl: serverUrl,
         username: username,
         password: password,
         allowSelfSigned: allowSelfSigned,
       );
 
-      await _storage.saveToken(token);
+      // TOFU: the first time we see a self-signed cert, pin its SHA-256 so
+      // later sessions reject anything else.
+      final fingerprint = result.certSha256;
+      if (allowSelfSigned && fingerprint != null) {
+        await _storage.setCertFingerprint(fingerprint);
+      }
+
+      await _storage.saveToken(result.token);
       await _storage.saveCredentials(serverUrl: serverUrl, username: username);
       await _storage.setAllowSelfSigned(allowSelfSigned);
 
       _serverUrl = serverUrl;
       _username = username;
-      _api = ApiService(baseUrl: serverUrl, token: token, allowSelfSigned: allowSelfSigned);
+      _api = ApiService(
+        baseUrl: serverUrl,
+        token: result.token,
+        allowSelfSigned: allowSelfSigned,
+        pinnedCertSha256: fingerprint,
+      );
       _status = AuthStatus.authenticated;
       _loading = false;
       notifyListeners();
@@ -91,9 +105,20 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Validate the token by creating the service and making a lightweight request
-      final api = ApiService(baseUrl: serverUrl, token: token, allowSelfSigned: allowSelfSigned);
+      // Validate the token by creating the service and making a lightweight request.
+      // No pin yet — first call runs in TOFU mode and captures the cert fingerprint.
+      final api = ApiService(
+        baseUrl: serverUrl,
+        token: token,
+        allowSelfSigned: allowSelfSigned,
+      );
       await api.getTags(); // will throw ApiException if token/URL is invalid
+
+      // TOFU: pin the cert we just accepted.
+      final fingerprint = api.lastSeenCertSha256;
+      if (allowSelfSigned && fingerprint != null) {
+        await _storage.setCertFingerprint(fingerprint);
+      }
 
       await _storage.saveToken(token);
       await _storage.saveCredentials(serverUrl: serverUrl, username: null);

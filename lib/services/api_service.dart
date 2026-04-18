@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import '../l10n/global_l10n.dart';
@@ -27,7 +28,23 @@ class ApiService {
   final String baseUrl;
   final bool allowSelfSigned;
 
-  ApiService({required this.baseUrl, required String token, this.allowSelfSigned = false}) {
+  /// SHA-256 of the DER-encoded server certificate that the user has previously
+  /// accepted (pinned). When set, any self-signed cert presented by the server
+  /// must match this fingerprint — otherwise the TLS handshake is rejected.
+  final String? pinnedCertSha256;
+
+  /// Populated by [badCertificateCallback] on a successful TOFU (trust-on-first-use)
+  /// acceptance of a self-signed certificate. Callers can read this after the first
+  /// request and persist it as the new pin.
+  String? _lastSeenCertSha256;
+  String? get lastSeenCertSha256 => _lastSeenCertSha256;
+
+  ApiService({
+    required this.baseUrl,
+    required String token,
+    this.allowSelfSigned = false,
+    this.pinnedCertSha256,
+  }) {
     if (!baseUrl.startsWith('https://')) {
       throw ApiException(currentL10n?.apiErrorHttpsOnly ?? 'Nur HTTPS-Verbindungen erlaubt.');
     }
@@ -43,20 +60,40 @@ class ApiService {
 
     if (allowSelfSigned) {
       final expectedHost = Uri.parse(baseUrl).host;
+      final pinned = pinnedCertSha256;
       (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
         final client = HttpClient();
-        // Only accept self-signed certs from the configured server host
-        client.badCertificateCallback = (cert, host, port) => host == expectedHost;
+        client.badCertificateCallback = (cert, host, port) {
+          if (host != expectedHost) return false;
+          final fp = _certSha256(cert);
+          if (pinned != null) {
+            // Pinned mode: only accept the exact cert previously trusted.
+            return fp == pinned;
+          }
+          // TOFU mode: accept and remember so the caller can pin it.
+          _lastSeenCertSha256 = fp;
+          return true;
+        };
         return client;
       };
     }
   }
 
-  static Future<String> authenticate({
+  static String _certSha256(X509Certificate cert) {
+    return sha256.convert(cert.der).toString();
+  }
+
+  /// Result of a successful username/password authentication.
+  ///
+  /// [certSha256] is populated when self-signed certs are allowed and a cert
+  /// was accepted during the handshake. Callers should persist it as the pin
+  /// for subsequent sessions.
+  static Future<({String token, String? certSha256})> authenticate({
     required String baseUrl,
     required String username,
     required String password,
     bool allowSelfSigned = false,
+    String? pinnedCertSha256,
   }) async {
     if (!baseUrl.startsWith('https://')) {
       throw ApiException(currentL10n?.apiErrorHttpsOnly ?? 'Nur HTTPS-Verbindungen erlaubt.');
@@ -68,12 +105,20 @@ class ApiService {
       receiveTimeout: const Duration(seconds: 15),
     ));
 
+    String? seenFingerprint;
     if (allowSelfSigned) {
       final expectedHost = Uri.parse(baseUrl).host;
       (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
         final client = HttpClient();
-        // Only accept self-signed certs from the configured server host
-        client.badCertificateCallback = (cert, host, port) => host == expectedHost;
+        client.badCertificateCallback = (cert, host, port) {
+          if (host != expectedHost) return false;
+          final fp = _certSha256(cert);
+          if (pinnedCertSha256 != null) {
+            return fp == pinnedCertSha256;
+          }
+          seenFingerprint = fp;
+          return true;
+        };
         return client;
       };
     }
@@ -85,7 +130,7 @@ class ApiService {
       );
       final token = response.data['token'] as String?;
       if (token == null) throw ApiException(currentL10n?.apiErrorNoToken ?? 'Kein Token in Serverantwort');
-      return token;
+      return (token: token, certSha256: seenFingerprint);
     } on DioException catch (e) {
       throw _mapDioError(e);
     }
@@ -311,11 +356,14 @@ class ApiService {
       return ApiException(l?.apiErrorNotFound ?? 'Ressource nicht gefunden.', statusCode: statusCode);
     }
     if (statusCode == 400) {
+      // Only expose field names, never raw server values (could leak paths,
+      // OCR snippets, stack traces). User still gets an actionable hint
+      // about which field is the problem.
       final body = e.response?.data;
-      final detail = body is Map
-          ? body.entries.map((e) => '${e.key}: ${e.value}').join(' | ')
-          : body?.toString();
-      final suffix = detail != null ? '\n$detail' : '';
+      final fields = body is Map
+          ? body.keys.map((k) => k.toString()).where((k) => k.isNotEmpty).toList()
+          : const <String>[];
+      final suffix = fields.isNotEmpty ? ' (${fields.join(', ')})' : '';
       return ApiException(
         '${l?.apiErrorServer('400') ?? 'Serverfehler (HTTP 400)'}$suffix',
         statusCode: 400,
