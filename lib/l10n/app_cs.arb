@@ -29,6 +29,11 @@
   "loginValidateHttps": "Povolena jsou pouze připojení HTTPS (https://...)",
   "loginValidateUsername": "Zadejte prosím uživatelské jméno",
   "loginValidatePassword": "Zadejte prosím heslo",
+  "loginTabCredentials": "Přihlašovací údaje",
+  "loginTabToken": "API token",
+  "loginApiToken": "API token",
+  "loginApiTokenHint": "Token z nastavení Paperless",
+  "loginValidateToken": "Zadejte prosím API token",
 
   "documentsSearch": "Hledat dokumenty...",
   "documentsCount": "{count, plural, =1{1 dokument} few{{count} dokumenty} many{{count} dokumentů} other{{count} dokumentů}}",

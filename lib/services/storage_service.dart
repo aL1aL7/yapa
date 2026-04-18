@@ -21,10 +21,14 @@ class StorageService {
 
   Future<void> saveCredentials({
     required String serverUrl,
-    required String username,
+    String? username,
   }) async {
     await _storage.write(key: _keyServerUrl, value: serverUrl);
-    await _storage.write(key: _keyUsername, value: username);
+    if (username != null) {
+      await _storage.write(key: _keyUsername, value: username);
+    } else {
+      await _storage.delete(key: _keyUsername);
+    }
   }
 
   Future<({String? serverUrl, String? username})> getCredentials() async {

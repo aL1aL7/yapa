@@ -29,6 +29,11 @@
   "loginValidateHttps": "Solo se permiten conexiones HTTPS (https://...)",
   "loginValidateUsername": "Por favor, introduce tu usuario",
   "loginValidatePassword": "Por favor, introduce tu contraseña",
+  "loginTabCredentials": "Credenciales",
+  "loginTabToken": "Token API",
+  "loginApiToken": "Token API",
+  "loginApiTokenHint": "Token de los ajustes de Paperless",
+  "loginValidateToken": "Por favor, introduce el token API",
 
   "documentsSearch": "Buscar documentos...",
   "documentsCount": "{count, plural, =1{1 documento} other{{count} documentos}}",

@@ -87,6 +87,21 @@ class AppLocalizationsPl extends AppLocalizations {
   String get loginValidatePassword => 'Proszę podać hasło';
 
   @override
+  String get loginTabCredentials => 'Dane logowania';
+
+  @override
+  String get loginTabToken => 'Token API';
+
+  @override
+  String get loginApiToken => 'Token API';
+
+  @override
+  String get loginApiTokenHint => 'Token z ustawień Paperless';
+
+  @override
+  String get loginValidateToken => 'Proszę podać token API';
+
+  @override
   String get documentsSearch => 'Szukaj dokumentów...';
 
   @override

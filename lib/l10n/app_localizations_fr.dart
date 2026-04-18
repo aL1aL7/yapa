@@ -87,6 +87,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginValidatePassword => 'Veuillez saisir votre mot de passe';
 
   @override
+  String get loginTabCredentials => 'Identifiants';
+
+  @override
+  String get loginTabToken => 'Jeton API';
+
+  @override
+  String get loginApiToken => 'Jeton API';
+
+  @override
+  String get loginApiTokenHint => 'Jeton depuis les paramètres Paperless';
+
+  @override
+  String get loginValidateToken => 'Veuillez saisir le jeton API';
+
+  @override
   String get documentsSearch => 'Rechercher des documents...';
 
   @override

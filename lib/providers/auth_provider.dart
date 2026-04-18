@@ -81,6 +81,40 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> loginWithToken({
+    required String serverUrl,
+    required String token,
+    bool allowSelfSigned = false,
+  }) async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      // Validate the token by creating the service and making a lightweight request
+      final api = ApiService(baseUrl: serverUrl, token: token, allowSelfSigned: allowSelfSigned);
+      await api.getTags(); // will throw ApiException if token/URL is invalid
+
+      await _storage.saveToken(token);
+      await _storage.saveCredentials(serverUrl: serverUrl, username: null);
+      await _storage.setAllowSelfSigned(allowSelfSigned);
+
+      _serverUrl = serverUrl;
+      _username = null;
+      _api = api;
+      _status = AuthStatus.authenticated;
+      _loading = false;
+      notifyListeners();
+      return true;
+    } on ApiException catch (e) {
+      _error = e.message;
+      _loading = false;
+      _status = AuthStatus.unauthenticated;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     await _storage.clearAll();
     _api = null;

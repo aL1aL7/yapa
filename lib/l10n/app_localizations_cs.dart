@@ -86,6 +86,21 @@ class AppLocalizationsCs extends AppLocalizations {
   String get loginValidatePassword => 'Zadejte prosím heslo';
 
   @override
+  String get loginTabCredentials => 'Přihlašovací údaje';
+
+  @override
+  String get loginTabToken => 'API token';
+
+  @override
+  String get loginApiToken => 'API token';
+
+  @override
+  String get loginApiTokenHint => 'Token z nastavení Paperless';
+
+  @override
+  String get loginValidateToken => 'Zadejte prosím API token';
+
+  @override
   String get documentsSearch => 'Hledat dokumenty...';
 
   @override

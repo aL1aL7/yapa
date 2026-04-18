@@ -29,6 +29,11 @@
   "loginValidateHttps": "Seules les connexions HTTPS sont autorisées (https://...)",
   "loginValidateUsername": "Veuillez saisir votre nom d'utilisateur",
   "loginValidatePassword": "Veuillez saisir votre mot de passe",
+  "loginTabCredentials": "Identifiants",
+  "loginTabToken": "Jeton API",
+  "loginApiToken": "Jeton API",
+  "loginApiTokenHint": "Jeton depuis les paramètres Paperless",
+  "loginValidateToken": "Veuillez saisir le jeton API",
 
   "documentsSearch": "Rechercher des documents...",
   "documentsCount": "{count, plural, =1{1 document} other{{count} documents}}",

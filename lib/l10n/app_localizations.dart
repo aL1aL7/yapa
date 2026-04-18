@@ -260,6 +260,36 @@ abstract class AppLocalizations {
   /// **'Bitte Passwort eingeben'**
   String get loginValidatePassword;
 
+  /// No description provided for @loginTabCredentials.
+  ///
+  /// In de, this message translates to:
+  /// **'Anmeldedaten'**
+  String get loginTabCredentials;
+
+  /// No description provided for @loginTabToken.
+  ///
+  /// In de, this message translates to:
+  /// **'API-Token'**
+  String get loginTabToken;
+
+  /// No description provided for @loginApiToken.
+  ///
+  /// In de, this message translates to:
+  /// **'API-Token'**
+  String get loginApiToken;
+
+  /// No description provided for @loginApiTokenHint.
+  ///
+  /// In de, this message translates to:
+  /// **'Token aus den Paperless-Einstellungen'**
+  String get loginApiTokenHint;
+
+  /// No description provided for @loginValidateToken.
+  ///
+  /// In de, this message translates to:
+  /// **'Bitte API-Token eingeben'**
+  String get loginValidateToken;
+
   /// No description provided for @documentsSearch.
   ///
   /// In de, this message translates to:

@@ -11,14 +11,19 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+enum _LoginMode { credentials, token }
+
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _serverController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _tokenController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureToken = true;
   bool _allowSelfSigned = false;
   bool _showSelfSignedWarning = false;
+  _LoginMode _loginMode = _LoginMode.credentials;
 
   @override
   void initState() {
@@ -33,7 +38,13 @@ class _LoginScreenState extends State<LoginScreen> {
     if (mounted) {
       setState(() {
         if (creds.serverUrl != null) _serverController.text = creds.serverUrl!;
-        if (creds.username != null) _usernameController.text = creds.username!;
+        if (creds.username != null) {
+          _usernameController.text = creds.username!;
+          _loginMode = _LoginMode.credentials;
+        } else if (creds.serverUrl != null) {
+          // Previously logged in with token
+          _loginMode = _LoginMode.token;
+        }
         _allowSelfSigned = allowSelfSigned;
       });
     }
@@ -44,19 +55,27 @@ class _LoginScreenState extends State<LoginScreen> {
     _serverController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
+    _tokenController.dispose();
     super.dispose();
   }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-
     final auth = context.read<AuthProvider>();
-    await auth.login(
-      serverUrl: _serverController.text.trim(),
-      username: _usernameController.text.trim(),
-      password: _passwordController.text,
-      allowSelfSigned: _allowSelfSigned,
-    );
+    if (_loginMode == _LoginMode.token) {
+      await auth.loginWithToken(
+        serverUrl: _serverController.text.trim(),
+        token: _tokenController.text.trim(),
+        allowSelfSigned: _allowSelfSigned,
+      );
+    } else {
+      await auth.login(
+        serverUrl: _serverController.text.trim(),
+        username: _usernameController.text.trim(),
+        password: _passwordController.text,
+        allowSelfSigned: _allowSelfSigned,
+      );
+    }
   }
 
   String? _validateUrl(String? value) {
@@ -64,8 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (value == null || value.trim().isEmpty) {
       return l10n?.loginValidateServerUrl ?? 'Bitte Server-URL eingeben';
     }
-    final trimmed = value.trim();
-    if (!trimmed.startsWith('https://')) {
+    if (!value.trim().startsWith('https://')) {
       return l10n?.loginValidateHttps ?? 'Nur HTTPS-Verbindungen erlaubt (https://...)';
     }
     return null;
@@ -142,6 +160,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      // Mode toggle
+                      SegmentedButton<_LoginMode>(
+                        segments: [
+                          ButtonSegment(
+                            value: _LoginMode.credentials,
+                            label: Text(l10n?.loginTabCredentials ?? 'Anmeldedaten'),
+                            icon: const Icon(Icons.person_outline),
+                          ),
+                          ButtonSegment(
+                            value: _LoginMode.token,
+                            label: Text(l10n?.loginTabToken ?? 'API-Token'),
+                            icon: const Icon(Icons.key_outlined),
+                          ),
+                        ],
+                        selected: {_loginMode},
+                        onSelectionChanged: (selection) => setState(() {
+                          _loginMode = selection.first;
+                          context.read<AuthProvider>().clearError();
+                          _formKey.currentState?.reset();
+                        }),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Server URL (always shown)
                       TextFormField(
                         controller: _serverController,
                         keyboardType: TextInputType.url,
@@ -155,40 +197,72 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: _validateUrl,
                       ),
                       const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _usernameController,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          labelText: l10n?.loginUsername ?? 'Benutzername',
-                          prefixIcon: const Icon(Icons.person_outline),
-                          border: const OutlineInputBorder(),
-                        ),
-                        validator: (v) => v == null || v.trim().isEmpty
-                            ? (l10n?.loginValidateUsername ?? 'Bitte Benutzername eingeben')
-                            : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: l10n?.loginPassword ?? 'Passwort',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          border: const OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            onPressed: () =>
-                                setState(() => _obscurePassword = !_obscurePassword),
+
+                      // Credentials mode fields
+                      if (_loginMode == _LoginMode.credentials) ...[
+                        TextFormField(
+                          controller: _usernameController,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            labelText: l10n?.loginUsername ?? 'Benutzername',
+                            prefixIcon: const Icon(Icons.person_outline),
+                            border: const OutlineInputBorder(),
                           ),
+                          validator: (v) => v == null || v.trim().isEmpty
+                              ? (l10n?.loginValidateUsername ?? 'Bitte Benutzername eingeben')
+                              : null,
                         ),
-                        validator: (v) => v == null || v.isEmpty
-                            ? (l10n?.loginValidatePassword ?? 'Bitte Passwort eingeben')
-                            : null,
-                        onFieldSubmitted: (_) => _login(),
-                      ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          decoration: InputDecoration(
+                            labelText: l10n?.loginPassword ?? 'Passwort',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(_obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined),
+                              onPressed: () =>
+                                  setState(() => _obscurePassword = !_obscurePassword),
+                            ),
+                          ),
+                          validator: (v) => v == null || v.isEmpty
+                              ? (l10n?.loginValidatePassword ?? 'Bitte Passwort eingeben')
+                              : null,
+                          onFieldSubmitted: (_) => _login(),
+                        ),
+                      ],
+
+                      // Token mode field
+                      if (_loginMode == _LoginMode.token)
+                        TextFormField(
+                          controller: _tokenController,
+                          obscureText: _obscureToken,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            labelText: l10n?.loginApiToken ?? 'API-Token',
+                            hintText: l10n?.loginApiTokenHint ?? 'Token aus den Paperless-Einstellungen',
+                            prefixIcon: const Icon(Icons.key_outlined),
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(_obscureToken
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined),
+                              onPressed: () =>
+                                  setState(() => _obscureToken = !_obscureToken),
+                            ),
+                          ),
+                          validator: (v) => v == null || v.trim().isEmpty
+                              ? (l10n?.loginValidateToken ?? 'Bitte API-Token eingeben')
+                              : null,
+                          onFieldSubmitted: (_) => _login(),
+                        ),
+
                       const SizedBox(height: 8),
+
+                      // Self-signed cert checkbox (always shown)
                       InkWell(
                         onTap: () => setState(() {
                           if (!_allowSelfSigned) {
@@ -217,7 +291,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                               Expanded(
-                                child: Text(l10n?.loginAllowSelfSigned ?? 'Selbst-signierte Zertifikate erlauben'),
+                                child: Text(l10n?.loginAllowSelfSigned ??
+                                    'Selbst-signierte Zertifikate erlauben'),
                               ),
                             ],
                           ),
