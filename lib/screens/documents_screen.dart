@@ -118,10 +118,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.tune),
-                  // Filter-Button deaktivieren wenn eine Ansicht aktiv ist
-                  onPressed: provider.selectedView == null ? _showFilter : null,
+                  onPressed: _showFilter,
                 ),
-                if (provider.filter.hasActiveFilters && provider.selectedView == null)
+                if (provider.filter.hasActiveFilters)
                   Positioned(
                     right: 6,
                     top: 6,
@@ -210,7 +209,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                   ),
                 )
               else ...[
-                if (provider.filter.hasActiveFilters && provider.selectedView == null)
+                if (provider.filter.hasActiveFilters)
                   _ActiveFilterBar(provider: provider),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),

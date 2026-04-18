@@ -100,8 +100,18 @@ class ApiService {
       final baseParams = savedView != null
           ? {
               ...savedView.toQueryParams(),
-              // Allow search query on top of view filters
+              // Merge additional filter params on top; ordering stays from saved view
               if (filter.query.isNotEmpty) 'query': filter.query,
+              if (filter.tagIds.isNotEmpty)
+                'tags__id__all': filter.tagIds.join(','),
+              if (filter.correspondentId != null)
+                'correspondent__id': filter.correspondentId,
+              if (filter.documentTypeId != null)
+                'document_type__id': filter.documentTypeId,
+              if (filter.customFieldId != null && filter.customFieldValue != null) ...{
+                'custom_fields__field__id': filter.customFieldId,
+                'custom_fields__value__icontains': filter.customFieldValue,
+              },
             }
           : filter.toQueryParams();
       final params = {

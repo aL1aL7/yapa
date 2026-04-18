@@ -130,17 +130,24 @@ class NotificationsScreen extends StatelessWidget {
   }
 }
 
-class _TaskCard extends StatelessWidget {
+class _TaskCard extends StatefulWidget {
   final TaskNotification task;
 
   const _TaskCard({required this.task});
 
-  Future<void> _acknowledge(BuildContext context) async {
+  @override
+  State<_TaskCard> createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<_TaskCard> {
+  bool _expanded = false;
+
+  Future<void> _acknowledge() async {
     final provider = context.read<NotificationsProvider>();
     try {
-      await provider.acknowledgeTask(task.id);
+      await provider.acknowledgeTask(widget.task.id);
     } on ApiException catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.message),
@@ -152,13 +159,26 @@ class _TaskCard extends StatelessWidget {
     }
   }
 
+  (IconData, Color, String) _statusInfo(String status, ThemeData theme) {
+    return switch (status) {
+      'SUCCESS' => (Icons.check_circle_outline, Colors.green, 'Erfolgreich'),
+      'FAILURE' => (Icons.error_outline, theme.colorScheme.error, 'Fehler'),
+      'STARTED' => (Icons.pending_outlined, theme.colorScheme.primary, 'Läuft'),
+      'PENDING' => (Icons.schedule_outlined, theme.colorScheme.outline, 'Wartend'),
+      'REVOKED' => (Icons.cancel_outlined, theme.colorScheme.outline, 'Abgebrochen'),
+      _ => (Icons.info_outline, theme.colorScheme.outline, status),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final task = widget.task;
     final (icon, color, statusLabel) = _statusInfo(task.status, theme);
     final dateFormat = DateFormat('dd.MM.yyyy HH:mm');
     final date = task.dateDone ?? task.dateCreated;
     final isUnread = !task.acknowledged;
+    final hasResult = task.result != null && task.result!.isNotEmpty;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -167,7 +187,7 @@ class _TaskCard extends StatelessWidget {
           : null,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: isUnread ? () => _acknowledge(context) : null,
+        onTap: () => setState(() => _expanded = !_expanded),
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Row(
@@ -179,6 +199,7 @@ class _TaskCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // --- Header row ---
                     Row(
                       children: [
                         Expanded(
@@ -206,9 +227,19 @@ class _TaskCard extends StatelessWidget {
                                 ?.copyWith(color: color),
                           ),
                         ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          _expanded
+                              ? Icons.expand_less
+                              : Icons.expand_more,
+                          size: 18,
+                          color: theme.colorScheme.outline,
+                        ),
                       ],
                     ),
-                    if (task.result != null && task.result!.isNotEmpty) ...[
+
+                    // --- Preview (collapsed) ---
+                    if (!_expanded && hasResult) ...[
                       const SizedBox(height: 4),
                       Text(
                         task.result!,
@@ -219,29 +250,43 @@ class _TaskCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
+
+                    // --- Full content (expanded) ---
+                    if (_expanded && hasResult) ...[
+                      const SizedBox(height: 8),
+                      SelectableText(
+                        task.result!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+
+                    // --- Date row ---
                     const SizedBox(height: 6),
                     Row(
                       children: [
                         Icon(Icons.schedule_outlined,
-                            size: 12,
-                            color: theme.colorScheme.outline),
+                            size: 12, color: theme.colorScheme.outline),
                         const SizedBox(width: 4),
                         Text(
                           dateFormat.format(date),
                           style: theme.textTheme.labelSmall
                               ?.copyWith(color: theme.colorScheme.outline),
                         ),
-                        if (isUnread) ...[
-                          const Spacer(),
-                          Text(
-                            'Tippen zum Bestätigen',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ],
                       ],
                     ),
+
+                    // --- Dismiss chip (expanded + unread only) ---
+                    if (_expanded && isUnread) ...[
+                      const SizedBox(height: 10),
+                      ActionChip(
+                        avatar: const Icon(Icons.check, size: 16),
+                        label: const Text('Verwerfen'),
+                        onPressed: _acknowledge,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -250,40 +295,5 @@ class _TaskCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  (IconData, Color, String) _statusInfo(String status, ThemeData theme) {
-    return switch (status) {
-      'SUCCESS' => (
-          Icons.check_circle_outline,
-          Colors.green,
-          'Erfolgreich'
-        ),
-      'FAILURE' => (
-          Icons.error_outline,
-          theme.colorScheme.error,
-          'Fehler'
-        ),
-      'STARTED' => (
-          Icons.pending_outlined,
-          theme.colorScheme.primary,
-          'Läuft'
-        ),
-      'PENDING' => (
-          Icons.schedule_outlined,
-          theme.colorScheme.outline,
-          'Wartend'
-        ),
-      'REVOKED' => (
-          Icons.cancel_outlined,
-          theme.colorScheme.outline,
-          'Abgebrochen'
-        ),
-      _ => (
-          Icons.info_outline,
-          theme.colorScheme.outline,
-          status
-        ),
-    };
   }
 }

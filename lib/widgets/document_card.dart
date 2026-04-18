@@ -100,7 +100,21 @@ class DocumentCard extends StatelessWidget {
                   children: document.tags.map((tagId) {
                     final tag = provider.tagById(tagId);
                     if (tag == null) return const SizedBox.shrink();
-                    return TagChip(tag: tag);
+                    final isFiltered = provider.filter.tagIds.contains(tagId);
+                    return TagChip(
+                      tag: tag,
+                      selected: isFiltered,
+                      onTap: () {
+                              final ids = List<int>.from(provider.filter.tagIds);
+                              if (isFiltered) {
+                                ids.remove(tagId);
+                              } else {
+                                ids.add(tagId);
+                              }
+                              provider.updateFilter(
+                                  provider.filter.copyWith(tagIds: ids));
+                            },
+                    );
                   }).toList(),
                 ),
               ],
