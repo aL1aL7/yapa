@@ -31,6 +31,14 @@ The filter sheet allows combining multiple criteria:
 - **Correspondent** — filter by a single correspondent
 - **Document type** — filter by document type
 - **Storage path** — filter by a single storage path
+- **Created date** — optional from/to date range for the document's created date
+- **Added date** — optional from/to date range for the date the document was added to Paperless-ngx
+- **Permissions / Owner** — filter by ownership or sharing status:
+  - *My documents* — documents owned by the logged-in user
+  - *Shared with me* — documents shared with the logged-in user by others
+  - *Shared by me* — documents the logged-in user has shared with others
+  - *No owner* — documents without an assigned owner
+  - *Specific user* — pick any user from the server to filter by their ownership
 - **Custom fields** — add one or more custom field conditions per filter:
   - *Field is present* — document has a value for this field
   - *Field is empty* — document has no value for this field

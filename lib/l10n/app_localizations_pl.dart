@@ -326,6 +326,36 @@ class AppLocalizationsPl extends AppLocalizations {
   String get filterSectionStoragePath => 'Ścieżka przechowywania';
 
   @override
+  String get filterSectionCreatedDate => 'Data utworzenia';
+
+  @override
+  String get filterSectionAddedDate => 'Data dodania';
+
+  @override
+  String get filterDateFrom => 'Od';
+
+  @override
+  String get filterDateTo => 'Do';
+
+  @override
+  String get filterSectionPermissions => 'Uprawnienia';
+
+  @override
+  String get filterPermissionMine => 'Moje dokumenty';
+
+  @override
+  String get filterPermissionSharedWithMe => 'Udostępnione mi';
+
+  @override
+  String get filterPermissionSharedByMe => 'Udostępnione przeze mnie';
+
+  @override
+  String get filterPermissionNoOwner => 'Bez właściciela';
+
+  @override
+  String get filterPermissionUser => 'Wybrany użytkownik';
+
+  @override
   String get filterSectionCustomField => 'Pole niestandardowe';
 
   @override

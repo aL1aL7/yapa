@@ -97,7 +97,7 @@ class _AppRoot extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(
-              create: (_) => DocumentsProvider(auth.api!),
+              create: (_) => DocumentsProvider(auth.api!, currentUsername: auth.username),
             ),
             ChangeNotifierProvider(
               create: (_) => NotificationsProvider(auth.api!)..load(),

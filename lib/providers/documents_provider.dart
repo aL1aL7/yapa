@@ -7,11 +7,13 @@ import '../models/document_type.dart';
 import '../models/custom_field.dart';
 import '../models/saved_view.dart';
 import '../models/storage_path.dart';
+import '../models/paperless_user.dart';
 import '../services/api_service.dart';
 import '../services/storage_service.dart';
 
 class DocumentsProvider extends ChangeNotifier {
   final ApiService _api;
+  final String? currentUsername;
 
   List<Document> _documents = [];
   int _totalCount = 0;
@@ -29,10 +31,12 @@ class DocumentsProvider extends ChangeNotifier {
   List<CustomField> _customFields = [];
   List<SavedView> _savedViews = [];
   List<StoragePath> _storagePaths = [];
+  List<PaperlessUser> _users = [];
+  int? _currentUserId;
   SavedView? _selectedView;
   bool _metaLoaded = false;
 
-  DocumentsProvider(this._api);
+  DocumentsProvider(this._api, {this.currentUsername});
 
   List<Document> get documents => _documents;
   int get totalCount => _totalCount;
@@ -47,7 +51,13 @@ class DocumentsProvider extends ChangeNotifier {
   List<CustomField> get customFields => _customFields;
   List<SavedView> get savedViews => _savedViews;
   List<StoragePath> get storagePaths => _storagePaths;
+  List<PaperlessUser> get users => _users;
+  int? get currentUserId => _currentUserId;
   SavedView? get selectedView => _selectedView;
+
+  PaperlessUser? userById(int id) {
+    try { return _users.firstWhere((u) => u.id == id); } catch (_) { return null; }
+  }
 
   Future<void> init() async {
     await loadMeta();
@@ -76,6 +86,7 @@ class DocumentsProvider extends ChangeNotifier {
         _api.getCustomFields(),
         _api.getSavedViews(),
         _api.getStoragePaths(),
+        _api.getUsers(),
       ]);
       _tags = results[0] as List<Tag>;
       _correspondents = results[1] as List<Correspondent>;
@@ -83,6 +94,10 @@ class DocumentsProvider extends ChangeNotifier {
       _customFields = results[3] as List<CustomField>;
       _savedViews = results[4] as List<SavedView>;
       _storagePaths = results[5] as List<StoragePath>;
+      _users = results[6] as List<PaperlessUser>;
+      if (currentUsername != null) {
+        _currentUserId = _users.where((u) => u.username == currentUsername).firstOrNull?.id;
+      }
       _metaLoaded = true;
       notifyListeners();
     } catch (_) {}

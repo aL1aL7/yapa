@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/filter_state.dart';
@@ -470,6 +471,66 @@ class _ActiveFilterBar extends StatelessWidget {
           icon: Icons.folder_outlined,
           onRemove: () =>
               provider.updateFilter(filter.copyWith(storagePathId: null)),
+        ));
+      }
+    }
+
+    // Date chips
+    final dateFmt = DateFormat('dd.MM.yyyy');
+    if (filter.createdDateFrom != null) {
+      chips.add(_FilterChip(
+        label: 'Erstellt ab ${dateFmt.format(filter.createdDateFrom!)}',
+        icon: Icons.calendar_today_outlined,
+        onRemove: () => provider.updateFilter(filter.copyWith(createdDateFrom: null)),
+      ));
+    }
+    if (filter.createdDateTo != null) {
+      chips.add(_FilterChip(
+        label: 'Erstellt bis ${dateFmt.format(filter.createdDateTo!)}',
+        icon: Icons.calendar_today_outlined,
+        onRemove: () => provider.updateFilter(filter.copyWith(createdDateTo: null)),
+      ));
+    }
+    if (filter.addedDateFrom != null) {
+      chips.add(_FilterChip(
+        label: 'Hinzugefügt ab ${dateFmt.format(filter.addedDateFrom!)}',
+        icon: Icons.calendar_today_outlined,
+        onRemove: () => provider.updateFilter(filter.copyWith(addedDateFrom: null)),
+      ));
+    }
+    if (filter.addedDateTo != null) {
+      chips.add(_FilterChip(
+        label: 'Hinzugefügt bis ${dateFmt.format(filter.addedDateTo!)}',
+        icon: Icons.calendar_today_outlined,
+        onRemove: () => provider.updateFilter(filter.copyWith(addedDateTo: null)),
+      ));
+    }
+
+    // Owner/permissions chip
+    if (filter.ownerFilter != OwnerFilter.none) {
+      String ownerLabel;
+      switch (filter.ownerFilter) {
+        case OwnerFilter.mine:
+          ownerLabel = 'Meine Dokumente';
+        case OwnerFilter.sharedWithMe:
+          ownerLabel = 'Für mich freigegeben';
+        case OwnerFilter.sharedByMe:
+          ownerLabel = 'Von mir freigegeben';
+        case OwnerFilter.noOwner:
+          ownerLabel = 'Ohne Eigentümer';
+        case OwnerFilter.specificUser:
+          final user = provider.userById(filter.ownerUserId ?? -1);
+          ownerLabel = user?.displayName ?? 'Benutzer';
+        case OwnerFilter.none:
+          ownerLabel = '';
+      }
+      if (ownerLabel.isNotEmpty) {
+        chips.add(_FilterChip(
+          label: ownerLabel,
+          icon: Icons.person_outline,
+          onRemove: () => provider.updateFilter(
+            filter.copyWith(ownerFilter: OwnerFilter.none, ownerUserId: null),
+          ),
         ));
       }
     }

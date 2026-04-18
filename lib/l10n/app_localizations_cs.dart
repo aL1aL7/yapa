@@ -325,6 +325,36 @@ class AppLocalizationsCs extends AppLocalizations {
   String get filterSectionStoragePath => 'Cesta úložiště';
 
   @override
+  String get filterSectionCreatedDate => 'Datum vytvoření';
+
+  @override
+  String get filterSectionAddedDate => 'Datum přidání';
+
+  @override
+  String get filterDateFrom => 'Od';
+
+  @override
+  String get filterDateTo => 'Do';
+
+  @override
+  String get filterSectionPermissions => 'Oprávnění';
+
+  @override
+  String get filterPermissionMine => 'Moje dokumenty';
+
+  @override
+  String get filterPermissionSharedWithMe => 'Sdíleno se mnou';
+
+  @override
+  String get filterPermissionSharedByMe => 'Sdíleno mnou';
+
+  @override
+  String get filterPermissionNoOwner => 'Bez vlastníka';
+
+  @override
+  String get filterPermissionUser => 'Určitý uživatel';
+
+  @override
   String get filterSectionCustomField => 'Vlastní pole';
 
   @override

@@ -13,6 +13,7 @@ import '../models/filter_state.dart';
 import '../models/saved_view.dart';
 import '../models/storage_path.dart';
 import '../models/task_notification.dart';
+import '../models/paperless_user.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -234,6 +235,16 @@ class ApiService {
       final response = await _dio.get('api/storage_paths/', queryParameters: {'page_size': 500});
       final results = response.data['results'] as List<dynamic>;
       return results.map((e) => StoragePath.fromJson(e as Map<String, dynamic>)).toList();
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  Future<List<PaperlessUser>> getUsers() async {
+    try {
+      final response = await _dio.get('api/users/', queryParameters: {'page_size': 500});
+      final results = response.data['results'] as List<dynamic>;
+      return results.map((e) => PaperlessUser.fromJson(e as Map<String, dynamic>)).toList();
     } on DioException catch (e) {
       throw _mapDioError(e);
     }

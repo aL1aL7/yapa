@@ -698,6 +698,66 @@ abstract class AppLocalizations {
   /// **'Speicherpfad'**
   String get filterSectionStoragePath;
 
+  /// No description provided for @filterSectionCreatedDate.
+  ///
+  /// In de, this message translates to:
+  /// **'Ausstellungsdatum'**
+  String get filterSectionCreatedDate;
+
+  /// No description provided for @filterSectionAddedDate.
+  ///
+  /// In de, this message translates to:
+  /// **'Hinzugefügt'**
+  String get filterSectionAddedDate;
+
+  /// No description provided for @filterDateFrom.
+  ///
+  /// In de, this message translates to:
+  /// **'Von'**
+  String get filterDateFrom;
+
+  /// No description provided for @filterDateTo.
+  ///
+  /// In de, this message translates to:
+  /// **'Bis'**
+  String get filterDateTo;
+
+  /// No description provided for @filterSectionPermissions.
+  ///
+  /// In de, this message translates to:
+  /// **'Berechtigungen'**
+  String get filterSectionPermissions;
+
+  /// No description provided for @filterPermissionMine.
+  ///
+  /// In de, this message translates to:
+  /// **'Meine Dokumente'**
+  String get filterPermissionMine;
+
+  /// No description provided for @filterPermissionSharedWithMe.
+  ///
+  /// In de, this message translates to:
+  /// **'Für mich freigegeben'**
+  String get filterPermissionSharedWithMe;
+
+  /// No description provided for @filterPermissionSharedByMe.
+  ///
+  /// In de, this message translates to:
+  /// **'Von mir freigegeben'**
+  String get filterPermissionSharedByMe;
+
+  /// No description provided for @filterPermissionNoOwner.
+  ///
+  /// In de, this message translates to:
+  /// **'Ohne Eigentümer'**
+  String get filterPermissionNoOwner;
+
+  /// No description provided for @filterPermissionUser.
+  ///
+  /// In de, this message translates to:
+  /// **'Bestimmter Benutzer'**
+  String get filterPermissionUser;
+
   /// No description provided for @filterSectionCustomField.
   ///
   /// In de, this message translates to:

@@ -324,6 +324,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get filterSectionStoragePath => 'Ruta de almacenamiento';
 
   @override
+  String get filterSectionCreatedDate => 'Fecha de creación';
+
+  @override
+  String get filterSectionAddedDate => 'Fecha añadida';
+
+  @override
+  String get filterDateFrom => 'Desde';
+
+  @override
+  String get filterDateTo => 'Hasta';
+
+  @override
+  String get filterSectionPermissions => 'Permisos';
+
+  @override
+  String get filterPermissionMine => 'Mis documentos';
+
+  @override
+  String get filterPermissionSharedWithMe => 'Compartido conmigo';
+
+  @override
+  String get filterPermissionSharedByMe => 'Compartido por mí';
+
+  @override
+  String get filterPermissionNoOwner => 'Sin propietario';
+
+  @override
+  String get filterPermissionUser => 'Usuario específico';
+
+  @override
   String get filterSectionCustomField => 'Campo personalizado';
 
   @override

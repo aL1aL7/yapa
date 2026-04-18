@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../models/custom_field.dart';
@@ -155,6 +156,111 @@ class _FilterSheetState extends State<FilterSheet> {
                   ),
                   const SizedBox(height: 20),
                 ],
+                // Created date range
+                _SectionTitle(l10n?.filterSectionCreatedDate ?? 'Ausstellungsdatum'),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _DatePickerField(
+                        label: l10n?.filterDateFrom ?? 'Von',
+                        value: _filter.createdDateFrom,
+                        onChanged: (d) => setState(() => _filter = _filter.copyWith(createdDateFrom: d)),
+                        onCleared: () => setState(() => _filter = _filter.copyWith(createdDateFrom: null)),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _DatePickerField(
+                        label: l10n?.filterDateTo ?? 'Bis',
+                        value: _filter.createdDateTo,
+                        onChanged: (d) => setState(() => _filter = _filter.copyWith(createdDateTo: d)),
+                        onCleared: () => setState(() => _filter = _filter.copyWith(createdDateTo: null)),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Added date range
+                _SectionTitle(l10n?.filterSectionAddedDate ?? 'Hinzugefügt'),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _DatePickerField(
+                        label: l10n?.filterDateFrom ?? 'Von',
+                        value: _filter.addedDateFrom,
+                        onChanged: (d) => setState(() => _filter = _filter.copyWith(addedDateFrom: d)),
+                        onCleared: () => setState(() => _filter = _filter.copyWith(addedDateFrom: null)),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _DatePickerField(
+                        label: l10n?.filterDateTo ?? 'Bis',
+                        value: _filter.addedDateTo,
+                        onChanged: (d) => setState(() => _filter = _filter.copyWith(addedDateTo: d)),
+                        onCleared: () => setState(() => _filter = _filter.copyWith(addedDateTo: null)),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Permissions / owner filter
+                _SectionTitle(l10n?.filterSectionPermissions ?? 'Berechtigungen'),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<OwnerFilter>(
+                  value: _filter.ownerFilter,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  items: [
+                    DropdownMenuItem(value: OwnerFilter.none, child: Text(l10n?.filterAll ?? 'Alle')),
+                    DropdownMenuItem(value: OwnerFilter.mine, child: Text(l10n?.filterPermissionMine ?? 'Meine Dokumente')),
+                    DropdownMenuItem(value: OwnerFilter.sharedWithMe, child: Text(l10n?.filterPermissionSharedWithMe ?? 'Für mich freigegeben')),
+                    DropdownMenuItem(value: OwnerFilter.sharedByMe, child: Text(l10n?.filterPermissionSharedByMe ?? 'Von mir freigegeben')),
+                    DropdownMenuItem(value: OwnerFilter.noOwner, child: Text(l10n?.filterPermissionNoOwner ?? 'Ohne Eigentümer')),
+                    if (provider.users.isNotEmpty)
+                      DropdownMenuItem(value: OwnerFilter.specificUser, child: Text(l10n?.filterPermissionUser ?? 'Bestimmter Benutzer')),
+                  ],
+                  onChanged: (v) {
+                    if (v == null) return;
+                    int? userId;
+                    // mine, sharedWithMe and sharedByMe all need the current
+                    // user's ID to build the correct API query parameter.
+                    if (v == OwnerFilter.mine ||
+                        v == OwnerFilter.sharedWithMe ||
+                        v == OwnerFilter.sharedByMe) {
+                      userId = provider.currentUserId;
+                    }
+                    if (v != OwnerFilter.specificUser) {
+                      setState(() => _filter = _filter.copyWith(ownerFilter: v, ownerUserId: userId));
+                    } else {
+                      setState(() => _filter = _filter.copyWith(ownerFilter: v, ownerUserId: null));
+                    }
+                  },
+                ),
+                if (_filter.ownerFilter == OwnerFilter.specificUser && provider.users.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<int?>(
+                    value: _filter.ownerUserId,
+                    decoration: InputDecoration(
+                      labelText: l10n?.filterPermissionUser ?? 'Benutzer',
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
+                    items: [
+                      DropdownMenuItem(value: null, child: Text(l10n?.filterAll ?? 'Alle')),
+                      ...provider.users.map((u) => DropdownMenuItem(value: u.id, child: Text(u.displayName))),
+                    ],
+                    onChanged: (v) => setState(() => _filter = _filter.copyWith(ownerUserId: v)),
+                  ),
+                ],
+                const SizedBox(height: 20),
+
                 if (provider.customFields.isNotEmpty) ...[
                   _SectionTitle(l10n?.filterSectionCustomField ?? 'Benutzerdefiniertes Feld'),
                   const SizedBox(height: 8),
@@ -398,6 +504,54 @@ class _CustomFieldFilterRow extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
       onChanged: (v) => onChanged(cfFilter.withValue(v.isEmpty ? null : v)),
+    );
+  }
+}
+
+class _DatePickerField extends StatelessWidget {
+  final String label;
+  final DateTime? value;
+  final ValueChanged<DateTime> onChanged;
+  final VoidCallback onCleared;
+
+  const _DatePickerField({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    required this.onCleared,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat('dd.MM.yyyy');
+    return InkWell(
+      onTap: () async {
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: value ?? DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        );
+        if (picked != null) onChanged(picked);
+      },
+      borderRadius: BorderRadius.circular(4),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          suffixIcon: value != null
+              ? IconButton(
+                  icon: const Icon(Icons.close, size: 16),
+                  onPressed: onCleared,
+                )
+              : const Icon(Icons.calendar_today_outlined, size: 16),
+        ),
+        child: Text(
+          value != null ? dateFormat.format(value!) : '—',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ),
     );
   }
 }
