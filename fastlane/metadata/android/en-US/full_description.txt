@@ -1,0 +1,41 @@
+YAPA – Yet Another Paperless-ngx App
+
+YAPA is a mobile Android client for Paperless-ngx — the self-hosted, open-source 
+document management system. Manage your digital archive anytime, anywhere, right 
+from your smartphone.
+
+📄 DOCUMENTS
+• Browse your documents with infinite scroll
+• Full-text search and combined filters (tags, correspondents, document types, 
+  custom fields)
+• Quick access to SavedViews via chips or dropdown
+• Inline PDF preview
+• Download documents to your device
+
+✏️ EDIT & UPLOAD
+• Edit metadata: title, date, correspondent, document type, storage path, tags
+• Edit custom fields (text, integer, decimal, date, select, URL, boolean)
+• Upload files from device storage (PDF, JPG, PNG, TIFF, GIF, WEBP)
+• Capture and upload documents directly with your camera
+
+🔒 SECURITY
+• HTTPS-only connections
+• Login via username/password or direct API token
+• Credentials stored securely in the Android Keystore
+• Optional support for self-signed TLS certificates
+
+🔔 NOTIFICATIONS
+• View pending Paperless-ngx tasks (file imports)
+• Acknowledge tasks directly from the app
+
+⚙️ SETTINGS
+• Set a default SavedView on startup
+• Override the system language
+• Configure tag and SavedView display style
+
+🌍 LANGUAGES
+Deutsch, English, Español, Français, Italiano, Polski, Português, Čeština
+
+Requirements: A reachable Paperless-ngx instance (HTTPS), Android 5.0+
+
+YAPA is open source and not affiliated with the Paperless-ngx project.
