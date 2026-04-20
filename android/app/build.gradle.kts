@@ -14,7 +14,7 @@ if (keyPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "de.yapa.yapa"
+    namespace = "com.al1al7.yapa.yapa"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

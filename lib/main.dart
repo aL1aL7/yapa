@@ -117,7 +117,7 @@ class _MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<_MainShell> with WidgetsBindingObserver {
-  static const _shareChannel = MethodChannel('de.yapa.yapa/share');
+  static const _shareChannel = MethodChannel('com.al1al7.yapa.yapa/share');
 
   int _selectedIndex = 0;
 

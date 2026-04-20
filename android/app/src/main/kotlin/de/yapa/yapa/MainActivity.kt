@@ -1,4 +1,4 @@
-package de.yapa.yapa
+package com.al1al7.yapa.yapa
 
 import android.content.Intent
 import android.net.Uri
@@ -12,7 +12,7 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
 
-    private val shareChannel = "de.yapa.yapa/share"
+    private val shareChannel = "com.al1al7.yapa.yapa/share"
     private var methodChannel: MethodChannel? = null
 
     /** URI from a share intent waiting to be consumed by Flutter. */
