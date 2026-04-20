@@ -28,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "de.yapa.yapa"
+        applicationId = "com.al1al7.yapa.yapa"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
